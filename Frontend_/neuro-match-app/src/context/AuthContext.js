@@ -1,7 +1,6 @@
-// src/context/AuthContext.js
 import { createContext, useContext, useState, useEffect } from "react";
 import { useNavigate } from "react-router-dom";
-
+import { API_BASE_URL } from "../config";
 const AuthContext = createContext();
 
 export function AuthProvider({ children }) {
@@ -16,6 +15,23 @@ export function AuthProvider({ children }) {
     }
     setLoading(false);
   }, []);
+
+  const fetchUserProfile = async (email, jwt) => {
+    try {
+      const res = await fetch(`${API_BASE_URL}/user/${email}`, {
+        headers: {
+          Authorization: `Bearer ${jwt}`,
+        },
+      });
+      const result = await res.json();
+      if (res.ok && result.data) return result.data;
+      throw new Error(result.statusMessage || "Failed to fetch profile");
+    } catch (error) {
+      console.error("Fetch user profile error:", error);
+      return null;
+    }
+  };
+
 
   const login = async (email, password) => {
     // authentication logic
@@ -32,16 +48,16 @@ export function AuthProvider({ children }) {
 
   const googleLogin = async (credentialResponse) => {
     try {
-      const res = await fetch("http://localhost:8084/api/v1/auth/google", {
-        method: "POST",
-        headers: { "Content-Type": "application/json" },
-        body: JSON.stringify({ idToken: credentialResponse.credential }),
-      });
+       const res = await fetch(`${API_BASE_URL}/auth/google`, {
+         method: "POST",
+         headers: { "Content-Type": "application/json" },
+         body: JSON.stringify({ idToken: credentialResponse.credential }),
+       });
       const data = await res.json();
       if (res.ok) {
         setUser(data);
         localStorage.setItem("user", JSON.stringify(data));
-        navigate("/dashboard");
+        navigate("/jobseeker");
       } else {
         console.error("Google login failed:", data);
       }
@@ -49,6 +65,7 @@ export function AuthProvider({ children }) {
       console.error("Google login error:", err);
     }
   };
+
   const register = async (userData) => {
     // registration logic
     const mockUser = {
@@ -70,7 +87,15 @@ export function AuthProvider({ children }) {
 
   return (
     <AuthContext.Provider
-      value={{ user, login, register, logout, loading, googleLogin }}
+      value={{
+        user,
+        login,
+        register,
+        logout,
+        loading,
+        googleLogin,
+        fetchUserProfile,
+      }}
     >
       {!loading && children}
     </AuthContext.Provider>

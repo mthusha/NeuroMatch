@@ -1,5 +1,6 @@
 import React, { useEffect } from 'react';
 import './Home.css';
+import myVideo from '../img/392332935793221636.mp4';
 
 
 const NeuroMatch = () => {
@@ -126,12 +127,12 @@ const NeuroMatch = () => {
                     </div>
                     
                     <div className="hidden md:flex items-center space-x-4">
-                        <a href="#login" target="_blank" 
+                        <a href="/login" 
                            className="text-white/80 hover:text-white transition-all duration-300 font-medium glow">
                             Log In
                         </a>
-                        <a href="#signup" target="_blank" 
-                           className="bg-gradient-to-r from-blue-500 to-purple-600 hover:from-blue-600 hover:to-purple-700 px-6 py-3 rounded-full font-semibold transition-all duration-300 hover:scale-105 neon-blue ripple">
+                        <a href="/register" 
+                           className="bg-gradient-to-r from-blue-500 to-purple-600 hover:from-blue-600 hover:to-purple-700 px-6 py-3 rounded-full font-semibold transition-all duration-300 hover:scale-105 neon-blue ">
                             Get Started
                         </a>
                     </div>
@@ -162,126 +163,248 @@ const NeuroMatch = () => {
                     <div className="border-t border-white/10 my-8"></div>
 
                     <div className="mt-auto space-y-4">
-                        <a href="#login" className="block w-full text-center py-3 bg-white/10 rounded-lg text-white hover:bg-white/20 transition">Log In</a>
-                        <a href="#signup" className="block w-full text-center py-3 bg-gradient-to-r from-blue-500 to-purple-600 hover:from-blue-600 hover:to-purple-700 text-white rounded-lg font-semibold shadow-md transition">🚀 Get Started with NeuroMatch</a>
+                        <a href="/login" className="block w-full text-center py-3 bg-white/10 rounded-lg text-white hover:bg-white/20 transition">Log In</a>
+                        <a href="/register" className="block w-full text-center py-3 bg-gradient-to-r from-blue-500 to-purple-600 hover:from-blue-600 hover:to-purple-700 text-white rounded-lg font-semibold shadow-md transition">🚀 Get Started with NeuroMatch</a>
                     </div>
                 </div>
             </div>
         </nav>
 {/* Hero Section */}
-<section id="home" className="min-h-screen flex items-center justify-center pt-20 relative overflow-hidden bg-gradient-to-br from-[#0f0c29] via-[#302b63] to-[#24243e]">
-    <div className="absolute inset-0 z-0 animated-bg"></div>
-{/*     
+<section id="hero" className="min-h-screen flex items-center justify-center relative overflow-hidden bg-gradient-to-br from-[#0f0c29] via-[#1a1a2e] to-[#0f172a]">
+    {/* Animated background elements */}
+    <div className="absolute inset-0 pointer-events-none z-0 opacity-20">
+        <div className="absolute top-1/4 left-1/4 w-64 h-64 rounded-full bg-gradient-to-r from-blue-600/20 to-purple-600/20 blur-3xl animate-float-slow"></div>
+        <div className="absolute bottom-1/3 right-1/4 w-72 h-72 rounded-full bg-gradient-to-r from-cyan-500/20 to-blue-600/20 blur-3xl animate-float-slow animation-delay-4000"></div>
+    </div>
+
+    {/* Floating particles */}
     <div className="absolute inset-0 z-0 overflow-hidden">
         {[...Array(30)].map((_, i) => (
             <div 
                 key={i}
                 className="particle absolute rounded-full"
                 style={{
-                    width: `${Math.random() * 10 + 5}px`,
-                    height: `${Math.random() * 10 + 5}px`,
-                    background: `rgba(${Math.floor(Math.random() * 100 + 155)}, ${Math.floor(Math.random() * 100 + 155)}, 255, ${Math.random() * 0.3 + 0.2})`,
+                    width: `${Math.random() * 6 + 3}px`,
+                    height: `${Math.random() * 6 + 3}px`,
+                    background: `rgba(255, 255, 255, ${Math.random() * 0.2 + 0.1})`,
                     top: `${Math.random() * 100}%`,
                     left: `${Math.random() * 100}%`,
-                    animationDelay: `${Math.random() * 10}s`,
-                    animationDuration: `${Math.random() * 20 + 10}s`
+                    animation: `float ${Math.random() * 15 + 10}s linear infinite`,
+                    animationDelay: `${Math.random() * 5}s`
                 }}
             />
         ))}
-    </div> */}
-
-    <div className="absolute inset-0 pointer-events-none z-0 opacity-20">
-        <div className="absolute top-1/4 left-1/4 w-32 h-32 rounded-full bg-gradient-to-r from-blue-500 to-purple-500 blur-xl animate-pulse"></div>
-        <div className="absolute bottom-1/3 right-1/4 w-40 h-40 rounded-full bg-gradient-to-r from-cyan-400 to-blue-500 blur-xl animate-pulse" style={{animationDelay: '2s'}}></div>
-        <div className="absolute top-1/3 right-1/3 w-24 h-24 rounded-full bg-gradient-to-r from-pink-500 to-purple-500 blur-xl animate-pulse" style={{animationDelay: '4s'}}></div>
     </div>
 
-    {/* Main Content */}
-    <div className="max-w-7xl mx-auto px-4 sm:px-6 lg:px-8 text-center relative z-10">
-        <div className="fade-up">
+    {/* Side content - Left */}
+    <div className="hidden lg:block absolute left-0 top-1/2 transform -translate-y-1/2 z-10 w-64 px-8 slide-in-left">
+        <div className="bg-white/5 backdrop-blur-lg border border-white/10 rounded-2xl p-6 shadow-xl hover:shadow-blue-500/20 transition-all duration-500 hover:-translate-x-2">
+            <div className="flex items-center mb-3">
+                <div className="w-10 h-10 rounded-full bg-gradient-to-br from-blue-500 to-purple-600 flex items-center justify-center mr-3">
+                    <svg className="w-5 h-5 text-white" fill="none" stroke="currentColor" viewBox="0 0 24 24">
+                        <path strokeLinecap="round" strokeLinejoin="round" strokeWidth={2} d="M9 5H7a2 2 0 00-2 2v12a2 2 0 002 2h10a2 2 0 002-2V7a2 2 0 00-2-2h-2M9 5a2 2 0 002 2h2a2 2 0 002-2M9 5a2 2 0 012-2h2a2 2 0 012 2" />
+                    </svg>
+                </div>
+                <h3 className="text-white font-semibold">Candidate Profile</h3>
+            </div>
+            <div className="space-y-2">
+                <div className="h-2 bg-white/10 rounded-full animate-pulse"></div>
+                <div className="h-2 bg-white/10 rounded-full animate-pulse w-3/4"></div>
+                <div className="h-2 bg-white/10 rounded-full animate-pulse w-1/2"></div>
+            </div>
+            <div className="mt-4 pt-4 border-t border-white/10">
+                <div className="flex justify-between text-sm text-white/70">
+                    <span>Match Score</span>
+                    <span className="text-green-400 font-medium">94%</span>
+                </div>
+                <div className="w-full bg-white/10 rounded-full h-2 mt-2">
+                    <div className="bg-gradient-to-r from-green-400 to-cyan-400 h-2 rounded-full" style={{width: '94%'}}></div>
+                </div>
+            </div>
+        </div>
+    </div>
+
+    <div className="hidden lg:block absolute right-0 top-1/2 transform -translate-y-1/2 z-10 w-80 px-8 slide-in-right">
+        <div className="relative group overflow-hidden rounded-2xl transition-all duration-500 hover:translate-x-2">
+            {/* <div className="relative">
+                <video 
+                    autoPlay 
+                    muted 
+                    loop
+                    playsInline
+                    className="w-full h-auto object-cover rounded-xl border border-white/10"
+                    style={{ boxShadow: '0 20px 40px rgba(0,0,0,0.4)' }}
+                >
+                    <source src={myVideo} type="video/mp4" />
+
+                </video>
+                <div className="absolute inset-0 bg-gradient-to-t from-black/60 to-transparent rounded-xl pointer-events-none"></div>
+            </div> */}
+            
+            <div className="absolute bottom-4 left-4 right-4 bg-gradient-to-br from-purple-600/80 to-blue-600/80 backdrop-blur-sm p-4 rounded-lg border border-white/10 transform transition-all duration-300 group-hover:translate-y-0 translate-y-2 opacity-0 group-hover:opacity-100">
+                <div className="flex items-center">
+                    <div className="bg-white/20 p-2 rounded-lg mr-3">
+                        <svg className="w-5 h-5 text-white" fill="none" stroke="currentColor" viewBox="0 0 24 24">
+                            <path strokeLinecap="round" strokeLinejoin="round" strokeWidth={2} d="M15 10l4.553-2.276A1 1 0 0121 8.618v6.764a1 1 0 01-1.447.894L15 14M5 18h8a2 2 0 002-2V8a2 2 0 00-2-2H5a2 2 0 00-2 2v8a2 2 0 002 2z" />
+                        </svg>
+                    </div>
+                    <div>
+                        <h4 className="text-white font-medium text-sm">AI Matching</h4>
+                        <p className="text-white/80 text-xs">Real-time candidate analysis</p>
+                    </div>
+                </div>
+            </div>
+            
+            {/* Static title */}
+            <div className="absolute bottom-4 left-4 right-4 bg-black/30 backdrop-blur-sm p-3 rounded-lg border border-white/10">
+                <h3 className="text-white font-medium text-sm flex items-center">
+                    <svg className="w-4 h-4 mr-2 text-purple-300" fill="none" stroke="currentColor" viewBox="0 0 24 24">
+                        <path strokeLinecap="round" strokeLinejoin="round" strokeWidth={2} d="M13 10V3L4 14h7v7l9-11h-7z" />
+                    </svg>
+                    <span>Live Demo Preview</span>
+                </h3>
+            </div>
+        </div>
+    </div>
+
+    {/* Main content */}
+    <div className="max-w-7xl mx-auto px-6 sm:px-8 lg:px-12 text-center relative z-10 py-20">
+        <div className="fade-in">
+            {/* Tagline */}
             <div className="mb-8">
-                <span className="inline-block bg-gradient-to-r from-blue-600/20 to-purple-600/20 px-6 py-3 rounded-full text-sm font-semibold text-white/90 border border-blue-400/30 glass-dark backdrop-blur-md hover:scale-105 transition-transform duration-300 hover:shadow-lg hover:shadow-blue-500/20">
-                    🚀 The Future of AI-Powered Recruitment
+                <span className="inline-block bg-gradient-to-r from-blue-600/20 to-purple-600/20 px-6 py-3 rounded-full text-sm font-semibold text-white/90 border border-blue-400/30 backdrop-blur-md hover:scale-105 transition-transform duration-300">
+                    ✨ Next-Gen Talent Acquisition
                 </span>
             </div>
 
-            {/* Headline with Typing Effect */}
-            <h1 className="text-5xl md:text-8xl font-black mb-8 leading-tight bg-clip-text text-transparent bg-gradient-to-r from-white via-blue-200 to-cyan-200 drop-shadow-2xl">
-                <span className="block">Smarter</span>
+            {/* Main headline */}
+            <h1 className="text-5xl md:text-7xl lg:text-8xl font-bold mb-8 leading-tight bg-clip-text text-transparent bg-gradient-to-r from-white via-blue-100 to-cyan-100">
+                <span className="block">AI-Powered</span>
                 <span className="text-shimmer relative inline-block">
-                    <span className="typing-animation">Talent Matching</span>
-                    <span className="absolute -bottom-2 left-0 w-full h-1 bg-gradient-to-r from-blue-500 to-purple-500 rounded-full animate-pulse"></span>
+                    Hiring Intelligence
                 </span>
             </h1>
 
-            {/* Subheading */}
-            <p className="text-xl md:text-2xl text-white/80 mb-12 max-w-3xl mx-auto leading-relaxed glass p-6 rounded-2xl backdrop-blur-sm border border-white/10 hover:border-white/20 transition-all duration-500 mobi-mr-1 mobi-fz-1 " >
-                Our <span className="font-semibold text-cyan-300">neuro-inspired algorithms</span> and <span className="font-semibold text-purple-300">immersive assessments</span> deliver <span className="font-semibold text-blue-300">unprecedented hiring accuracy</span> while reducing bias and time-to-hire.
+            {/* Subheadline */}
+            <p className="text-xl md:text-2xl text-white/80 mb-12 max-w-3xl mx-auto leading-relaxed">
+                Our <span className="font-semibold text-cyan-300">neural matching engine</span> analyzes candidates with <span className="font-semibold text-purple-300">unprecedented depth</span>, reducing hiring time by 70% while improving quality matches.
             </p>
 
-            {/* CTA Buttons */}
-            <div className="flex flex-col sm:flex-row gap-6 justify-center items-center mb-20 mobi-mr-1">
-                <a id="login-btn" href="#signup" className="group relative overflow-hidden px-8 py-4 rounded-xl bg-gradient-to-br from-blue-600 to-purple-600 text-xl font-bold text-white shadow-2xl hover:shadow-blue-500/30 transition-all duration-500 hover:scale-105 neon-blue">
-                    <span className="relative z-10 flex items-center justify-center">
-                        <span className="mr-3">Get Started</span>
-                        <i className="fas fa-arrow-right group-hover:translate-x-1 transition-transform"></i>
+            {/* CTA buttons */}
+            <div className="flex flex-col sm:flex-row gap-4 justify-center items-center mb-16">
+                <a href="/demo" className="width-768-100 relative overflow-hidden px-8 py-4 rounded-xl bg-gradient-to-br from-blue-600 to-cyan-600 text-lg font-semibold text-white shadow-xl hover:shadow-blue-500/30 transition-all duration-300 hover:scale-[1.02] group">
+                    <span className="relative z-10 flex items-center">
+                        <span className="mr-2">Request Demo</span>
+                        <svg className="w-4 h-4 group-hover:translate-x-1 transition-transform" fill="none" stroke="currentColor" viewBox="0 0 24 24" xmlns="http://www.w3.org/2000/svg">
+                            <path strokeLinecap="round" strokeLinejoin="round" strokeWidth={2} d="M14 5l7 7m0 0l-7 7m7-7H3" />
+                        </svg>
                     </span>
-                    <div className="absolute inset-0 bg-gradient-to-r from-white/0 via-white/10 to-white/0 opacity-0 group-hover:opacity-100 transition-opacity duration-500"></div>
+                    <span className="absolute inset-0 bg-gradient-to-r from-white/10 to-white/0 opacity-0 group-hover:opacity-100 transition-opacity duration-300"></span>
                 </a>
 
-                <a id="demo-btn" href="#demo" className="group glass px-8 py-4 rounded-xl text-xl font-bold text-white hover:bg-white/10 transition-all duration-500 hover:scale-105 border border-white/20 hover:border-white/40 shadow-lg hover:shadow-white/10 flex items-center">
-                    <i className="fas fa-play-circle mr-3 text-blue-300 group-hover:text-purple-300 transition-colors"></i>
-                    <span>Watch Demo</span>
+                <a href="/features" className="width-768-100 px-8 py-4 rounded-xl text-lg font-semibold text-white border border-white/20 hover:border-white/40 bg-white/5 backdrop-blur-sm hover:bg-white/10 transition-all duration-300 hover:scale-[1.02] flex items-center">
+                    <svg className="w-4 h-4 mr-2" fill="none" stroke="currentColor" viewBox="0 0 24 24" xmlns="http://www.w3.org/2000/svg">
+                        <path strokeLinecap="round" strokeLinejoin="round" strokeWidth={2} d="M13 10V3L4 14h7v7l9-11h-7z" />
+                    </svg>
+                    <span>How It Works</span>
                 </a>
             </div>
 
-            {/* Stats Grid */}
-            <div className="grid grid-cols-2 md:grid-cols-4 gap-6 max-w-5xl mx-auto">
+            {/* Stats */}
+            <div className="grid grid-cols-2 md:grid-cols-4 gap-4 max-w-4xl mx-auto">
                 {[
-                    { value: "98.7%", label: "Match Accuracy", color: "text-cyan-400" },
-                    { value: "10K+", label: "Successful Hires", color: "text-blue-400" },
-                    { value: "75%", label: "Time Saved", color: "text-purple-400" },
-                    { value: "4.9/5", label: "User Rating", color: "text-pink-400" }
+                    { value: "98%", label: "Accuracy", icon: "🔍" },
+                    { value: "10x", label: "Faster", icon: "⚡" },
+                    { value: "70%", label: "Cost Save", icon: "💰" },
+                    { value: "4.9★", label: "Satisfaction", icon: "❤️" }
                 ].map((stat, index) => (
                     <div 
                         key={index}
-                        className="glass p-6 rounded-xl hover:scale-105 transition-transform duration-500 border border-white/10 hover:border-white/20 backdrop-blur-sm mobi-p-1"
+                        className="p-4 rounded-xl border border-white/10 bg-white/5 backdrop-blur-sm hover:scale-105 transition-transform duration-300"
                     >
-                        <div className={`text-4xl font-bold ${stat.color} mb-2 flex items-center justify-center`}>
-                            {stat.value}
-                            {index === 3 && <i className="fas fa-star ml-2 text-yellow-300"></i>}
-                        </div>
-                        <div className="text-white/80 text-sm uppercase tracking-wider">{stat.label}</div>
+                        <div className="text-2xl mb-1">{stat.icon}</div>
+                        <div className="text-3xl font-bold text-white mb-1">{stat.value}</div>
+                        <div className="text-white/70 text-sm">{stat.label}</div>
                     </div>
                 ))}
             </div>
         </div>
     </div>
 
-    {/* Animated Wave Divider */}
- {/* <div className="absolute bottom-0 w-full z-10 overflow-hidden">
-    <svg 
-        className="w-screen min-w-full" 
-        viewBox="0 0 1200 120" 
-        preserveAspectRatio="none"
-        style={{ height: 'auto', display: 'block' }}
-    >
-        <path 
-            fill="rgba(255,255,255,0.03)" 
-            d="M0,0V46.29c47.79,22.2,103.59,32.17,158,28,70.36-5.37,136.33-33.31,206.8-37.5C438.64,32.43,512.34,53.67,583,72.05c69.27,18,138.3,24.88,209.4,13.08,36.15-6,69.85-17.84,104.45-29.34C989.49,25,1113-14.29,1200,52.47V0Z" 
-            opacity=".25"
-        />
-        <path 
-            fill="rgba(255,255,255,0.03)" 
-            d="M0,0V15.81C13,36.92,27.64,56.86,47.69,72.05,99.41,111.27,165,111,224.58,91.58c31.15-10.15,60.09-26.07,89.67-39.8,40.92-19,84.73-46,130.83-49.67,36.26-2.85,70.9,9.42,98.6,31.56,31.77,25.39,62.32,62,103.63,73,40.44,10.79,81.35-6.69,119.13-24.28s75.16-39,116.92-43.05c59.73-5.85,113.28,22.88,168.9,38.84,30.2,8.66,59,6.17,87.09-7.5,22.43-10.89,48-26.93,60.65-49.24V0Z" 
-            opacity=".5"
-        />
-        <path 
-            fill="rgba(255,255,255,0.03)" 
-            d="M0,0V5.63C149.93,59,314.09,71.32,475.83,42.57c43-7.64,84.23-20.12,127.61-26.46,59-8.63,112.48,12.24,165.56,35.4C827.93,77.22,886,95.24,951.2,90c86.53-7,172.46-45.71,248.8-84.81V0Z"
-        />
-    </svg>
-</div> */}
+    <style jsx>{`
+        .particle {
+            animation: float linear infinite;
+        }
+        
+        @keyframes float {
+            0% { transform: translateY(0) translateX(0); opacity: 0; }
+            10% { opacity: 1; }
+            90% { opacity: 1; }
+            100% { transform: translateY(-100px) translateX(20px); opacity: 0; }
+        }
+        
+        .text-shimmer {
+            position: relative;
+            display: inline-block;
+        }
+        
+        .text-shimmer::after {
+            content: '';
+            position: absolute;
+            bottom: -4px;
+            left: 0;
+            width: 100%;
+            height: 2px;
+            background: linear-gradient(90deg, rgba(100,200,255,0.8), rgba(200,160,255,0.8));
+            border-radius: 2px;
+            animation: shimmer 3s ease-in-out infinite;
+        }
+        
+        @keyframes shimmer {
+            0%, 100% { opacity: 0.8; background-position: 0% 50%; }
+            50% { opacity: 1; background-position: 100% 50%; }
+        }
+        
+        .fade-in {
+            animation: fadeIn 1s ease-out forwards;
+        }
+        
+        @keyframes fadeIn {
+            from { opacity: 0; transform: translateY(20px); }
+            to { opacity: 1; transform: translateY(0); }
+        }
+        
+        .animate-float-slow {
+            animation: floatSlow 12s ease-in-out infinite;
+        }
+        
+        .animation-delay-4000 {
+            animation-delay: 4s;
+        }
+        
+        @keyframes floatSlow {
+            0%, 100% { transform: translateY(0) translateX(0); }
+            50% { transform: translateY(-40px) translateX(20px); }
+        }
+        
+        .slide-in-left {
+            animation: slideInLeft 1s ease-out forwards;
+        }
+        
+        .slide-in-right {
+            animation: slideInRight 1s ease-out forwards;
+        }
+        
+        @keyframes slideInLeft {
+            from { opacity: 0; transform: translate(-50px, -50%); }
+            to { opacity: 1; transform: translate(0, -50%); }
+        }
+        
+        @keyframes slideInRight {
+            from { opacity: 0; transform: translate(50px, -50%); }
+            to { opacity: 1; transform: translate(0, -50%); }
+        }
+    `}</style>
 </section>
 
         {/* Features Section */}

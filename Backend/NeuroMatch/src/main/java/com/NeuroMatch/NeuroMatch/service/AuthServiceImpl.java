@@ -4,6 +4,7 @@ import com.NeuroMatch.NeuroMatch.config.GoogleTokenVerifier;
 import com.NeuroMatch.NeuroMatch.model.dto.AuthResponse;
 import com.NeuroMatch.NeuroMatch.model.dto.LoginRequest;
 import com.NeuroMatch.NeuroMatch.model.dto.RegisterRequest;
+import com.NeuroMatch.NeuroMatch.model.entity.JobSeekerDetails;
 import com.NeuroMatch.NeuroMatch.model.entity.Users;
 import com.NeuroMatch.NeuroMatch.repository.UsersRepository;
 import com.NeuroMatch.NeuroMatch.util.ValidationMessages;
@@ -31,11 +32,14 @@ public class AuthServiceImpl implements AuthService {
         Users user = new Users();
         user.setEmail(req.getEmail());
         user.setPassword(encoder.encode(req.getPassword()));
-        user.setName(req.getName());
+        JobSeekerDetails jobSeekerDetails = new JobSeekerDetails();
+        jobSeekerDetails.setName(req.getName());
+        jobSeekerDetails.setUser(user);
+        user.setJobSeekerDetails(jobSeekerDetails);
         user.setProvider("LOCAL");
 
         userRepo.save(user);
-        return new AuthResponse(jwtService.generateToken(user.getEmail()));
+        return new AuthResponse(jwtService.generateToken(user.getEmail()), user.getEmail(), user.getJobSeekerDetails().getName());
     }
     public AuthResponse login(LoginRequest req) {
         Users user = userRepo.findByEmail(req.getEmail())
@@ -45,7 +49,7 @@ public class AuthServiceImpl implements AuthService {
             throw new RuntimeException(ValidationMessages.INVALID_PASSWORD);
         }
 
-        return new AuthResponse(jwtService.generateToken(user.getEmail()));
+        return new AuthResponse(jwtService.generateToken(user.getEmail()), user.getEmail(), user.getJobSeekerDetails().getName());
     }
 
     public AuthResponse googleLogin (String idToken) {
@@ -57,11 +61,14 @@ public class AuthServiceImpl implements AuthService {
         if (user == null) {
             user = new Users();
             user.setEmail(email);
-            user.setName(name);
+            JobSeekerDetails jobSeekerDetails = new JobSeekerDetails();
+            jobSeekerDetails.setName(name);
+            jobSeekerDetails.setUser(user);
+            user.setJobSeekerDetails(jobSeekerDetails);
             user.setProvider("GOOGLE");
             userRepo.save(user);
         }
 
-        return new AuthResponse(jwtService.generateToken(user.getEmail()));
+        return new AuthResponse(jwtService.generateToken(user.getEmail()), user.getEmail(), user.getJobSeekerDetails().getName());
     }
 }

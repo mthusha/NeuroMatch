@@ -18,8 +18,10 @@ public class AuthController {
     @Autowired
     private AuthService authService;
 
+
     @PostMapping(EndpointBundle.GOOGLE)
     public ResponseEntity<?> googleLogin (@RequestBody Map<String, String> body) {
-        return ResponseEntity.ok(authService.googleLogin(body.get("idToken")));
+        return ResponseEntity.ok
+                (authService.googleLogin(body.get("idToken")));
     }
 }

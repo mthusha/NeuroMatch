@@ -1,9 +1,6 @@
 package com.NeuroMatch.NeuroMatch.model.entity;
 
-import jakarta.persistence.Entity;
-import jakarta.persistence.GeneratedValue;
-import jakarta.persistence.GenerationType;
-import jakarta.persistence.Id;
+import jakarta.persistence.*;
 import lombok.Getter;
 import lombok.Setter;
 
@@ -17,6 +14,13 @@ public class Users {
     private Long id;
     private String email;
     private String password;
-    private String name;
     private String provider;
+    private String role;
+
+    @OneToOne(cascade = CascadeType.ALL, mappedBy = "user")
+    private JobSeekerDetails jobSeekerDetails;
+
+    @OneToOne(cascade = CascadeType.ALL, mappedBy = "user")
+    private CompanyDetails companyDetails;
+
 }

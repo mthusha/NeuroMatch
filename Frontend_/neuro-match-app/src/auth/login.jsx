@@ -31,28 +31,177 @@ export default function LoginPage() {
   return (
     <div className="min-h-screen flex bg-gradient-to-br from-[#0f0c29] via-[#302b63] to-[#24243e] animated-bg">
       <div className="hidden md:flex flex-col items-center justify-center w-1/2 p-12 relative overflow-hidden">
-        <div className="absolute inset-0 z-0 opacity-20">
-          <div className="absolute inset-0 bg-[url('data:image/svg+xml;base64,PHN2ZyB4bWxucz0iaHR0cDovL3d3dy53My5vcmcvMjAwMC9zdmciIHdpZHRoPSI2MCIgaGVpZ2h0PSI2MCIgdmlld0JveD0iMCAwIDYwIDYwIj48Y2lyY2xlIGN4PSIzMCIgY3k9IjMwIiByPSIxIiBmaWxsPSJ3aGl0ZSIgZmlsbC1vcGFjaXR5PSIwLjEiLz48L3N2Zz4=')]"></div>
-        </div>
-        
-        <div className="relative z-10 text-center max-w-md">
-          <div className="w-32 h-32 mx-auto mb-8 rounded-full bg-gradient-to-r from-blue-600 to-purple-600 flex items-center justify-center shadow-xl">
-            <i className="fas fa-brain text-5xl text-white"></i>
-          </div>
-          <h1 className="text-4xl font-bold text-white mb-4">NeuroMatch AI</h1>
-          <p className="text-lg text-white/80 mb-8">The future of neural network matching technology</p>
-          
-          <div className="glass p-6 rounded-xl border border-white/10 backdrop-blur-sm">
-            <div className="flex items-center justify-center space-x-2 text-white/70">
-              <i className="fas fa-quote-left text-xl opacity-50"></i>
-              <p className="italic">Revolutionizing connections through advanced artificial intelligence</p>
-            </div>
-          </div>
-        </div>
-        
-        <div className="absolute top-20 left-20 w-40 h-40 rounded-full bg-blue-600/10 blur-xl animate-float"></div>
-        <div className="absolute bottom-20 right-20 w-48 h-48 rounded-full bg-purple-600/10 blur-xl animate-float" style={{animationDelay: '2s'}}></div>
+  {/* Animated background grid */}
+  <div className="absolute inset-0 z-0 opacity-20">
+    <div 
+      className="absolute inset-0 bg-[url('data:image/svg+xml;base64,PHN2ZyB4bWxucz0iaHR0cDovL3d3dy53My5vcmcvMjAwMC9zdmciIHdpZHRoPSI2MCIgaGVpZ2h0PSI2MCIgdmlld0JveD0iMCAwIDYwIDYwIj48Y2lyY2xlIGN4PSIzMCIgY3k9IjMwIiByPSIxIiBmaWxsPSJ3aGl0ZSIgZmlsbC1vcGFjaXR5PSIwLjEiLz48L3N2Zz4=')]"
+      style={{
+        animation: 'gridPulse 8s infinite alternate'
+      }}
+    ></div>
+  </div>
+  
+  {/* Neural connections animation */}
+  <div className="absolute inset-0 z-0 overflow-hidden">
+    {[...Array(8)].map((_, i) => (
+      <div
+        key={`neuron-${i}`}
+        className="absolute w-2 h-2 rounded-full bg-gradient-to-br from-blue-400 to-purple-500 animate-pulse"
+        style={{
+          top: `${Math.random() * 100}%`,
+          left: `${Math.random() * 100}%`,
+          animationDelay: `${i * 0.5}s`,
+          boxShadow: '0 0 10px rgba(99, 102, 241, 0.7)'
+        }}
+      ></div>
+    ))}
+  </div>
+  
+  {/* Main content */}
+  <div className="relative z-10 text-center max-w-md">
+    {/* Animated brain icon */}
+    <div 
+      className="w-32 h-32 mx-auto mb-8 rounded-full bg-gradient-to-r from-blue-600 to-purple-600 flex items-center justify-center shadow-xl relative"
+      style={{
+        animation: 'brainFloat 6s ease-in-out infinite'
+      }}
+    >
+      <i 
+        className="fas fa-brain text-5xl text-white"
+        style={{
+          filter: 'drop-shadow(0 0 8px rgba(255,255,255,0.3))',
+          animation: 'brainPulse 3s ease-in-out infinite'
+        }}
+      ></i>
+      {/* Glow effect */}
+      <div className="absolute inset-0 rounded-full bg-blue-400/20 animate-ping opacity-0"></div>
+    </div>
+    
+    <h1 
+      className="text-4xl font-bold text-white mb-4"
+      style={{
+        textShadow: '0 0 10px rgba(129, 140, 248, 0.5)',
+        animation: 'textGlow 3s ease-in-out infinite alternate'
+      }}
+    >
+      NeuroMatch AI
+    </h1>
+    
+    <p 
+      className="text-lg text-white/80 mb-8"
+      style={{
+        animation: 'fadeIn 1.5s ease-out'
+      }}
+    >
+      The future of neural network matching technology
+    </p>
+    
+    {/* Animated quote box */}
+    <div 
+      className="glass p-6 rounded-xl border border-white/10 backdrop-blur-sm relative overflow-hidden"
+      style={{
+        animation: 'slideUp 1s ease-out',
+        boxShadow: '0 8px 32px rgba(0, 0, 0, 0.3)'
+      }}
+    >
+      {/* Floating particles inside quote box */}
+      {[...Array(3)].map((_, i) => (
+        <div
+          key={`particle-${i}`}
+          className="absolute w-1 h-1 rounded-full bg-white/30"
+          style={{
+            top: `${10 + (i * 30)}%`,
+            left: `${15 + (i * 20)}%`,
+            animation: `particleFloat ${3 + i}s ease-in-out infinite`,
+            animationDelay: `${i * 0.5}s`
+          }}
+        ></div>
+      ))}
+      
+      <div className="flex items-center justify-center space-x-2 text-white/70 relative z-10">
+        <i 
+          className="fas fa-quote-left text-xl opacity-50"
+          style={{
+            animation: 'quotePulse 4s ease-in-out infinite'
+          }}
+        ></i>
+        <p className="italic">Revolutionizing connections through advanced artificial intelligence</p>
       </div>
+    </div>
+  </div>
+  
+  {/* Floating orb animations */}
+  <div 
+    className="absolute top-20 left-20 w-40 h-40 rounded-full bg-blue-600/10 blur-xl"
+    style={{
+      animation: 'orbFloat 15s ease-in-out infinite alternate'
+    }}
+  ></div>
+  
+  <div 
+    className="absolute bottom-20 right-20 w-48 h-48 rounded-full bg-purple-600/10 blur-xl"
+    style={{
+      animation: 'orbFloat 18s ease-in-out infinite alternate-reverse',
+      animationDelay: '2s'
+    }}
+  ></div>
+  
+  {/* CSS Animations */}
+  <style jsx>{`
+    @keyframes gridPulse {
+      0% { opacity: 0.1; }
+      100% { opacity: 0.3; }
+    }
+    
+    @keyframes brainFloat {
+      0%, 100% { transform: translateY(0) rotate(0deg); }
+      50% { transform: translateY(-10px) rotate(2deg); }
+    }
+    
+    @keyframes brainPulse {
+      0%, 100% { transform: scale(1); }
+      50% { transform: scale(1.05); }
+    }
+    
+    @keyframes textGlow {
+      0% { text-shadow: 0 0 10px rgba(129, 140, 248, 0.3); }
+      100% { text-shadow: 0 0 15px rgba(129, 140, 248, 0.7); }
+    }
+    
+    @keyframes fadeIn {
+      from { opacity: 0; transform: translateY(10px); }
+      to { opacity: 1; transform: translateY(0); }
+    }
+    
+    @keyframes slideUp {
+      from { opacity: 0; transform: translateY(20px); }
+      to { opacity: 1; transform: translateY(0); }
+    }
+    
+    @keyframes particleFloat {
+      0%, 100% { transform: translate(0, 0); opacity: 0.3; }
+      50% { transform: translate(10px, -10px); opacity: 0.7; }
+    }
+    
+    @keyframes quotePulse {
+      0%, 100% { opacity: 0.4; transform: scale(1); }
+      50% { opacity: 0.8; transform: scale(1.1); }
+    }
+    
+    @keyframes orbFloat {
+      0% { transform: translate(0, 0); }
+      25% { transform: translate(20px, 20px); }
+      50% { transform: translate(0, 40px); }
+      75% { transform: translate(-20px, 20px); }
+      100% { transform: translate(0, 0); }
+    }
+    
+    @keyframes pulse {
+      0%, 100% { opacity: 0.3; }
+      50% { opacity: 0.7; }
+    }
+  `}</style>
+</div>
 
       <div className="w-full md:w-1/2 flex items-center justify-center p-8">
         <div className="w-full max-w-md glass " style={{padding:"20px", borderRadius:'22px'}}>

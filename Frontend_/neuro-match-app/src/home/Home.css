@@ -269,6 +269,34 @@
     @keyframes blink-caret {
       50% { border-color: transparent }
     }
+    .align-1500{
+        text-align: justify !important;
+    }
+    .marginLe-1500{
+        margin-left: 0 !important;
+    }
+    .margin-let-1500{
+        margin-left: 0 !important;
+    }
+    
+    @media (max-width: 1500px) {
+        #cv-analysis{
+            display: none;
+        }
+        .align-1500{
+            text-align: center !important;
+        }
+        .marginLe-1500{
+            margin-left: auto !important;
+        }
+        .justify-1500-start{
+            justify-content: center !important;
+        }
+        .margin-let-1500{
+            margin-left: auto !important;
+        }
+    }
+    
     @media (max-width: 768px) {
         #demo-btn{
             justify-content: center;
@@ -285,6 +313,12 @@
         }
         .mobi-p-1{
             padding: 1rem !important;
+        }
+        #hero{
+            padding: 10px;
+        }
+        .width-768-100{
+            width: 100%;
         }
     }
     
