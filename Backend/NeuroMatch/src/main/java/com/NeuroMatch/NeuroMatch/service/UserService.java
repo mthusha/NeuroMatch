@@ -8,5 +8,5 @@ import java.util.Map;
 public interface UserService {
     Object getUserByEmail(String email);
     void uploadProfile (String base64Image, String email, String type);
-    void updateCv(Map<String, Object> requestData) throws JsonProcessingException;
+
 }

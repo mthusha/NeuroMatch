@@ -4,18 +4,30 @@ import SuggestedCandidates from './components/post_components/SuggestedCandidate
 import AppliedCandidates from './components/post_components/AppliedCandidates';
 import JobPosts from './components/post_components/JobPosts';
 import ProfileCard from './components/ProfileCard';
-
+import { useAuth } from '../../context/AuthContext';
+import { getJobPostsByEmail } from '../../api/Vacancy';
 const HiringDashboard = () => {
+  const { user } = useAuth();
   const [activeTab, setActiveTab] = useState('post');
   const [vacancies, setVacancies] = useState([]);
   const [selectedVacancy, setSelectedVacancy] = useState(null);
   const [showForm, setShowForm] = useState(false);
 
   useEffect(() => {
-    fetch('/api/vacancies')
-      .then(res => res.json())
-      .then(data => setVacancies(data));
-  }, []);
+    const fetchVacancies = async () => {
+      if (!user?.email) return;
+      try {
+        const response = await getJobPostsByEmail(user.email);
+        // console.log("Fetched vacancies:", response.data.data);
+        setVacancies(response.data.data || []);
+      } catch (error) {
+        console.error('Failed to fetch vacancies:', error);
+      }
+    };
+    fetchVacancies();
+  }, [user]);
+  
+  
 
   const chartData = [
     { name: 'Applications', value: 120 },
@@ -95,71 +107,71 @@ const HiringDashboard = () => {
         <ProfileCard/>
         {/* Stats Overview */}
         <div className="bg-gray-800 rounded-xl p-5 shadow-md border border-gray-700 max-w-xs" style={{minWidth:"100%"}}>
-  <h3 className="text-lg font-semibold text-white mb-4 border-b border-gray-700 pb-2">
-    Recruitment Metrics
-  </h3>
+           <h3 className="text-lg font-semibold text-white mb-4 border-b border-gray-700 pb-2">
+            Recruitment Metrics
+          </h3>
 
-  <div className="space-y-5">
-    {/* Open Positions */}
-    <div className="flex justify-between items-center">
-      <div className="flex items-center space-x-3">
-        <div className="bg-indigo-900/30 p-2 rounded-lg">
-          <svg xmlns="http://www.w3.org/2000/svg" className="h-5 w-5 text-indigo-400" fill="none" viewBox="0 0 24 24" stroke="currentColor">
-            <path strokeLinecap="round" strokeLinejoin="round" strokeWidth={2} d="M21 13.255A23.931 23.931 0 0112 15c-3.183 0-6.22-.62-9-1.745M16 6V4a2 2 0 00-2-2h-4a2 2 0 00-2 2v2m4 6h.01M5 20h14a2 2 0 002-2V8a2 2 0 00-2-2H5a2 2 0 00-2 2v10a2 2 0 002 2z" />
-          </svg>
+          <div className="space-y-5">
+            {/* Open Positions */}
+            <div className="flex justify-between items-center">
+              <div className="flex items-center space-x-3">
+                <div className="bg-indigo-900/30 p-2 rounded-lg">
+                  <svg xmlns="http://www.w3.org/2000/svg" className="h-5 w-5 text-indigo-400" fill="none" viewBox="0 0 24 24" stroke="currentColor">
+                    <path strokeLinecap="round" strokeLinejoin="round" strokeWidth={2} d="M21 13.255A23.931 23.931 0 0112 15c-3.183 0-6.22-.62-9-1.745M16 6V4a2 2 0 00-2-2h-4a2 2 0 00-2 2v2m4 6h.01M5 20h14a2 2 0 002-2V8a2 2 0 00-2-2H5a2 2 0 00-2 2v10a2 2 0 002 2z" />
+                  </svg>
+                </div>
+                <span className="text-gray-300 text-sm">Open Positions</span>
+              </div>
+              <div className="text-right">
+                <p className="text-white font-medium">24</p>
+                <p className="text-indigo-400 text-xs">+2 last month</p>
+              </div>
+            </div>
+
+            {/* Active Candidates */}
+            <div className="flex justify-between items-center">
+              <div className="flex items-center space-x-3">
+                <div className="bg-purple-900/30 p-2 rounded-lg">
+                  <svg xmlns="http://www.w3.org/2000/svg" className="h-5 w-5 text-purple-400" fill="none" viewBox="0 0 24 24" stroke="currentColor">
+                    <path strokeLinecap="round" strokeLinejoin="round" strokeWidth={2} d="M12 4.354a4 4 0 110 5.292M15 21H3v-1a6 6 0 0112 0v1zm0 0h6v-1a6 6 0 00-9-5.197M13 7a4 4 0 11-8 0 4 4 0 018 0z" />
+                  </svg>
+                </div>
+                <span className="text-gray-300 text-sm">Active Candidates</span>
+              </div>
+              <div className="text-right">
+                <p className="text-white font-medium">142</p>
+                <p className="text-purple-400 text-xs">+24 this week</p>
+              </div>
+            </div>
+
+            {/* Avg. Time to Hire */}
+            <div className="flex justify-between items-center">
+              <div className="flex items-center space-x-3">
+                <div className="bg-blue-900/30 p-2 rounded-lg">
+                  <svg xmlns="http://www.w3.org/2000/svg" className="h-5 w-5 text-blue-400" fill="none" viewBox="0 0 24 24" stroke="currentColor">
+                    <path strokeLinecap="round" strokeLinejoin="round" strokeWidth={2} d="M12 8v4l3 3m6-3a9 9 0 11-18 0 9 9 0 0118 0z" />
+                  </svg>
+                </div>
+                <span className="text-gray-300 text-sm">Avg. Time to Hire</span>
+              </div>
+              <div className="text-right">
+                <p className="text-white font-medium">32 days</p>
+                <p className="text-blue-400 text-xs">-3 last quarter</p>
+              </div>
+            </div>
+          </div>
+
+          {/* Progress Bar */}
+          <div className="mt-5 pt-4 border-t border-gray-700">
+            <div className="flex justify-between text-sm mb-1">
+              <span className="text-gray-300">Hiring Goal Progress</span>
+              <span className="text-white font-medium">65%</span>
+            </div>
+            <div className="w-full bg-gray-700 rounded-full h-2">
+              <div className="bg-gradient-to-r from-indigo-500 to-purple-600 h-2 rounded-full" style={{width: '65%'}}></div>
+            </div>
+          </div>
         </div>
-        <span className="text-gray-300 text-sm">Open Positions</span>
-      </div>
-      <div className="text-right">
-        <p className="text-white font-medium">24</p>
-        <p className="text-indigo-400 text-xs">+2 last month</p>
-      </div>
-    </div>
-
-    {/* Active Candidates */}
-    <div className="flex justify-between items-center">
-      <div className="flex items-center space-x-3">
-        <div className="bg-purple-900/30 p-2 rounded-lg">
-          <svg xmlns="http://www.w3.org/2000/svg" className="h-5 w-5 text-purple-400" fill="none" viewBox="0 0 24 24" stroke="currentColor">
-            <path strokeLinecap="round" strokeLinejoin="round" strokeWidth={2} d="M12 4.354a4 4 0 110 5.292M15 21H3v-1a6 6 0 0112 0v1zm0 0h6v-1a6 6 0 00-9-5.197M13 7a4 4 0 11-8 0 4 4 0 018 0z" />
-          </svg>
-        </div>
-        <span className="text-gray-300 text-sm">Active Candidates</span>
-      </div>
-      <div className="text-right">
-        <p className="text-white font-medium">142</p>
-        <p className="text-purple-400 text-xs">+24 this week</p>
-      </div>
-    </div>
-
-    {/* Avg. Time to Hire */}
-    <div className="flex justify-between items-center">
-      <div className="flex items-center space-x-3">
-        <div className="bg-blue-900/30 p-2 rounded-lg">
-          <svg xmlns="http://www.w3.org/2000/svg" className="h-5 w-5 text-blue-400" fill="none" viewBox="0 0 24 24" stroke="currentColor">
-            <path strokeLinecap="round" strokeLinejoin="round" strokeWidth={2} d="M12 8v4l3 3m6-3a9 9 0 11-18 0 9 9 0 0118 0z" />
-          </svg>
-        </div>
-        <span className="text-gray-300 text-sm">Avg. Time to Hire</span>
-      </div>
-      <div className="text-right">
-        <p className="text-white font-medium">32 days</p>
-        <p className="text-blue-400 text-xs">-3 last quarter</p>
-      </div>
-    </div>
-  </div>
-
-  {/* Progress Bar */}
-  <div className="mt-5 pt-4 border-t border-gray-700">
-    <div className="flex justify-between text-sm mb-1">
-      <span className="text-gray-300">Hiring Goal Progress</span>
-      <span className="text-white font-medium">65%</span>
-    </div>
-    <div className="w-full bg-gray-700 rounded-full h-2">
-      <div className="bg-gradient-to-r from-indigo-500 to-purple-600 h-2 rounded-full" style={{width: '65%'}}></div>
-    </div>
-  </div>
-</div>
 
         
 
@@ -212,7 +224,7 @@ const HiringDashboard = () => {
           <div className="mt-4 w-full">
           {activeTab === 'post' && (
             <JobPosts 
-              posts={mockPosts} 
+              posts={vacancies} 
               onCreateNew={() => setShowForm(true)} 
             />
           )}

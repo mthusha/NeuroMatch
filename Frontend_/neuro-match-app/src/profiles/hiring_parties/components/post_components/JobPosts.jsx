@@ -1,4 +1,3 @@
-// components/JobPosts.js
 import React from 'react';
 
 const JobPosts = ({ posts, onCreateNew }) => {
@@ -14,11 +13,11 @@ const JobPosts = ({ posts, onCreateNew }) => {
               <div className="md:flex-shrink-0 md:w-48">
                 <img 
                   className="h-full w-full object-cover" 
-                  src={post.image} 
+                  src={post.posterImageBase64}  
                   alt={post.title} 
                 />
               </div>
-              <div className="p-6">
+              <div className="p-6 w-full">
                 <div className="flex items-center justify-between">
                   <h3 className="text-xl font-bold text-indigo-300">{post.title}</h3>
                   <span className="bg-indigo-900/50 text-indigo-300 text-xs px-2 py-1 rounded-full">
@@ -35,7 +34,14 @@ const JobPosts = ({ posts, onCreateNew }) => {
                 <div className="mt-3 text-gray-300">{post.description}</div>
                 <div className="mt-4 flex items-center justify-between">
                   <div className="text-sm text-gray-500">
-                    <span className="text-indigo-400 font-medium">{post.salary}</span> · Posted on {post.postedAt}
+                  <span className="text-indigo-400 font-medium">
+                    {post.salaryFrom && post.salaryTo
+                      ? `$${Math.round(post.salaryFrom / 1000)}k - $${Math.round(post.salaryTo / 1000)}k`
+                      : post.salaryFrom
+                      ? `$${Math.round(post.salaryFrom / 1000)}k`
+                      : 'Not specified'}
+                  </span>
+                   · Posted on {post.postedOn}
                   </div>
                   <button className="text-sm bg-indigo-600 hover:bg-indigo-700 text-white px-4 py-2 rounded-lg transition">
                     View Details

@@ -36,7 +36,7 @@ export const sendProcessedData = async (data,jwt,email) => {
       throw new Error("Invalid data structure");
     }
 
-    const response = await fetch(`${API_BASE_URL}/user/cv/save`, {
+    const response = await fetch(`${API_BASE_URL}/job-seeker/cv/save`, {
       method: "POST",
       headers: {
         "Content-Type": "application/json",

@@ -1,18 +1,14 @@
-package com.NeuroMatch.NeuroMatch.model.entity;
+package com.NeuroMatch.NeuroMatch.model.dto;
 
-import jakarta.persistence.*;
 import lombok.Getter;
 import lombok.Setter;
 
 import java.time.LocalDate;
 
-@Entity
 @Setter
 @Getter
-public class JobPost {
+public class JobPostDto {
 
-    @Id
-    @GeneratedValue(strategy = GenerationType.IDENTITY)
     private Long id;
     private String title;
     private String description;
@@ -22,12 +18,5 @@ public class JobPost {
     private LocalDate postedOn;
     private LocalDate createdOn;
     private String requirements;
-    @Column(columnDefinition = "LONGBLOB")
-    private byte[] posterImage;
-
-    @ManyToOne
-    @JoinColumn(name = "company_id")
-    private CompanyDetails companyDetails;
-
-
+    private String posterImageBase64;
 }

@@ -51,7 +51,7 @@ public class UserController {
     ) {
         try {
             userService.uploadProfile(req.getBase64Image(), req.getEmail(), req.getType());
-            Object user = userService.getUserByEmail(req.getEmail());
+//            Object user = userService.getUserByEmail(req.getEmail());
 
             ResponseWrapper<Object> resp = new ResponseWrapper<>(
                     RestApiResponseStatusCodes.SUCCESS.getCode(),
@@ -68,35 +68,7 @@ public class UserController {
             return ResponseEntity.status(HttpStatus.INTERNAL_SERVER_ERROR).body(err);
         }
     }
-    @PostMapping(EndpointBundle.SAVE_CV)
-    public ResponseEntity<ResponseWrapper<String>> updateUserCv(@RequestBody Map<String, Object> requestData) {
-        try {
-            userService.updateCv(requestData);
 
-            ResponseWrapper<String> response = new ResponseWrapper<>(
-                    RestApiResponseStatusCodes.SUCCESS.getCode(),
-                    ValidationMessages.CV_UPDATED,
-                    null
-            );
-            return ResponseEntity.ok(response);
-
-        } catch (RuntimeException ex) {
-            ResponseWrapper<String> response = new ResponseWrapper<>(
-                    RestApiResponseStatusCodes.BAD_REQUEST.getCode(),
-                    ex.getMessage(),
-                    null
-            );
-            return ResponseEntity.badRequest().body(response);
-
-        } catch (Exception ex) {
-            ResponseWrapper<String> response = new ResponseWrapper<>(
-                    RestApiResponseStatusCodes.INTERNAL_SERVER_ERROR.getCode(),
-                    ex.getMessage(),
-                    null
-            );
-            return ResponseEntity.internalServerError().body(response);
-        }
-    }
 
 
 }

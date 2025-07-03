@@ -1,6 +1,9 @@
 import React, { useState, useRef } from 'react';
-
+import { postJobVacancy } from '../../../../api/Vacancy';
+import { useAuth } from '../../../../context/AuthContext';
 const VacancyForm = ({ onSuccess, onClose }) => {
+  const { user } = useAuth();
+  const userEmail = user?.email;
   const [formData, setFormData] = useState({
     title: '',
     description: '',
@@ -8,53 +11,41 @@ const VacancyForm = ({ onSuccess, onClose }) => {
     location: '',
     salaryRange: '',
     deadline: '',
-    image: null
+    image: null,
   });
+
   const [imagePreview, setImagePreview] = useState(null);
   const fileInputRef = useRef(null);
 
   const handleImageChange = (e) => {
     const file = e.target.files[0];
-    if (file) {
-      const reader = new FileReader();
-      reader.onloadend = () => {
-        setImagePreview(reader.result);
-        setFormData({...formData, image: file});
-      };
-      reader.readAsDataURL(file);
-    }
+    if (!file) return;
+
+    const reader = new FileReader();
+    reader.onloadend = () => {
+      setImagePreview(reader.result);
+      setFormData((prev) => ({ ...prev, image: file }));
+    };
+    reader.readAsDataURL(file);
   };
 
   const handleSubmit = async (e) => {
     e.preventDefault();
-    const formDataToSend = new FormData();
-    for (const key in formData) {
-      if (formData[key] !== null) {
-        formDataToSend.append(key, formData[key]);
-      }
-    }
-
     try {
-      const response = await fetch('/api/vacancies', {
-        method: 'POST',
-        body: formDataToSend
-      });
-      const newVacancy = await response.json();
-      onSuccess(newVacancy);
+      const response = await postJobVacancy(formData, userEmail);
+      onSuccess(response.data);
     } catch (error) {
-      console.error('Error creating vacancy:', error);
+      // console.error('Failed to create vacancy:', error);
     }
   };
 
-  const triggerFileInput = () => {
-    fileInputRef.current.click();
-  };
-
+  const triggerFileInput = () => fileInputRef.current.click();
   const removeImage = () => {
     setImagePreview(null);
-    setFormData({...formData, image: null});
+    setFormData((prev) => ({ ...prev, image: null }));
     fileInputRef.current.value = '';
   };
+
 
   return (
     <div className="relative bg-gray-800 p-6 rounded-xl shadow-2xl border border-gray-700 max-w-2xl w-full">

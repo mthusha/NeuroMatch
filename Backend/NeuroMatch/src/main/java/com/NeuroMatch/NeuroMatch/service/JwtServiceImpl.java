@@ -19,6 +19,7 @@ public class JwtServiceImpl implements JwtService {
 //    public JwtServiceImpl(@Value("${jwt.secret}") String secret) {
 //        this.key = Keys.hmacShaKeyFor(Decoders.BASE64.decode(secret));
 //    }
+    @Override
     public String generateToken(String email) {
         return Jwts.builder()
                 .subject(email)
@@ -28,6 +29,7 @@ public class JwtServiceImpl implements JwtService {
                 .compact();
     }
 
+    @Override
     public String extractEmail(String token) {
         Claims claims = Jwts
                 .parser()

@@ -34,16 +34,34 @@ export function AuthProvider({ children }) {
 
 
   const login = async (email, password) => {
-    // authentication logic
-    const mockUser = {
-      id: "1",
-      email,
-      name: "Demo User",
-    };
-    setUser(mockUser);
-    localStorage.setItem("user", JSON.stringify(mockUser));
-    return mockUser;
+    try {
+      const res = await fetch(`${API_BASE_URL}/auth/login`, {
+        method: "POST",
+        headers: { "Content-Type": "application/json" },
+        body: JSON.stringify({ email, password }),
+      });
+      const response = await res.json();
+      if (res.ok && response.statusCode === 200) {
+        const data = response.data;
+        setUser(data);
+        localStorage.setItem("user", JSON.stringify(data));
+        if (data.role === "employer") {
+          navigate("/employer");
+        } else {
+          navigate("/jobseeker");
+        }
+        return data;
+      } else {
+        console.error("Login failed:", response.statusMessage);
+        throw new Error(response.statusMessage || "Login failed");
+      }
+    } catch (err) {
+      console.error("Login error:", err);
+      throw err;
+    }
   };
+  
+  
 
 
   const googleLogin = async (credentialResponse) => {
@@ -57,7 +75,11 @@ export function AuthProvider({ children }) {
       if (res.ok) {
         setUser(data);
         localStorage.setItem("user", JSON.stringify(data));
-        navigate("/jobseeker");
+        if (data.role === "employer") {
+          navigate("/employer");
+        } else {
+          navigate("/jobseeker");
+        }
       } else {
         console.error("Google login failed:", data);
       }

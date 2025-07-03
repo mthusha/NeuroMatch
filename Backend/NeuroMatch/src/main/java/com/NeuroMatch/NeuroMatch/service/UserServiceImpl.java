@@ -20,48 +20,27 @@ public class UserServiceImpl implements UserService{
    @Autowired
    private UsersRepository usersRepository;
 
+   @Autowired
+   JobSeekerService jobSeekerService;
+
+   @Autowired
+   CompanyService companyService;
+
+   @Override
     public Object getUserByEmail(String email) {
         Users user = usersRepository.findByEmail(email)
                 .orElseThrow(() -> new RuntimeException(ValidationMessages.USER_NOT_FOUND));
-
         if (Objects.equals(user.getRole(), "user")) {
-            JobSeekerDto jobSeekerDto = new JobSeekerDto();
-            BeanUtils.copyProperties(user, jobSeekerDto);
-            BeanUtils.copyProperties(user.getJobSeekerDetails(), jobSeekerDto);
-
-            if (user.getJobSeekerDetails().getProfilePicture() != null) {
-                jobSeekerDto.setProfilePictureBase64(Base64.getEncoder()
-                        .encodeToString(user.getJobSeekerDetails().getProfilePicture()));
-            }
-            if (user.getJobSeekerDetails().getCoverPicture() != null) {
-                jobSeekerDto.setCoverPictureBase64(Base64.getEncoder()
-                        .encodeToString(user.getJobSeekerDetails().getCoverPicture()));
-            }
-
-            return jobSeekerDto;
+            return jobSeekerService.getJobSeekerDetailsByUser(user);
         }
-
         if (Objects.equals(user.getRole(), "employer")) {
-            CompanyDto companyDto = new CompanyDto();
-            BeanUtils.copyProperties(user, companyDto);
-            BeanUtils.copyProperties(user.getCompanyDetails(), companyDto);
-
-            if (user.getCompanyDetails().getProfilePicture() != null) {
-                companyDto.setProfilePictureBase64(Base64.getEncoder()
-                        .encodeToString(user.getCompanyDetails().getProfilePicture()));
-            }
-            if (user.getCompanyDetails().getCoverPicture() != null) {
-                companyDto.setCoverPictureBase64(Base64.getEncoder()
-                        .encodeToString(user.getCompanyDetails().getCoverPicture()));
-            }
-
-            return companyDto;
+            return companyService.getCompanyByUser(user);
         }
-
         throw new RuntimeException(ValidationMessages.USER_DOSE_NOT_ASSOCIATED);
     }
 
 
+    @Override
     public void uploadProfile (String base64Image, String email, String type) {
         Users user = usersRepository.findByEmail(email)
                 .orElseThrow(() -> new RuntimeException(ValidationMessages.USER_NOT_FOUND));
@@ -90,18 +69,6 @@ public class UserServiceImpl implements UserService{
         } catch (IllegalArgumentException e) {
             throw new RuntimeException(ValidationMessages.FAIL_IMAGE_UPLOAD + e.getMessage());
         }
-    }
-
-    public void updateCv(Map<String, Object> requestData) throws JsonProcessingException {
-        Map<String, Object> cvData = (Map<String, Object>) requestData.get("cv_data");
-        String email = requestData.get("user").toString();
-
-        Users users = usersRepository.findByEmail(email)
-                .orElseThrow(() -> new RuntimeException(ValidationMessages.USER_NOT_FOUND));
-
-        String json = new ObjectMapper().writeValueAsString(cvData);
-        users.getJobSeekerDetails().setCvJson(json);
-        usersRepository.save(users);
     }
 
 

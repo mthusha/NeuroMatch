@@ -13,4 +13,8 @@ public class ValidationMessages {
     public static String FAIL_IMAGE_UPLOAD = "Failed to upload image: ";
     public static String CV_UPDATED = "CV update successfully: ";
     public static String USER_DOSE_NOT_ASSOCIATED = "User does not have associated JobSeekerDetails or CompanyDetails";
+    public static String SAVED_SUCCESSFULLY = "Saved successfully";
+    public static String JOB_POST_RETRIEVED_SUCCESSFULLY = "Job posts retrieved successfully";
+    public static String LOGIN_SUCCESS = "Login successfully";
+    public static String COMPANY_LIST_RETRIEVED_SUCCESSFULLY = "Company list retrieved successfully";
 }

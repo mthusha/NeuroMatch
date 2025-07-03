@@ -24,6 +24,7 @@ public class AuthServiceImpl implements AuthService {
     @Autowired
     private GoogleTokenVerifier googleTokenVerifier;
 
+//    @Autowired
     public AuthResponse register(RegisterRequest req) {
         if (userRepo.existsByEmail(req.getEmail())) {
             throw new RuntimeException(ValidationMessages.DUPLICATE_EMAIL);
@@ -39,19 +40,28 @@ public class AuthServiceImpl implements AuthService {
         user.setProvider("LOCAL");
 
         userRepo.save(user);
-        return new AuthResponse(jwtService.generateToken(user.getEmail()), user.getEmail(), user.getJobSeekerDetails().getName());
+        return new AuthResponse(jwtService.generateToken(user.getEmail()), user.getEmail(), user.getJobSeekerDetails().getName(), user.getRole());
     }
+
+    @Override
     public AuthResponse login(LoginRequest req) {
+        String name = "";
         Users user = userRepo.findByEmail(req.getEmail())
                 .orElseThrow(() -> new RuntimeException(ValidationMessages.USER_NOT_FOUND));
 
         if (!encoder.matches(req.getPassword(), user.getPassword())) {
             throw new RuntimeException(ValidationMessages.INVALID_PASSWORD);
         }
-
-        return new AuthResponse(jwtService.generateToken(user.getEmail()), user.getEmail(), user.getJobSeekerDetails().getName());
+        if (user.getRole().equals("user")) {
+            name = user.getJobSeekerDetails().getName();
+        }
+        else if (user.getRole().equals("employer")) {
+            name = user.getCompanyDetails().getName();
+        }
+        return new AuthResponse(jwtService.generateToken(user.getEmail()), user.getEmail(), name, user.getRole());
     }
 
+    @Override
     public AuthResponse googleLogin (String idToken) {
         GoogleIdToken.Payload payload = googleTokenVerifier.verify(idToken);
         String email = payload.getEmail();
@@ -69,6 +79,6 @@ public class AuthServiceImpl implements AuthService {
             userRepo.save(user);
         }
 
-        return new AuthResponse(jwtService.generateToken(user.getEmail()), user.getEmail(), user.getJobSeekerDetails().getName());
+        return new AuthResponse(jwtService.generateToken(user.getEmail()), user.getEmail(), user.getJobSeekerDetails().getName(), user.getRole());
     }
 }
