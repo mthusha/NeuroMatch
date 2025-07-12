@@ -9,4 +9,5 @@ import java.util.List;
 public interface JobPostService {
     JobPost createJobPost (JobPostDto jobPostDto, String email);
     List<JobPostDto> getAllJobPostsByCompany (String email);
+    List<JobPostDto> getAllRecommendJobPostsByJoSeeker(String email);
 }

@@ -17,4 +17,11 @@ public class ValidationMessages {
     public static String JOB_POST_RETRIEVED_SUCCESSFULLY = "Job posts retrieved successfully";
     public static String LOGIN_SUCCESS = "Login successfully";
     public static String COMPANY_LIST_RETRIEVED_SUCCESSFULLY = "Company list retrieved successfully";
+    public static String RECOMMENDED_RETRIEVED_SUCCESSFULLY = "Recommended Job posts retrieved successfully";
+    public static String USER_SKILLS = "user_skills";
+    public static String JOB_SKILLS = "job_skills";
+    public static String JOB_POST_NOT_FOUND = "Job post not found";
+    public static String RECOMMENDED_JOB_SEEKERS = "Recommended For JobSeekers retrieved successfully";
+    public static String JOB_SEEKER_NOT_FOUND = "Job seeker not found.";
+    public static String APPLICANTS_RETRIEVED_SUCCESSFULLY = "Applicants retrieved successfully";
 }

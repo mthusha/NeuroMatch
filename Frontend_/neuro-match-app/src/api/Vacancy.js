@@ -58,3 +58,9 @@ export const postJobVacancy = async (formData, email) => {
   });
 };
 
+
+
+export const getRecommendedJobPosts = async (email) => {
+  const res = await axios.get(`${API_BASE_URL}/job-post/recommended/${email}`);
+  return res.data;
+};

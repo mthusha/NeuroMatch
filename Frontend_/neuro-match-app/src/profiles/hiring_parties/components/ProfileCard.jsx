@@ -1,5 +1,5 @@
 import React, { useEffect, useRef, useState } from 'react';
-import { FaMapMarkerAlt, FaLink, FaEllipsisH, FaPlus } from 'react-icons/fa';
+import { FaMapMarkerAlt} from 'react-icons/fa';
 import { useAuth } from '../../../context/AuthContext';
 import { uploadImage } from '../../../api/Users';
 
@@ -10,14 +10,15 @@ const ProfileCard = () => {
   const coverInputRef = useRef(null);
 
   useEffect(() => {
-    const loadProfile = async () => {
-      if (user?.email) {
-        const data = await fetchUserProfile(user.email, user.jwt);
-        setProfile(data);
-      }
-    };
-    loadProfile();
-  }, [user]);
+  const loadProfile = async () => {
+    if (user?.email) {
+      const data = await fetchUserProfile(user.email, user.jwt);
+      setProfile(data);
+    }
+  };
+  loadProfile();
+}, [user, fetchUserProfile]);
+
 
   const handleProfilePicClick = () => {
     profileInputRef.current.click();
@@ -76,7 +77,7 @@ const ProfileCard = () => {
   return (
     <div>
       {/* Header */}
-      <div className="relative rounded-2xl overflow-hidden shadow-xl border border-gray-700">
+      <div className="relative rounded-2xl overflow-hidden shadow-xl  border-gray-700 bg-in-box">
         <div className="h-40 w-full">
           <img
              src={profile.coverPictureBase64
@@ -95,7 +96,7 @@ const ProfileCard = () => {
           />
         </div>
 
-        <div className="bg-gradient-to-br from-gray-900 via-gray-800 to-gray-900 px-6 pb-6 text-white relative">
+        <div className="bg-in-box from-gray-900 via-gray-800 to-gray-900 px-6 pb-6 text-white relative " style={{border:"none"}} >
           <div className="absolute -top-12 left-6">
             <img
               src={profile.coverPictureBase64

@@ -3,8 +3,11 @@ package com.NeuroMatch.NeuroMatch.model.entity;
 import jakarta.persistence.*;
 import lombok.Getter;
 import lombok.Setter;
+import org.springframework.boot.autoconfigure.batch.BatchProperties;
 
 import java.time.LocalDate;
+import java.util.ArrayList;
+import java.util.List;
 
 @Entity
 @Setter
@@ -15,6 +18,8 @@ public class JobPost {
     @GeneratedValue(strategy = GenerationType.IDENTITY)
     private Long id;
     private String title;
+    @Lob
+    @Column(columnDefinition = "LONGTEXT")
     private String description;
     private String location;
     private Long salaryFrom;
@@ -24,10 +29,15 @@ public class JobPost {
     private String requirements;
     @Column(columnDefinition = "LONGBLOB")
     private byte[] posterImage;
+    private Long likes;
+    private Long applies;
 
     @ManyToOne
     @JoinColumn(name = "company_id")
     private CompanyDetails companyDetails;
+
+    @OneToMany(mappedBy = "jobPost")
+    private List<AppliedJobs> appliedJobs = new ArrayList<>();
 
 
 }

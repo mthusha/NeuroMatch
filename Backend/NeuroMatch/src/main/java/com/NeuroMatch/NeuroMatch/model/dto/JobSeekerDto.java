@@ -3,6 +3,9 @@ package com.NeuroMatch.NeuroMatch.model.dto;
 import lombok.Getter;
 import lombok.Setter;
 
+import java.util.List;
+import java.util.Map;
+
 @Setter
 @Getter
 public class JobSeekerDto {
@@ -23,4 +26,7 @@ public class JobSeekerDto {
     private String jobRole;
     private String location;
     private String NeuroScore;
+
+    //
+    private Map<String, List<String>> userSkillsMap;
 }

@@ -1,5 +1,6 @@
 package com.NeuroMatch.NeuroMatch.controller;
 
+import com.NeuroMatch.NeuroMatch.model.dto.JobSeekerDto;
 import com.NeuroMatch.NeuroMatch.model.enums.RestApiResponseStatusCodes;
 import com.NeuroMatch.NeuroMatch.service.JobSeekerService;
 import com.NeuroMatch.NeuroMatch.util.EndpointBundle;
@@ -7,11 +8,9 @@ import com.NeuroMatch.NeuroMatch.util.ResponseWrapper;
 import com.NeuroMatch.NeuroMatch.util.ValidationMessages;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.http.ResponseEntity;
-import org.springframework.web.bind.annotation.PostMapping;
-import org.springframework.web.bind.annotation.RequestBody;
-import org.springframework.web.bind.annotation.RequestMapping;
-import org.springframework.web.bind.annotation.RestController;
+import org.springframework.web.bind.annotation.*;
 
+import java.util.List;
 import java.util.Map;
 
 @RestController
@@ -43,6 +42,36 @@ public class JobSeekerController {
 
         } catch (Exception ex) {
             ResponseWrapper<String> response = new ResponseWrapper<>(
+                    RestApiResponseStatusCodes.INTERNAL_SERVER_ERROR.getCode(),
+                    ex.getMessage(),
+                    null
+            );
+            return ResponseEntity.internalServerError().body(response);
+        }
+    }
+
+    @GetMapping(EndpointBundle.RECOMMENDED_JOB_SEEKERS + EndpointBundle.ID)
+    public ResponseEntity<ResponseWrapper<List<JobSeekerDto>>> getJobSeekersRecommendedForJobSeekers(@PathVariable Long id){
+        try {
+            List<JobSeekerDto> recommendedJobSeekers =jobSeekerService.getJobSeekersRecommendedForJobSeekers(id);
+
+            ResponseWrapper<List<JobSeekerDto>> response = new ResponseWrapper<>(
+                    RestApiResponseStatusCodes.SUCCESS.getCode(),
+                    ValidationMessages.RECOMMENDED_JOB_SEEKERS,
+                    recommendedJobSeekers
+            );
+            return ResponseEntity.ok(response);
+
+        } catch (RuntimeException ex) {
+            ResponseWrapper<List<JobSeekerDto>> response = new ResponseWrapper<>(
+                    RestApiResponseStatusCodes.BAD_REQUEST.getCode(),
+                    ex.getMessage(),
+                    null
+            );
+            return ResponseEntity.badRequest().body(response);
+
+        } catch (Exception ex) {
+            ResponseWrapper<List<JobSeekerDto>> response = new ResponseWrapper<>(
                     RestApiResponseStatusCodes.INTERNAL_SERVER_ERROR.getCode(),
                     ex.getMessage(),
                     null

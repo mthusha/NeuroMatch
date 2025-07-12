@@ -12,9 +12,8 @@ import org.springframework.beans.BeanUtils;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Service;
 
-import java.util.ArrayList;
-import java.util.Base64;
-import java.util.List;
+import java.util.*;
+import java.util.stream.Collectors;
 
 @Service
 public class JobPostServiceImpl implements JobPostService {
@@ -23,6 +22,10 @@ public class JobPostServiceImpl implements JobPostService {
     private JobPostRepository jobPostRepository;
     @Autowired
     private UsersRepository usersRepository;
+    @Autowired
+    private UserService userService;
+    @Autowired
+    private MLApiService mlApiService;
 
     @Override
     public JobPost createJobPost (JobPostDto jobPostDto, String email) {
@@ -68,6 +71,57 @@ public class JobPostServiceImpl implements JobPostService {
         }
 
         return jobPostDtoList;
+    }
+
+    @Override
+    public List<JobPostDto> getAllRecommendJobPostsByJoSeeker(String email) {
+        List<JobPost> recommendJobPosts = jobPostRepository.findRecommendedJobPostsByJobSeekerEmail(email);
+        List<JobPost> allJobPosts = jobPostRepository.findJobPostsByNotFollowedCompanies(email);
+        Map<String, List<String>> userSkillsMap = userService.extractSkillsFromCV(email);
+//        List<String> userSkills = userSkillsMap.getOrDefault("user_skills", new ArrayList<>());
+
+        Set<Long> existingIds = recommendJobPosts.stream()
+                .map(JobPost::getId)
+                .collect(Collectors.toSet());
+
+        List<JobPostDto> finalRecommended = new ArrayList<>();
+        for (JobPost job : recommendJobPosts) {
+            JobPostDto dto = new JobPostDto();
+            BeanUtils.copyProperties(job, dto);
+            dto.setSuggestionsType("following");
+            dto.setPostedBy(job.getCompanyDetails().getName());
+            if (job.getPosterImage() != null) {
+                dto.setPosterImageBase64(Base64.getEncoder().encodeToString(job.getPosterImage()));
+            }
+            if (job.getCompanyDetails().getProfilePicture() != null) {
+                dto.setProfileImageBase64(Base64.getEncoder().encodeToString(job.getCompanyDetails().getProfilePicture()));
+            }
+            finalRecommended.add(dto);
+        }
+        for (JobPost job : allJobPosts) {
+            if (existingIds.contains(job.getId())) continue;
+            List<String> jobSkillsList = Arrays.stream(job.getRequirements().split(","))
+                    .map(s -> s.trim().toLowerCase())
+                    .toList();
+            Map<String, List<String>> jobSkillsMap = Collections.singletonMap(ValidationMessages.JOB_SKILLS, jobSkillsList);
+            boolean isRecommended = mlApiService.sendToMLApi(userSkillsMap, jobSkillsMap);
+
+            if (isRecommended) {
+                JobPostDto dto = new JobPostDto();
+                BeanUtils.copyProperties(job, dto);
+                dto.setSuggestionsType("recommended");
+                dto.setPostedBy(job.getCompanyDetails().getName());
+                if (job.getPosterImage() != null) {
+                    dto.setPosterImageBase64(Base64.getEncoder().encodeToString(job.getPosterImage()));
+                }
+                if (job.getCompanyDetails().getProfilePicture() != null) {
+                    dto.setProfileImageBase64(Base64.getEncoder().encodeToString(job.getCompanyDetails().getProfilePicture()));
+                }
+                finalRecommended.add(dto);
+            }
+        }
+
+        return finalRecommended;
     }
 
 

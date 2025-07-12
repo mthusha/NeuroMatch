@@ -1,0 +1,33 @@
+.hirin-dash{
+    background: rgb(17 24 39 / var(--tw-bg-opacity, 1));;
+}
+.bg-in-box{
+    /* background-color: rgba(30, 41, 59, 0.5); */
+    background: rgba(15, 23, 42, 0.8);
+    border-radius: 12px;
+    /* padding: 20px; */
+    box-shadow: 0 4px 20px rgba(0, 0, 0, 0.3);
+    border: 1px solid rgba(255, 255, 255, 0.1);
+}
+
+.bg-in-post{
+    background-color: rgba(30, 41, 59, 0.5);
+    border-radius: 12px;
+    /* padding: 20px; */
+    box-shadow: 0 4px 20px rgba(0, 0, 0, 0.3);
+    border: 1px solid rgba(255, 255, 255, 0.1);
+}
+.bg-in-in-box{
+    background-color: rgb(31 41 55 / 0.5);
+}
+.bg-in-in-in-box{
+    background-color: rgb(17 24 39 / 0.5);
+}
+.text-sm {
+    font-size: 0.75rem;
+    line-height: 1.25rem;
+}
+.bg-indigo-600 {
+    --tw-bg-opacity: 1;
+    background-color: rgb(79 70 229 / 40%);
+}

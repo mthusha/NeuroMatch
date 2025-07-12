@@ -1,5 +1,5 @@
-import React, { useEffect, useRef, useState } from 'react';
-import { FaMapMarkerAlt, FaLink, FaEllipsisH, FaPlus } from 'react-icons/fa';
+import { useEffect, useRef, useState } from 'react';
+import { FaMapMarkerAlt, FaEllipsisH } from 'react-icons/fa';
 import { useAuth } from '../../../context/AuthContext';
 import { uploadImage } from '../../../api/Users';
 
@@ -9,15 +9,16 @@ const ProfileCard = () => {
   const profileInputRef = useRef(null);
   const coverInputRef = useRef(null);
 
-  useEffect(() => {
-    const loadProfile = async () => {
-      if (user?.email) {
-        const data = await fetchUserProfile(user.email,user.jwt);
-        setProfile(data);
-      }
-    };
-    loadProfile();
-  }, [user]);
+ useEffect(() => {
+  const loadProfile = async () => {
+    if (user?.email) {
+      const data = await fetchUserProfile(user.email, user.jwt);
+      setProfile(data);
+    }
+  };
+  loadProfile();
+}, [user, fetchUserProfile]);
+
 
   const handleProfilePicClick = () => {
     profileInputRef.current.click();
@@ -135,11 +136,11 @@ const ProfileCard = () => {
       <h1 className="profile-name">{profile.name}</h1>
         <p className="profile-title"> {profile.job || 'Unknown'}{profile.jobRole ? ` | ${profile.jobRole}` : ''}</p>
         <p className="profile-location"><FaMapMarkerAlt />  {profile.location || 'Not set'}</p>
-        <a href="#" className="contact-info"><i class="fas fa-link" style={{marginRight: 5}}></i>View Neural Compatibility Profile</a>
+        <a href="/neuro-profile" className="contact-info"><i class="fas fa-link" style={{marginRight: 5}}></i>View Neural Compatibility</a>
         
         <div className="action-buttons">
-          <button className="btn-primary">Request NeuroSync</button>
-          <button className="btn-secondary">Add Cognitive Skill</button>
+         <button className="btn-primary">NeuroSync Interview</button>
+          <button className="btn-secondary">View Submissions</button>
           <button className="more-btn"><FaEllipsisH /></button>
         </div>
 

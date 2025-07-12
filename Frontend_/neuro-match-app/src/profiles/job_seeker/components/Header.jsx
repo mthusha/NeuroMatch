@@ -1,6 +1,6 @@
 import React from 'react';
-import { FaBrain, FaHome, FaNetworkWired, FaBell, FaEnvelope, FaUserCircle, FaCog } from 'react-icons/fa';
-import { FaMagnifyingGlass } from 'react-icons/fa6';
+import {  FaHome, FaNetworkWired, FaBell, FaEnvelope, FaUserCircle, FaCog } from 'react-icons/fa';
+// import { FaMagnifyingGlass } from 'react-icons/fa6';
 
 const Header = () => {
   return (

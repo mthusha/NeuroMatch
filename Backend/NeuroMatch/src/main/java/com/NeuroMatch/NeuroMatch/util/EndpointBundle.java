@@ -21,6 +21,7 @@ public class EndpointBundle {
     //jobSeeker
     public static final String JOB_SEEKER = BASE_URL + "/job-seeker";
     public static final String SAVE_CV = "/cv/save";
+    public static final String RECOMMENDED_JOB_SEEKERS = "/recommend/job-seekers";
 
     //utils
     public static final String CREATE = "/create";
@@ -29,7 +30,15 @@ public class EndpointBundle {
 
     //company
     public static final String COMPANY = BASE_URL + "/company";
-    public static final String NOT_COMPANY_LIST = "/not-followed-list";
+    public static final String NOT_COMPANY_LIST = "/followed-list";
+    public static final String RECOMMENDED_COMPANY_LIST = "/recommended";
+
+    //Applied Jobs
+    public static final String APPLIED_JOBS = BASE_URL + "/applied-jobs";
+    public static final String RECOMMENDED_APPLIED_JOBS = "/{jobPostId}/applicants";
+
+    // python server
+    public static final String MLA_URL = "http://localhost:5000/api/recommend/predict";
 
 
 }

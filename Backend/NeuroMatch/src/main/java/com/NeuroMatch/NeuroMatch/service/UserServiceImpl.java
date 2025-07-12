@@ -6,14 +6,13 @@ import com.NeuroMatch.NeuroMatch.model.entity.Users;
 import com.NeuroMatch.NeuroMatch.repository.UsersRepository;
 import com.NeuroMatch.NeuroMatch.util.ValidationMessages;
 import com.fasterxml.jackson.core.JsonProcessingException;
+import com.fasterxml.jackson.databind.JsonNode;
 import com.fasterxml.jackson.databind.ObjectMapper;
 import org.springframework.beans.BeanUtils;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Service;
 
-import java.util.Base64;
-import java.util.Map;
-import java.util.Objects;
+import java.util.*;
 
 @Service
 public class UserServiceImpl implements UserService{
@@ -70,6 +69,40 @@ public class UserServiceImpl implements UserService{
             throw new RuntimeException(ValidationMessages.FAIL_IMAGE_UPLOAD + e.getMessage());
         }
     }
+
+    public Map<String, List<String>> extractSkillsFromCV(String email) {
+        return usersRepository.findByEmail(email).map(user -> {
+            try {
+                ObjectMapper mapper = new ObjectMapper();
+                JsonNode root = mapper.readTree(user.getJobSeekerDetails().getCvJson());
+
+                Set<String> skillSet = new LinkedHashSet<>();
+
+                JsonNode skillsNode = root.path("skills");
+                if (!skillsNode.isMissingNode()) {
+                    skillsNode.path("frameworks").forEach(f -> skillSet.add(f.asText().toLowerCase()));
+                    skillsNode.path("languages").forEach(l -> skillSet.add(l.asText().toLowerCase()));
+                    skillsNode.path("technologies").forEach(t -> skillSet.add(t.asText().toLowerCase()));
+                }
+                List<String> skillList = new ArrayList<>(skillSet);
+                Map<String, List<String>> result = new HashMap<>();
+                result.put(ValidationMessages.USER_SKILLS, skillList);
+                return result;
+
+            } catch (Exception e) {
+                System.out.println(e.getMessage());
+                Map<String, List<String>> errorResult = new HashMap<>();
+                errorResult.put(ValidationMessages.USER_SKILLS, new ArrayList<>());
+                return errorResult;
+            }
+        }).orElseGet(() -> {
+            Map<String, List<String>> emptyResult = new HashMap<>();
+            emptyResult.put(ValidationMessages.USER_SKILLS, new ArrayList<>());
+            return emptyResult;
+        });
+    }
+
+
 
 
 

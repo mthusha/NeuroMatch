@@ -1,11 +1,13 @@
-import React, { useState, useEffect } from 'react';
+import React, { useState, useEffect, useCallback } from 'react';
 import VacancyForm from './components/post_components/VacancyForm';
 import SuggestedCandidates from './components/post_components/SuggestedCandidates';
 import AppliedCandidates from './components/post_components/AppliedCandidates';
 import JobPosts from './components/post_components/JobPosts';
 import ProfileCard from './components/ProfileCard';
+import Header from './components/Header';
 import { useAuth } from '../../context/AuthContext';
 import { getJobPostsByEmail } from '../../api/Vacancy';
+import './hiringDash.css';
 const HiringDashboard = () => {
   const { user } = useAuth();
   const [activeTab, setActiveTab] = useState('post');
@@ -13,87 +15,41 @@ const HiringDashboard = () => {
   const [selectedVacancy, setSelectedVacancy] = useState(null);
   const [showForm, setShowForm] = useState(false);
 
-  useEffect(() => {
-    const fetchVacancies = async () => {
-      if (!user?.email) return;
-      try {
-        const response = await getJobPostsByEmail(user.email);
-        // console.log("Fetched vacancies:", response.data.data);
-        setVacancies(response.data.data || []);
-      } catch (error) {
-        console.error('Failed to fetch vacancies:', error);
-      }
-    };
-    fetchVacancies();
-  }, [user]);
-  
-  
-
-  const chartData = [
-    { name: 'Applications', value: 120 },
-    { name: 'Shortlisted', value: 45 },
-    { name: 'Rejected', value: 30 },
-  ];
-
-  const COLORS = ['#8b5cf6', '#6366f1', '#a78bfa'];
-
-  const mockPosts = [
-    {
-      title: 'Senior Frontend Developer',
-      location: 'Colombo, Sri Lanka',
-      description: 'We\'re looking for a React expert to build modern UIs for enterprise clients.',
-      postedAt: '2025-06-20',
-      image: 'https://images.unsplash.com/photo-1571171637578-41bc2dd41cd2?ixlib=rb-4.0.3&ixid=M3wxMjA3fDB8MHxwaG90by1wYWdlfHx8fGVufDB8fHx8fA%3D%3D&auto=format&fit=crop&w=600&q=80',
-      type: 'Full-time',
-      salary: '$80k - $120k'
-    },
-    {
-      title: 'AI Engineer',
-      location: 'Remote',
-      description: 'Join our team to work on cutting-edge AI-driven products using TensorFlow and PyTorch.',
-      postedAt: '2025-06-18',
-      image: 'https://images.unsplash.com/photo-1620712943543-bcc4688e7485?ixlib=rb-4.0.3&ixid=M3wxMjA3fDB8MHxwaG90by1wYWdlfHx8fGVufDB8fHx8fA%3D%3D&auto=format&fit=crop&w=600&q=80',
-      type: 'Full-time',
-      salary: '$90k - $140k'
-    },
-    {
-      title: 'UX Designer',
-      location: 'New York, USA',
-      description: 'Create beautiful, intuitive interfaces for our next-generation products.',
-      postedAt: '2025-06-15',
-      image: 'https://images.unsplash.com/photo-1593720219276-0b1eacd0aef4?ixlib=rb-4.0.3&ixid=M3wxMjA3fDB8MHxwaG90by1wYWdlfHx8fGVufDB8fHx8fA%3D%3D&auto=format&fit=crop&w=600&q=80',
-      type: 'Contract',
-      salary: '$70/hr'
-    },
-    {
-      title: 'DevOps Engineer',
-      location: 'Berlin, Germany',
-      description: 'Implement CI/CD pipelines and cloud infrastructure for our global platform.',
-      postedAt: '2025-06-10',
-      image: 'https://images.unsplash.com/photo-1551288049-bebda4e38f71?ixlib=rb-4.0.3&ixid=M3wxMjA3fDB8MHxwaG90by1wYWdlfHx8fGVufDB8fHx8fA%3D%3D&auto=format&fit=crop&w=600&q=80',
-      type: 'Full-time',
-      salary: '€75k - €95k'
-    },
-    {
-      title: 'Data Scientist',
-      location: 'Singapore',
-      description: 'Analyze complex datasets and build predictive models for business insights.',
-      postedAt: '2025-06-08',
-      image: 'https://images.unsplash.com/photo-1551288049-bebda4e38f71?ixlib=rb-4.0.3&ixid=M3wxMjA3fDB8MHxwaG90by1wYWdlfHx8fGVufDB8fHx8fA%3D%3D&auto=format&fit=crop&w=600&q=80',
-      type: 'Full-time',
-      salary: 'S$100k - S$130k'
+  const fetchVacancies = useCallback(async () => {
+    if (!user?.email) return;
+    try {
+      const response = await getJobPostsByEmail(user.email);
+      setVacancies(response.data.data || []);
+    } catch (error) {
+      console.error('Failed to fetch vacancies:', error);
     }
-  ];
+  }, [user?.email]);
+
+  useEffect(() => {
+    fetchVacancies();
+  }, [fetchVacancies]);
+
+  
+  
+
+  // const chartData = [
+  //   { name: 'Applications', value: 120 },
+  //   { name: 'Shortlisted', value: 45 },
+  //   { name: 'Rejected', value: 30 },
+  // ];
+
+  // const COLORS = ['#8b5cf6', '#6366f1', '#a78bfa'];
 
   return (
 
-    <div className="min-h-screen bg-gray-900 text-gray-100">
+    <div className="min-h-screen hirin-dash text-gray-100">
       {showForm && (
         <div className="fixed inset-0 bg-black bg-opacity-70 flex items-center justify-center z-50 p-4">
           <div className="bg-gray-800 rounded-xl shadow-2xl w-full max-w-2xl max-h-[90vh] overflow-y-auto border border-gray-700">
             <VacancyForm
               onSuccess={(newVacancy) => {
-                setVacancies([...vacancies, newVacancy]);
+                // setVacancies([...vacancies, newVacancy]);
+                fetchVacancies();
                 setShowForm(false);
               }}
               onClose={() => setShowForm(false)}
@@ -103,10 +59,11 @@ const HiringDashboard = () => {
       )}
 
       <div className="container mx-auto px-4 py-8">
+         <Header />
         {/*  */}
         <ProfileCard/>
         {/* Stats Overview */}
-        <div className="bg-gray-800 rounded-xl p-5 shadow-md border border-gray-700 max-w-xs" style={{minWidth:"100%"}}>
+        <div className="bg-in-box rounded-xl p-5 shadow-md  border-gray-700 max-w-xs" style={{minWidth:"100%"}}>
            <h3 className="text-lg font-semibold text-white mb-4 border-b border-gray-700 pb-2">
             Recruitment Metrics
           </h3>
@@ -178,7 +135,7 @@ const HiringDashboard = () => {
         {/* Main Content */}
         <div className="flex flex-col">
           {/* Tabs */}
-          <div className="flex space-x-2 mb-6 bg-gray-800 p-1 rounded-lg border border-gray-700">
+          <div className="flex space-x-2 mb-6 bg-in-box p-1 rounded-lg border border-gray-700">
             <button
               className={`py-2 px-4 font-medium text-sm rounded-md transition-all ${
                 activeTab === 'post' ? 'bg-indigo-900 text-indigo-100 shadow-md' : 'text-gray-400 hover:text-gray-200'
@@ -246,10 +203,10 @@ const HiringDashboard = () => {
           </div>
         </div>
         {/* Chart */}
-        <div className="bg-gray-800 rounded-xl shadow-xl p-6 mb-8 border border-gray-700 hover:border-indigo-500 transition-colors duration-300 h-fit">
+        <div className="bg-in-box rounded-xl shadow-xl p-6 mb-8 transition-colors duration-300 h-fit">
           <div className="flex flex-col sm:flex-row justify-between items-start sm:items-center mb-6 gap-4">
             <div>
-              <h2 className="text-xl font-bold text-white">Hiring Insights</h2>
+              <h2 className="text-xl font-bold text-white">Insights</h2>
               <p className="text-sm text-gray-400">Key metrics and candidate distribution</p>
             </div>
             <div className="flex gap-3">
@@ -263,7 +220,7 @@ const HiringDashboard = () => {
 
           <div className="grid grid-cols-1 gap-6">
             {/* Circular Progress Indicators */}
-            <div className="bg-gray-800/50 rounded-xl p-6 border border-gray-700">
+            <div className="bg-in-in-box rounded-xl p-6 border border-gray-700">
               <h3 className="text-lg font-semibold text-gray-200 mb-4">Application Status</h3>
               <div className="flex flex-wrap justify-between gap-4">
                 {[
@@ -308,7 +265,7 @@ const HiringDashboard = () => {
           </div>
 
   {/* Time to Hire Metrics */}
-          <div className="mt-6 bg-gray-800/50 rounded-xl p-6 border border-gray-700">
+          <div className="mt-6 bg-in-in-box rounded-xl p-6 border border-gray-700">
             <h3 className="text-lg font-semibold text-gray-200 mb-4">Time to Hire Metrics</h3>
             <div className="grid  gap-4">
               {[
@@ -316,7 +273,7 @@ const HiringDashboard = () => {
                 { metric: 'Avg. Time to Screen', value: '3.2 days', change: '-0.5 days', positive: true },
                 { metric: 'Interview to Offer', value: '7 days', change: '+1 day', positive: false }
               ].map((item, index) => (
-                <div key={index} className="bg-gray-900/50 p-4 rounded-lg border border-gray-700">
+                <div key={index} className="bg-in-in-in-box p-4 rounded-lg border border-gray-700">
                   <p className="text-sm text-gray-400">{item.metric}</p>
                   <p className="text-xl font-bold text-white mt-1">{item.value}</p>
                   <div className="flex items-center mt-2">
