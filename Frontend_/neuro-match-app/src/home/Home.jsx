@@ -1,6 +1,6 @@
 import React, { useEffect } from 'react';
 import './Home.css';
-import myVideo from '../img/392332935793221636.mp4';
+// import myVideo from '../img/392332935793221636.mp4';
 
 
 const NeuroMatch = () => {
@@ -104,7 +104,7 @@ const NeuroMatch = () => {
 
       <body className="text-white overflow-x-hidden">
         {/* Animated Background with Particles */}
-        <div className="fixed inset-0 animated-bg -z-10">
+        <div className="fixed inset-0 animated-bg-j -z-10">
             <div id="particles-container" className="absolute inset-0"></div>
         </div>
         <div className="hidden translate-x-0 translate-x-full"></div>
@@ -120,10 +120,10 @@ const NeuroMatch = () => {
                     </div>
                     
                     <div className="hidden md:flex items-center space-x-8">
-                        <a href="#home" className="text-white/80 hover:text-white transition-all duration-300 hover:scale-110 font-medium glow">Home</a>
-                        <a href="#features" className="text-white/80 hover:text-white transition-all duration-300 hover:scale-110 font-medium glow">Features</a>
-                        <a href="#how-it-works" className="text-white/80 hover:text-white transition-all duration-300 hover:scale-110 font-medium glow">How It Works</a>
-                        <a href="#contact" className="text-white/80 hover:text-white transition-all duration-300 hover:scale-110 font-medium glow">Contact</a>
+                        <a href="/home" className="text-white/80 hover:text-white transition-all duration-300 hover:scale-110 font-medium glow">Home</a>
+                        <a href="/features" className="text-white/80 hover:text-white transition-all duration-300 hover:scale-110 font-medium glow">Features</a>
+                        <a href="/how-it-works" className="text-white/80 hover:text-white transition-all duration-300 hover:scale-110 font-medium glow">How It Works</a>
+                        <a href="/contact" className="text-white/80 hover:text-white transition-all duration-300 hover:scale-110 font-medium glow">Contact</a>
                     </div>
                     
                     <div className="hidden md:flex items-center space-x-4">
@@ -621,12 +621,12 @@ const NeuroMatch = () => {
                     <div className="fade-up" style={{animationDelay: '0.2s'}}>
                         <h3 className="text-3xl font-bold text-shimmer mb-6 glow">Quick Links</h3>
                         <ul className="space-y-4">
-                            <li><a href="#home" className="text-white/70 hover:text-blue-400 text-lg font-medium transition-colors duration-500 glow">Home</a></li>
-                            <li><a href="#features" className="text-white/70 hover:text-blue-400 text-lg font-medium transition-colors duration-500 glow">Features</a></li>
-                            <li><a href="#how-it-works" className="text-white/70 hover:text-blue-400 text-lg font-medium transition-colors duration-500 glow">How It Works</a></li>
-                            <li><a href="#contact" className="text-white/70 hover:text-blue-400 text-lg font-medium transition-colors duration-500 glow">Contact</a></li>
-                            <li><a href="#" className="text-white/70 hover:text-blue-400 text-lg font-medium transition-colors duration-500 glow">Privacy Policy</a></li>
-                            <li><a href="#" className="text-white/70 hover:text-blue-400 text-lg font-medium transition-colors duration-500 glow">Terms of Service</a></li>
+                            <li><a href="/home" className="text-white/70 hover:text-blue-400 text-lg font-medium transition-colors duration-500 glow">Home</a></li>
+                            <li><a href="/features" className="text-white/70 hover:text-blue-400 text-lg font-medium transition-colors duration-500 glow">Features</a></li>
+                            <li><a href="/how-it-works" className="text-white/70 hover:text-blue-400 text-lg font-medium transition-colors duration-500 glow">How It Works</a></li>
+                            <li><a href="/contact" className="text-white/70 hover:text-blue-400 text-lg font-medium transition-colors duration-500 glow">Contact</a></li>
+                            <li><a href="/" className="text-white/70 hover:text-blue-400 text-lg font-medium transition-colors duration-500 glow">Privacy Policy</a></li>
+                            <li><a href="/" className="text-white/70 hover:text-blue-400 text-lg font-medium transition-colors duration-500 glow">Terms of Service</a></li>
                         </ul>
                     </div>
                     
@@ -634,15 +634,15 @@ const NeuroMatch = () => {
                     <div className="fade-up" style={{animationDelay: '0.3s'}}>
                         <h3 className="text-3xl font-bold text-shimmer mb-6 glow">Connect With Us</h3>
                         <div className="flex space-x-6">
-                            <a href="#" className="text-white/70 hover:text-blue-400 transition-colors duration-500 glow">
+                            <a href="/" className="text-white/70 hover:text-blue-400 transition-colors duration-500 glow">
                                 <i className="fab fa-linkedin text-2xl"></i>
                                 <span className="sr-only">LinkedIn</span>
                             </a>
-                            <a href="#" className="text-white/70 hover:text-blue-400 transition-colors duration-500 glow">
+                            <a href="/" className="text-white/70 hover:text-blue-400 transition-colors duration-500 glow">
                                 <i className="fab fa-twitter text-2xl"></i>
                                 <span className="sr-only">Twitter</span>
                             </a>
-                            <a href="#" className="text-white/70 hover:text-blue-400 transition-colors duration-500 glow">
+                            <a href="/" className="text-white/70 hover:text-blue-400 transition-colors duration-500 glow">
                                 <i className="fab fa-facebook text-2xl"></i>
                                 <span className="sr-only">Facebook</span>
                             </a>

@@ -1,4 +1,5 @@
 import { API_BASE_URL } from "../config";
+import axios from "axios";
 
 const fetchSuggestedCandidates = async (jobPostId) => {
   const res = await fetch(
@@ -27,3 +28,30 @@ const fetchSuggestedCandidates = async (jobPostId) => {
 };
 
 export default fetchSuggestedCandidates;
+
+
+export async function fetchCompanyProfile(companyId, email) {
+  const url = `${API_BASE_URL}/company/${companyId}?email=${email}`;
+  try {
+    const response = await fetch(url);
+    const data = await response.json();
+
+    if (data.statusCode === 200) {
+      return data.data;
+    } else {
+      throw new Error(data.statusMessage || "Failed to fetch company profile");
+    }
+  } catch (error) {
+    console.error("Error in fetchCompanyProfile:", error);
+    throw error;
+  }
+}
+
+
+export const toggleFollowCompany = async (email, companyId) => {
+  const response = await axios.get(`${API_BASE_URL}/job-seeker/follow`, {
+    params: { email, companyId },
+  });
+  return response.data;
+};
+

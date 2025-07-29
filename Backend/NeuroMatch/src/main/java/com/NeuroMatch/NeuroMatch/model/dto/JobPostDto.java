@@ -26,4 +26,5 @@ public class JobPostDto {
     //
     private String postedBy;
     private String profileImageBase64;
+    private Boolean isLiked;
 }

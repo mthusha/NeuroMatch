@@ -12,10 +12,15 @@
     
     body {
         overflow-x: hidden;
-        background: #0a0a1e;
+        background: #f9fafb;
     }
     
     .animated-bg {
+        background:linear-gradient(-45deg, #bae7ff, #f1e2e2, #bbd9ff, #ffe2e2);
+        background-size: 400% 400%;
+        animation: gradientShift 15s ease infinite;
+    }
+    .animated-bg-j {
         background: linear-gradient(-45deg, #0f0f23, #1a1a2e, #16213e, #0f3460);
         background-size: 400% 400%;
         animation: gradientShift 15s ease infinite;
@@ -186,7 +191,7 @@
     }
     
     ::-webkit-scrollbar-track {
-        background: #1a1a2e;
+        background: #f9fafb;
     }
     
     ::-webkit-scrollbar-thumb {

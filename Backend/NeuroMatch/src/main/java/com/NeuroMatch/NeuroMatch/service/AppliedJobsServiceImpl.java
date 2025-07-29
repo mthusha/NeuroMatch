@@ -8,11 +8,9 @@ import com.NeuroMatch.NeuroMatch.model.entity.JobSeekerDetails;
 import com.NeuroMatch.NeuroMatch.model.entity.Users;
 import com.NeuroMatch.NeuroMatch.repository.AppliedJobsRepository;
 import com.NeuroMatch.NeuroMatch.repository.JobPostRepository;
-import com.NeuroMatch.NeuroMatch.repository.JobSeekerRepository;
 import com.NeuroMatch.NeuroMatch.repository.UsersRepository;
 import com.NeuroMatch.NeuroMatch.util.ValidationMessages;
 import org.springframework.beans.factory.annotation.Autowired;
-import org.springframework.http.ResponseEntity;
 import org.springframework.stereotype.Service;
 
 import java.time.LocalDate;
@@ -35,7 +33,7 @@ public class AppliedJobsServiceImpl implements AppliedJobsService {
     private UserService userService;
 
     @Autowired
-    private MLApiService mlApiService;
+    private AIClientApiService AIClientApiService;
 
     public AppliedJobs applyToJob(ApplyJobDto request) {
         Users users = usersRepository.findByEmail(request.getEmail())
@@ -84,7 +82,7 @@ public class AppliedJobsServiceImpl implements AppliedJobsService {
 
             Map<String, List<String>> userSkillsMap = userService.extractSkillsFromCV(user.getEmail());
 
-            boolean isRecommended = mlApiService.sendToMLApi(userSkillsMap, jobSkillsMap);
+            boolean isRecommended = AIClientApiService.isRecommendationMatch(userSkillsMap, jobSkillsMap);
             if (user.getJobSeekerDetails().getProfilePicture() != null) {
                  profilePictureBase64 = (Base64.getEncoder()
                         .encodeToString(user.getJobSeekerDetails().getProfilePicture()));

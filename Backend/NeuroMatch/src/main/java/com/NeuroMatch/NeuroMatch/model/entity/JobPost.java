@@ -39,5 +39,8 @@ public class JobPost {
     @OneToMany(mappedBy = "jobPost")
     private List<AppliedJobs> appliedJobs = new ArrayList<>();
 
+    @OneToMany(mappedBy = "jobPost")
+    private List<LikedJobs> likedJobs = new ArrayList<>();
+
 
 }

@@ -87,7 +87,7 @@ const ProfileCard = () => {
           backgroundSize: 'cover',
           backgroundPosition: 'center',
           height: '120px',
-          position: 'relative',
+          position: 'static',
           cursor: 'pointer',
           zIndex: 1 
         }}
@@ -110,8 +110,8 @@ const ProfileCard = () => {
             borderRadius: '50%',
             width: '100px',
             height: '100px',
-            position: 'absolute',
-            bottom: '-50px',
+            position: 'relative',
+            // bottom: '-50px',
             // left: '20px',
             border: '4px solid white',
             cursor: 'pointer',

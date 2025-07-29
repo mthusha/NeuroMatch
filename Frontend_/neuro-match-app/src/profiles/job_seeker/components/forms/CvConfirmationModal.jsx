@@ -1,8 +1,8 @@
 import React from 'react';
 
 const DataSection = ({ title, children }) => (
-  <div className="mb-3">
-    <h4 className="text-xs font-semibold text-transparent bg-clip-text bg-gradient-to-r from-blue-500 to-purple-500 mb-1 border-b border-gray-600 pb-1">
+  <div className="mb-4">
+    <h4 className="text-xs font-semibold text-transparent bg-clip-text bg-gradient-to-r from-blue-600 to-indigo-600 mb-2 border-b border-gray-200 pb-1">
       {title}
     </h4>
     {children}
@@ -16,19 +16,19 @@ export const CvConfirmationModal = ({
   isLoading,
 }) => {
   return (
-    <div className="fixed inset-0 bg-black bg-opacity-70 flex items-center justify-center p-4 z-50">
-      <div className="bg-[#1a1b25] rounded-lg shadow-2xl max-w-2xl w-full max-h-[90vh] flex flex-col  border-purple-800">
-        <div className="p-4 overflow-y-auto text-[11px] text-gray-300 flex-grow" style={{scrollbarWidth:"none"}}>
-          <h3 className="text-sm font-bold text-transparent bg-clip-text bg-gradient-to-r from-blue-500 to-purple-500 mb-3">
+    <div className="fixed inset-0 bg-black bg-opacity-50 flex items-center justify-center p-4 z-50">
+      <div className="bg-white rounded-lg shadow-xl max-w-2xl w-full max-h-[90vh] flex flex-col border border-gray-200">
+        <div className="p-6 overflow-y-auto text-sm text-gray-700 flex-grow" style={{scrollbarWidth:"none"}}>
+          <h3 className="text-lg font-bold text-transparent bg-clip-text bg-gradient-to-r from-blue-600 to-indigo-600 mb-4">
             Confirm Your CV Details
           </h3>
 
           <DataSection title="Personal Information">
-            <div className="grid grid-cols-1 md:grid-cols-2 gap-2">
+            <div className="grid grid-cols-1 md:grid-cols-2 gap-4">
               {['name', 'email', 'phone', 'languages'].map((field) => (
                 <div key={field}>
-                  <p className="font-medium capitalize text-gray-400">{field}:</p>
-                  <p>
+                  <p className="font-medium capitalize text-gray-500">{field}:</p>
+                  <p className="text-gray-800">
                     {field === 'languages'
                       ? data.personal_info.languages?.join(', ')
                       : data.personal_info[field]}
@@ -39,13 +39,13 @@ export const CvConfirmationModal = ({
           </DataSection>
 
           <DataSection title="Skills">
-            <div className="space-y-2">
+            <div className="space-y-3">
               {Object.entries(data.skills).map(([category, items]) => (
                 <div key={category}>
-                  <p className="font-medium capitalize text-gray-400">{category}:</p>
-                  <div className="flex flex-wrap gap-1 mt-1">
+                  <p className="font-medium capitalize text-gray-500">{category}:</p>
+                  <div className="flex flex-wrap gap-2 mt-1">
                     {items.map((skill, i) => (
-                      <span key={i} className="bg-blue-800/30 text-blue-300 px-2 py-0.5 rounded text-[10px]">
+                      <span key={i} className="bg-blue-100 text-blue-800 px-3 py-1 rounded-full text-xs">
                         {skill}
                       </span>
                     ))}
@@ -56,12 +56,12 @@ export const CvConfirmationModal = ({
           </DataSection>
 
           <DataSection title="Education">
-            <div className="space-y-2">
+            <div className="space-y-3">
               {data.education.map((edu, index) => (
-                <div key={index} className="border-l-4 border-purple-600 pl-3 py-1">
-                  <p className="font-semibold text-blue-300">{edu.degree}</p>
-                  <p>{edu.institution}</p>
-                  <p className="text-gray-500">
+                <div key={index} className="border-l-4 border-indigo-400 pl-4 py-2">
+                  <p className="font-semibold text-blue-700">{edu.degree}</p>
+                  <p className="text-gray-800">{edu.institution}</p>
+                  <p className="text-gray-500 text-sm">
                     {edu.year || 'Ongoing'} {edu.awarding_body && `• ${edu.awarding_body}`}
                   </p>
                 </div>
@@ -70,25 +70,25 @@ export const CvConfirmationModal = ({
           </DataSection>
 
           <DataSection title="Experience">
-            <div className="space-y-2">
+            <div className="space-y-3">
               {data.experience.map((exp, index) => (
-                <div key={index} className="border-l-4 border-purple-600 pl-3 py-1">
+                <div key={index} className="border-l-4 border-indigo-400 pl-4 py-2">
                   <div className="flex justify-between flex-wrap">
-                    <p className="font-semibold text-purple-300">{exp.position || 'Not specified'}</p>
-                    <p className="text-gray-500 text-[10px]">{exp.duration}</p>
+                    <p className="font-semibold text-indigo-700">{exp.position || 'Not specified'}</p>
+                    <p className="text-gray-500 text-xs">{exp.duration}</p>
                   </div>
-                  <p>{exp.company || 'Freelance'}</p>
+                  <p className="text-gray-800">{exp.company || 'Freelance'}</p>
                   {exp.responsibilities?.length > 0 && (
-                    <ul className="list-disc list-inside mt-1 text-[10px] text-gray-400 space-y-0.5">
+                    <ul className="list-disc list-inside mt-2 text-xs text-gray-600 space-y-1">
                       {exp.responsibilities.map((resp, i) => (
                         <li key={i}>{resp}</li>
                       ))}
                     </ul>
                   )}
                   {exp.technologies_used?.length > 0 && (
-                    <div className="flex flex-wrap gap-1 mt-2">
+                    <div className="flex flex-wrap gap-2 mt-3">
                       {exp.technologies_used.map((tech, i) => (
-                        <span key={i} className="bg-purple-700/40 text-purple-200 px-2 py-0.5 rounded text-[10px]">
+                        <span key={i} className="bg-indigo-100 text-indigo-800 px-3 py-1 rounded-full text-xs">
                           {tech}
                         </span>
                       ))}
@@ -101,18 +101,18 @@ export const CvConfirmationModal = ({
 
           {data.projects?.length > 0 && (
             <DataSection title="Projects">
-              <div className="space-y-2">
+              <div className="space-y-3">
                 {data.projects.map((project, index) => (
-                  <div key={index} className="bg-[#252738] p-3 rounded-lg">
+                  <div key={index} className="bg-gray-50 p-4 rounded-lg border border-gray-200">
                     <div className="flex justify-between items-start">
-                      <p className="font-semibold text-blue-400">{project.name}</p>
-                      <p className="text-gray-500 text-[10px]">{project.duration}</p>
+                      <p className="font-semibold text-blue-700">{project.name}</p>
+                      <p className="text-gray-500 text-xs">{project.duration}</p>
                     </div>
-                    <p className="mt-1">{project.description}</p>
+                    <p className="mt-2 text-gray-700">{project.description}</p>
                     {project.technologies?.length > 0 && (
-                      <div className="flex flex-wrap gap-1 mt-2">
+                      <div className="flex flex-wrap gap-2 mt-3">
                         {project.technologies.map((tech, i) => (
-                          <span key={i} className="bg-blue-700/40 text-blue-200 px-2 py-0.5 rounded text-[10px]">
+                          <span key={i} className="bg-blue-100 text-blue-800 px-3 py-1 rounded-full text-xs">
                             {tech}
                           </span>
                         ))}
@@ -123,7 +123,7 @@ export const CvConfirmationModal = ({
                         href={project.github_link}
                         target="_blank"
                         rel="noopener noreferrer"
-                        className="inline-block mt-2 text-[10px] text-purple-400 hover:underline"
+                        className="inline-block mt-3 text-xs text-indigo-600 hover:underline"
                       >
                         View on GitHub
                       </a>
@@ -136,19 +136,19 @@ export const CvConfirmationModal = ({
         </div>
 
         {/* Footer Buttons */}
-        <div className="flex justify-end gap-2 p-3 border-t border-[#333]">
+        <div className="flex justify-end gap-3 p-4 border-t border-gray-200 bg-gray-50">
           <button
             onClick={onClose}
-            className="px-3 py-1.5 border border-gray-600 rounded-md text-gray-300 hover:bg-gray-700 text-[11px]"
+            className="px-4 py-2 border border-gray-300 rounded-md text-gray-700 hover:bg-gray-100 text-sm font-medium transition-colors"
           >
             Cancel
           </button>
           <button
             onClick={onConfirm}
-            className="px-3 py-1.5 bg-gradient-to-r from-blue-500 to-purple-500 text-white rounded-md hover:opacity-90 text-[11px] disabled:opacity-50"
+            className="px-4 py-2 bg-gradient-to-r from-blue-600 to-indigo-600 text-white rounded-md hover:opacity-90 text-sm font-medium transition-colors disabled:opacity-50"
             disabled={isLoading}
           >
-            {isLoading ? 'Sending...' : 'Confirm and Save'}
+            {isLoading ? 'Saving...' : 'Confirm and Save'}
           </button>
         </div>
       </div>

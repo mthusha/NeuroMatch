@@ -2,9 +2,9 @@ import React, { useState, useEffect } from 'react';
 import { FaThumbsUp, FaShareSquare } from 'react-icons/fa';
 import { getRecommendedJobPosts } from '../../../api/Vacancy';
 import { applyToJobPost } from '../../../api/AppliedJobs';
-import ApplyModal from '../components/forms/ApplyModal';
+import ApplyModal from './forms/ApplyModal';
 import { useAuth } from '../../../context/AuthContext';
-function JobFeed() {
+function JobFeed({ companyId, type }) {
   const [jobs, setJobs] = useState([]);
   const [userInteractions, setUserInteractions] = useState({});
   const { user } = useAuth();
@@ -16,11 +16,10 @@ function JobFeed() {
    setFormData({ subject: '', description: '' });
    setIsModalOpen(true);
   };
-
   useEffect(() => {
     const fetchJobs = async () => {
       try {
-        const response = await getRecommendedJobPosts(user.email);
+        const response = await getRecommendedJobPosts(user.email, companyId, type);
         if (response.statusCode === 200) {
           const formattedJobs = response.data.map(job => ({
             id: job.id,
@@ -35,7 +34,8 @@ function JobFeed() {
             requirements: job.requirements,
             suggestionType: job.suggestionsType,
             postedBy: job.postedBy,
-            profileImageBase64: `data:image/png;base64,${job.profileImageBase64}`
+            profileImageBase64: `data:image/png;base64,${job.profileImageBase64}`,
+            isLiked: job.isLiked
           }));
           setJobs(formattedJobs);
         } else {
@@ -47,7 +47,7 @@ function JobFeed() {
     };
 
     fetchJobs();
-  }, [user.email]);
+  }, [user.email, companyId, type]);
 
   const handleApplySubmit = async (e) => {
   e.preventDefault();
@@ -118,20 +118,25 @@ function JobFeed() {
         text: 'Recommended',
         color: 'bg-gray-50 text-gray-700 border border-gray-200',
         icon: '⭐'
+      },
+      nothing: {
+        text: '',
+        color: '',
+        icon: ''
       }
     };
 
-    return types[type?.toLowerCase()] || types['recommended'];
+    return types[type?.toLowerCase()] || types['nothing'];
   };
 
 
   return (
-    <div className="job-feed">
+    <div className="job-feed-seeker">
       {jobs.map(job => {
         const badge = getSuggestionBadge(job.suggestionType);
         // const interaction = userInteractions[job.id] || {};
         return (
-         <div className="job-card bg-white rounded-lg shadow-md overflow-hidden hover:shadow-lg transition-shadow duration-300 relative" key={job.id}>  
+         <div className="job-card bg-white rounded-lg overflow-hidden duration-300 relative" key={job.id}>  
             <div className="flex items-center justify-between mb-3 suggest_box ">
               <div className="flex items-center gap-3">
               {job.profileImageBase64 && job.profileImageBase64.includes('A')
@@ -149,7 +154,7 @@ function JobFeed() {
 
 
                 <div>
-                  <p className="font-semibold text-sm text-gray-800 text-white">{job.postedBy}</p>
+                  <p className="font-semibold text-sm text-gray-800 text-black">{job.postedBy}</p>
                   <p className="text-xs text-gray-500">{job.postedTime}</p>
                 </div>
               </div>
@@ -172,11 +177,11 @@ function JobFeed() {
               <p><strong>Location:</strong> {job.location}</p>
               <p><strong>Salary:</strong> {job.salary}</p>
               
-              <img src={job.image} alt="Job Visual" className="job-image" />
+              <img src={job.image} alt="Job Visual" className="job-image-j" />
               <div className="job-actions">
                 <button
                   onClick={() => toggleInteraction(job.id, 'likes')}
-                  style={{ color: user.likes ? 'blue' : 'black', display: 'flex', alignItems: 'center', gap: '6px' }}
+                  style={{ color: job.isLiked ? 'blue' : 'black', display: 'flex', alignItems: 'center', gap: '6px' }}
                   title="Like"
                 >
                   <FaThumbsUp />
@@ -185,7 +190,7 @@ function JobFeed() {
 
                 <button
                    onClick={() => openApplyForm(job)}
-                  style={{ color: user.applied ? 'purple' : 'black', display: 'flex', alignItems: 'center', gap: '6px' }}
+                  style={{ color: job.applied ? 'purple' : 'black', display: 'flex', alignItems: 'center', gap: '6px' }}
                   title="Applied"
                 >
                   <FaShareSquare />

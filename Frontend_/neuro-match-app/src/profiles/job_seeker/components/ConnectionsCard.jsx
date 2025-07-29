@@ -2,7 +2,7 @@ import React, { useEffect, useState } from "react";
 import fetchNotFollowedCompanies from "../../../api/Company";
 import { useAuth } from "../../../context/AuthContext";
 
-const ConnectionsCard = () => {
+const ConnectionsCard = ({ trigger }) => {
   const { user } = useAuth();
   const [connections, setConnections] = useState([]);
   const [loading, setLoading] = useState(true);
@@ -23,7 +23,7 @@ const ConnectionsCard = () => {
     };
 
     loadConnections();
-  }, [email]);
+  }, [email, trigger]);
 
   if (loading) return <div className="sidebar-card">Loading connections...</div>;
   if (error) return <div className="sidebar-card">Error: {error}</div>;

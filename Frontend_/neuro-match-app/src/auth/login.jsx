@@ -130,7 +130,6 @@ export default function LoginPage() {
     </div>
   </div>
   
-  {/* Floating orb animations */}
   <div 
     className="absolute top-20 left-20 w-40 h-40 rounded-full bg-blue-600/10 blur-xl"
     style={{
@@ -146,7 +145,6 @@ export default function LoginPage() {
     }}
   ></div>
   
-  {/* CSS Animations */}
   <style jsx>{`
     @keyframes gridPulse {
       0% { opacity: 0.1; }
@@ -204,49 +202,49 @@ export default function LoginPage() {
 </div>
 
       <div className="w-full md:w-1/2 flex items-center justify-center p-8">
-        <div className="w-full max-w-md glass " style={{padding:"20px", borderRadius:'22px'}}>
+        <div className="w-full max-w-md bg-white/90 backdrop-blur-sm p-6 rounded-2xl border border-gray-200">
           <div className="text-center mb-10">
-            <h2 className="text-3xl font-bold text-white mb-2">Welcome Back</h2>
-            <p className="text-white/70">Sign in to continue to your dashboard</p>
+            <h2 className="text-3xl font-bold text-gray-800 mb-2">Welcome Back</h2>
+            <p className="text-gray-600">Sign in to continue to your dashboard</p>
           </div>
 
           {error && (
-            <div className="mb-6 p-4 bg-red-500/10 border border-red-500/30 rounded-lg text-red-300 text-sm">
-              <i className="fas fa-exclamation-circle mr-2"></i>
+            <div className="mb-6 p-4 bg-red-50 border border-red-200 rounded-lg text-red-600 text-sm">
+              <i className="fas fa-exclamation-circle mr-2 text-red-500"></i>
               {error}
             </div>
           )}
 
           <form onSubmit={handleLogin} className="space-y-6">
             <div>
-              <label htmlFor="email" className="block text-sm font-medium text-white/80 mb-2">Email Address</label>
+              <label htmlFor="email" className="block text-sm font-medium text-gray-700 mb-2">Email Address</label>
               <div className="relative">
                 <input
                   id="email"
                   type="email"
                   value={email}
                   onChange={(e) => setEmail(e.target.value)}
-                  className="w-full bg-white/5 px-4 py-3 rounded-lg border border-white/10 focus:border-blue-500/50 focus:ring-2 focus:ring-blue-500/20 text-white placeholder-white/30 transition-all duration-300"
+                  className="w-full bg-gray-50 px-4 py-3 rounded-lg border border-gray-300 focus:border-blue-500 focus:ring-2 focus:ring-blue-200 text-gray-800 placeholder-gray-400 transition-all duration-300"
                   placeholder="you@example.com"
                   required
                 />
-                <i className="fas fa-envelope absolute right-3 top-3 text-white/30"></i>
+                <i className="fas fa-envelope absolute right-3 top-3 text-gray-400"></i>
               </div>
             </div>
 
             <div>
-              <label htmlFor="password" className="block text-sm font-medium text-white/80 mb-2">Password</label>
+              <label htmlFor="password" className="block text-sm font-medium text-gray-700 mb-2">Password</label>
               <div className="relative">
                 <input
                   id="password"
                   type="password"
                   value={password}
                   onChange={(e) => setPassword(e.target.value)}
-                  className="w-full bg-white/5 px-4 py-3 rounded-lg border border-white/10 focus:border-blue-500/50 focus:ring-2 focus:ring-blue-500/20 text-white placeholder-white/30 transition-all duration-300"
+                  className="w-full bg-gray-50 px-4 py-3 rounded-lg border border-gray-300 focus:border-blue-500 focus:ring-2 focus:ring-blue-200 text-gray-800 placeholder-gray-400 transition-all duration-300"
                   placeholder="••••••••"
                   required
                 />
-                <i className="fas fa-lock absolute right-3 top-3 text-white/30"></i>
+                <i className="fas fa-lock absolute right-3 top-3 text-gray-400"></i>
               </div>
             </div>
 
@@ -256,15 +254,15 @@ export default function LoginPage() {
                   id="remember-me"
                   name="remember-me"
                   type="checkbox"
-                  className="h-4 w-4 rounded border-white/20 bg-white/10 focus:ring-blue-500"
+                  className="h-4 w-4 rounded border-gray-300 text-blue-600 focus:ring-blue-500"
                 />
-                <label htmlFor="remember-me" className="ml-2 block text-sm text-white/70">
+                <label htmlFor="remember-me" className="ml-2 block text-sm text-gray-700">
                   Remember me
                 </label>
               </div>
 
               <div className="text-sm">
-                <a href="/forgot-password" className="font-medium text-blue-400 hover:text-blue-300">
+                <a href="/forgot-password" className="font-medium text-blue-600 hover:text-blue-500">
                   Forgot password?
                 </a>
               </div>
@@ -274,7 +272,7 @@ export default function LoginPage() {
               <button
                 type="submit"
                 disabled={isLoading}
-                className={`w-full py-3 px-4 rounded-lg font-semibold text-white transition-all duration-300 ${isLoading ? 'bg-blue-600/50 cursor-not-allowed' : 'bg-gradient-to-r from-blue-600 to-purple-600 hover:from-blue-700 hover:to-purple-700 shadow-lg hover:shadow-blue-500/20'}`}
+                className={`w-full py-3 px-4 rounded-lg font-semibold text-white transition-all duration-300 ${isLoading ? 'bg-blue-400 cursor-not-allowed' : 'bg-gradient-to-r from-blue-600 to-indigo-600 hover:from-blue-700 hover:to-indigo-700 shadow hover:shadow-blue-200'}`}
               >
                 {isLoading ? (
                   <>
@@ -289,35 +287,35 @@ export default function LoginPage() {
             </div>
           </form>
 
-          <div className="mt-8 text-center text-sm text-white/70">
+          <div className="mt-8 text-center text-sm text-gray-600">
             <div className="relative my-6">
               <div className="absolute inset-0 flex items-center">
-                <div className="w-full border-t border-white/10"></div>
+                <div className="w-full border-t border-gray-300"></div>
               </div>
               <div className="relative flex justify-center text-sm">
-                <span className="px-2 bg-[#0f0c29] text-white/50">Or continue with</span>
+                <span className="px-2 bg-white text-gray-500">Or continue with</span>
               </div>
             </div>
 
             <div className="grid grid-cols-2 gap-4">
               <button
-                     type="button"
-                     onClick={triggerGoogleLogin}
-                     className="bg-white/5 py-2 px-4 rounded-lg flex items-center justify-center text-white/80 hover:text-white hover:bg-white/10 transition-all duration-300 border border-white/10"
-                   >
-                     <i className="fab fa-google mr-2"></i> Google
-                   </button>
-                   <div ref={googleButtonRef} style={{ display: "none" }}>
-                     <GoogleLogin
-                       onSuccess={googleLogin}
-                       onError={() => console.error("Google Login Failed")}
-                     />
-                   </div>
+                type="button"
+                onClick={triggerGoogleLogin}
+                className="bg-white py-2 px-4 rounded-lg flex items-center justify-center text-gray-700 hover:text-gray-900 hover:bg-gray-50 transition-all duration-300 border border-gray-300 shadow-sm"
+              >
+                <i className="fab fa-google mr-2 text-red-500"></i> Google
+              </button>
+              <div ref={googleButtonRef} style={{ display: "none" }}>
+                <GoogleLogin
+                  onSuccess={googleLogin}
+                  onError={() => console.error("Google Login Failed")}
+                />
+              </div>
               <button
                 type="button"
-                className="bg-white/5 py-2 px-4 rounded-lg flex items-center justify-center text-white/80 hover:text-white hover:bg-white/10 transition-all duration-300 border border-white/10"
+                className="bg-white py-2 px-4 rounded-lg flex items-center justify-center text-gray-700 hover:text-gray-900 hover:bg-gray-50 transition-all duration-300 border border-gray-300 shadow-sm"
               >
-                <i className="fab fa-linkedin mr-2"></i> LinkedIn
+                <i className="fab fa-linkedin mr-2 text-blue-600"></i> LinkedIn
               </button>
             </div>
 
@@ -325,7 +323,7 @@ export default function LoginPage() {
               Don't have an account?{' '}
               <a 
                 href="/register" 
-                className="font-semibold text-blue-400 hover:text-blue-300 underline underline-offset-4 transition-colors duration-300"
+                className="font-semibold text-blue-600 hover:text-blue-500 underline underline-offset-4 transition-colors duration-300"
               >
                 Create account
               </a>

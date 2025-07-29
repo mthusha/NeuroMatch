@@ -5,6 +5,7 @@ public class ValidationMessages {
     public static String FAIL_GOOGLE_ID = "Failed to verify Google ID token";
     public static String DUPLICATE_EMAIL = "Email already registered";
     public static String USER_NOT_FOUND = "User not found";
+    public static String USER_NOT_COMPANY = "Company not found";
     public static String INVALID_PASSWORD = "Invalid password";
 
     public static String RETRIEVED = "User fetched successfully";
@@ -24,4 +25,10 @@ public class ValidationMessages {
     public static String RECOMMENDED_JOB_SEEKERS = "Recommended For JobSeekers retrieved successfully";
     public static String JOB_SEEKER_NOT_FOUND = "Job seeker not found.";
     public static String APPLICANTS_RETRIEVED_SUCCESSFULLY = "Applicants retrieved successfully";
+    public static String INTERVIEW_QA_GENERATED = "Interview questions generated successfully";
+    public static final String INVALID_RESPONSE_FROM_AI = "Invalid response from AI server";
+    public static final String UNEXPECTED_ERROR = "Unexpected error occurred: ";
+    public static final String ANSWER_PROCESSED = "Answer processed";
+    public static final String UNFOLLOWED = "Unfollowed";
+    public static final String FOLLOWED = "Followed";
 }

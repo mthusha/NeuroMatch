@@ -1,1 +1,1 @@
-BSc Software Enginering
+BSc Software Engineering

@@ -1,6 +1,7 @@
 import React, { useState, useRef } from 'react';
 import { postJobVacancy } from '../../../../api/Vacancy';
 import { useAuth } from '../../../../context/AuthContext';
+
 const VacancyForm = ({ onSuccess, onClose }) => {
   const { user } = useAuth();
   const userEmail = user?.email;
@@ -35,7 +36,7 @@ const VacancyForm = ({ onSuccess, onClose }) => {
       const response = await postJobVacancy(formData, userEmail);
       onSuccess(response.data);
     } catch (error) {
-      // console.error('Failed to create vacancy:', error);
+      console.error('Failed to create vacancy:', error);
     }
   };
 
@@ -46,25 +47,24 @@ const VacancyForm = ({ onSuccess, onClose }) => {
     fileInputRef.current.value = '';
   };
 
-
   return (
-    <div className="relative bg-gray-800 p-6 rounded-xl shadow-2xl border border-gray-700 max-w-2xl w-full">
-      <div className="absolute top-0 left-0 right-0 h-1.5 bg-gradient-to-r from-purple-600 to-indigo-600 rounded-t-xl"></div>
+    <div className="relative bg-white p-6 rounded-xl shadow-lg border border-gray-200 max-w-2xl w-full">
+      <div className="absolute top-0 left-0 right-0 h-1.5 bg-gradient-to-r from-indigo-500 to-blue-500 rounded-t-xl"></div>
       
-      <div className="mb-4">
-        <h2 className="text-lg font-bold bg-clip-text text-transparent bg-gradient-to-r from-purple-400 to-indigo-300">
+      <div className="mb-5">
+        <h2 className="text-xl font-bold text-gray-800">
           Create New Position
         </h2>
-        <p className="text-xs text-gray-400 mt-0.5">Fill in the details to post your vacancy</p>
+        <p className="text-sm text-gray-500 mt-1">Fill in the details to post your vacancy</p>
       </div>
 
       <form onSubmit={handleSubmit}>
-        <div className="mb-4">
-          <label className="block text-xs font-medium text-gray-300 mb-1">Job Image</label>
+        <div className="mb-5">
+          <label className="block text-sm font-medium text-gray-700 mb-2">Job Image</label>
           <div className="flex items-start space-x-4">
             <div className="flex flex-col items-center">
               <div 
-                className="w-24 h-24 rounded-lg bg-gray-700 border-2 border-dashed border-gray-600 flex items-center justify-center overflow-hidden cursor-pointer hover:border-purple-500 transition-colors"
+                className="w-24 h-24 rounded-lg bg-gray-100 border-2 border-dashed border-gray-300 flex items-center justify-center overflow-hidden cursor-pointer hover:border-indigo-400 transition-colors"
                 onClick={triggerFileInput}
               >
                 {imagePreview ? (
@@ -75,7 +75,7 @@ const VacancyForm = ({ onSuccess, onClose }) => {
                   />
                 ) : (
                   <div className="text-center p-2">
-                    <svg className="w-8 h-8 text-gray-500 mx-auto" fill="none" stroke="currentColor" viewBox="0 0 24 24">
+                    <svg className="w-8 h-8 text-gray-400 mx-auto" fill="none" stroke="currentColor" viewBox="0 0 24 24">
                       <path strokeLinecap="round" strokeLinejoin="round" strokeWidth={2} d="M4 16l4.586-4.586a2 2 0 012.828 0L16 16m-2-2l1.586-1.586a2 2 0 012.828 0L20 14m-6-6h.01M6 20h12a2 2 0 002-2V6a2 2 0 00-2-2H6a2 2 0 00-2 2v12a2 2 0 002 2z" />
                     </svg>
                     <p className="text-xs text-gray-500 mt-1">Click to upload</p>
@@ -85,7 +85,7 @@ const VacancyForm = ({ onSuccess, onClose }) => {
               {imagePreview && (
                 <button
                   type="button"
-                  className="text-xs text-red-400 hover:text-red-300 mt-1 transition"
+                  className="text-xs text-red-500 hover:text-red-600 mt-1 transition"
                   onClick={removeImage}
                 >
                   Remove Image
@@ -100,17 +100,17 @@ const VacancyForm = ({ onSuccess, onClose }) => {
                 className="hidden"
                 accept="image/*"
               />
-              <p className="text-xs text-gray-400 mb-2">Upload an image that represents this job position (JPEG, PNG)</p>
+              <p className="text-xs text-gray-500 mb-3">Upload an image that represents this job position (JPEG, PNG)</p>
               <div className="flex items-center space-x-2">
                 <button
                   type="button"
-                  className="text-xs bg-gray-700 hover:bg-gray-600 text-white px-3 py-1.5 rounded border border-gray-600 transition"
+                  className="text-xs bg-white hover:bg-gray-50 text-gray-700 px-3 py-1.5 rounded border border-gray-300 transition shadow-sm"
                   onClick={triggerFileInput}
                 >
                   {imagePreview ? 'Change Image' : 'Select Image'}
                 </button>
                 {imagePreview && (
-                  <span className="text-xs text-green-400">
+                  <span className="text-xs text-green-600">
                     ✓ Image selected
                   </span>
                 )}
@@ -122,10 +122,10 @@ const VacancyForm = ({ onSuccess, onClose }) => {
         {/* Job Details */}
         <div className="grid grid-cols-1 md:grid-cols-2 gap-4 mb-4">
           <div>
-            <label className="block text-xs font-medium text-gray-300 mb-1">Job Title*</label>
+            <label className="block text-sm font-medium text-gray-700 mb-1">Job Title*</label>
             <input
               type="text"
-              className="w-full p-2 text-sm border border-gray-600 rounded-lg bg-gray-700 text-white focus:ring-2 focus:ring-purple-500 focus:border-transparent transition"
+              className="w-full p-2.5 text-sm border border-gray-300 rounded-lg bg-white text-gray-800 focus:ring-2 focus:ring-indigo-500 focus:border-indigo-500 transition"
               value={formData.title}
               onChange={(e) => setFormData({...formData, title: e.target.value})}
               required
@@ -133,10 +133,10 @@ const VacancyForm = ({ onSuccess, onClose }) => {
             />
           </div>
           <div>
-            <label className="block text-xs font-medium text-gray-300 mb-1">Location*</label>
+            <label className="block text-sm font-medium text-gray-700 mb-1">Location*</label>
             <input
               type="text"
-              className="w-full p-2 text-sm border border-gray-600 rounded-lg bg-gray-700 text-white focus:ring-2 focus:ring-purple-500 focus:border-transparent transition"
+              className="w-full p-2.5 text-sm border border-gray-300 rounded-lg bg-white text-gray-800 focus:ring-2 focus:ring-indigo-500 focus:border-indigo-500 transition"
               value={formData.location}
               onChange={(e) => setFormData({...formData, location: e.target.value})}
               required
@@ -146,9 +146,9 @@ const VacancyForm = ({ onSuccess, onClose }) => {
         </div>
         
         <div className="mb-4">
-          <label className="block text-xs font-medium text-gray-300 mb-1">Job Description*</label>
+          <label className="block text-sm font-medium text-gray-700 mb-1">Job Description*</label>
           <textarea
-            className="w-full p-2 text-sm border border-gray-600 rounded-lg bg-gray-700 text-white focus:ring-2 focus:ring-purple-500 focus:border-transparent transition min-h-[100px]"
+            className="w-full p-2.5 text-sm border border-gray-300 rounded-lg bg-white text-gray-800 focus:ring-2 focus:ring-indigo-500 focus:border-indigo-500 transition min-h-[120px]"
             value={formData.description}
             onChange={(e) => setFormData({...formData, description: e.target.value})}
             required
@@ -157,9 +157,9 @@ const VacancyForm = ({ onSuccess, onClose }) => {
         </div>
         
         <div className="mb-4">
-          <label className="block text-xs font-medium text-gray-300 mb-1">Requirements*</label>
+          <label className="block text-sm font-medium text-gray-700 mb-1">Requirements*</label>
           <textarea
-            className="w-full p-2 text-sm border border-gray-600 rounded-lg bg-gray-700 text-white focus:ring-2 focus:ring-purple-500 focus:border-transparent transition min-h-[100px]"
+            className="w-full p-2.5 text-sm border border-gray-300 rounded-lg bg-white text-gray-800 focus:ring-2 focus:ring-indigo-500 focus:border-indigo-500 transition min-h-[120px]"
             value={formData.requirements}
             onChange={(e) => setFormData({...formData, requirements: e.target.value})}
             required
@@ -169,20 +169,20 @@ const VacancyForm = ({ onSuccess, onClose }) => {
         
         <div className="grid grid-cols-1 md:grid-cols-2 gap-4 mb-6">
           <div>
-            <label className="block text-xs font-medium text-gray-300 mb-1">Salary Range</label>
+            <label className="block text-sm font-medium text-gray-700 mb-1">Salary Range</label>
             <input
               type="text"
-              className="w-full p-2 text-sm border border-gray-600 rounded-lg bg-gray-700 text-white focus:ring-2 focus:ring-purple-500 focus:border-transparent transition"
+              className="w-full p-2.5 text-sm border border-gray-300 rounded-lg bg-white text-gray-800 focus:ring-2 focus:ring-indigo-500 focus:border-indigo-500 transition"
               value={formData.salaryRange}
               onChange={(e) => setFormData({...formData, salaryRange: e.target.value})}
               placeholder="e.g. $90k - $120k"
             />
           </div>
           <div>
-            <label className="block text-xs font-medium text-gray-300 mb-1">Application Deadline</label>
+            <label className="block text-sm font-medium text-gray-700 mb-1">Application Deadline</label>
             <input
               type="date"
-              className="w-full p-2 text-sm border border-gray-600 rounded-lg bg-gray-700 text-white focus:ring-2 focus:ring-purple-500 focus:border-transparent transition [color-scheme:dark]"
+              className="w-full p-2.5 text-sm border border-gray-300 rounded-lg bg-white text-gray-800 focus:ring-2 focus:ring-indigo-500 focus:border-indigo-500 transition"
               value={formData.deadline}
               onChange={(e) => setFormData({...formData, deadline: e.target.value})}
             />
@@ -192,14 +192,14 @@ const VacancyForm = ({ onSuccess, onClose }) => {
         <div className="flex justify-end space-x-3">
           <button
             type="button"
-            className="px-4 py-2 text-xs rounded-lg border border-gray-600 text-gray-300 hover:bg-gray-700/50 transition duration-200"
+            className="px-4 py-2.5 text-sm rounded-lg border border-gray-300 text-gray-700 hover:bg-gray-50 transition duration-200"
             onClick={onClose}
           >
             Cancel
           </button>
           <button
             type="submit"
-            className="px-4 py-2 text-xs rounded-lg bg-gradient-to-r from-purple-600 to-indigo-600 text-white hover:from-purple-700 hover:to-indigo-700 transition duration-200 shadow hover:shadow-purple-500/20 disabled:opacity-50"
+            className="px-4 py-2.5 text-sm rounded-lg bg-gradient-to-r from-indigo-600 to-blue-600 text-white hover:from-indigo-700 hover:to-blue-700 transition duration-200 shadow-sm hover:shadow-md disabled:opacity-50"
             disabled={!formData.title || !formData.description || !formData.requirements || !formData.location}
           >
             Post Vacancy

@@ -1,10 +1,9 @@
 package com.NeuroMatch.NeuroMatch.service;
+import com.NeuroMatch.NeuroMatch.model.dto.InterviewResponse;
+import com.NeuroMatch.NeuroMatch.model.dto.InterviewSession;
 import com.NeuroMatch.NeuroMatch.model.dto.JobSeekerDto;
-import com.NeuroMatch.NeuroMatch.model.entity.JobPost;
-import com.NeuroMatch.NeuroMatch.model.entity.JobSeekerDetails;
-import com.NeuroMatch.NeuroMatch.model.entity.Users;
-import com.NeuroMatch.NeuroMatch.repository.JobPostRepository;
-import com.NeuroMatch.NeuroMatch.repository.UsersRepository;
+import com.NeuroMatch.NeuroMatch.model.entity.*;
+import com.NeuroMatch.NeuroMatch.repository.*;
 import com.NeuroMatch.NeuroMatch.util.ValidationMessages;
 import com.fasterxml.jackson.core.JsonProcessingException;
 import com.fasterxml.jackson.databind.ObjectMapper;
@@ -14,7 +13,6 @@ import org.springframework.context.annotation.Lazy;
 import org.springframework.stereotype.Service;
 
 import java.util.*;
-import java.util.stream.Collectors;
 
 @Service
 public class JobSeekerServiceImpl implements JobSeekerService {
@@ -26,7 +24,13 @@ public class JobSeekerServiceImpl implements JobSeekerService {
     @Lazy
     private UserService userService;
     @Autowired
-    private MLApiService mlApiService;
+    private AIClientApiService AIClientApiService;
+    @Autowired
+    private CompanyRepository companyRepository;
+    @Autowired
+    private UserFlowsRepository userFlowsRepository;
+    @Autowired
+    private JobSeekerRepository jobSeekerRepository;
 
     @Override
     public void updateCv(Map<String, Object> requestData) throws JsonProcessingException {
@@ -78,7 +82,7 @@ public class JobSeekerServiceImpl implements JobSeekerService {
 
             Map<String, List<String>> userSkillsMap = userService.extractSkillsFromCV(user.getEmail());
 
-            boolean isRecommended = mlApiService.sendToMLApi(userSkillsMap, jobSkillsMap);
+            boolean isRecommended = AIClientApiService.isRecommendationMatch(userSkillsMap, jobSkillsMap);
             if (isRecommended) {
                 JobSeekerDto dto = new JobSeekerDto();
                 JobSeekerDetails jobSeeker = user.getJobSeekerDetails();
@@ -97,4 +101,43 @@ public class JobSeekerServiceImpl implements JobSeekerService {
         return recommendedSeekers;
 
     }
+
+    @Override
+    public String followCompany(String email, Long companyId) {
+        Users user = usersRepository.findByEmail(email)
+                .orElseThrow(() -> new RuntimeException(ValidationMessages.USER_NOT_FOUND));
+
+        CompanyDetails companyDetails = companyRepository.findById(companyId)
+                .orElseThrow(() -> new RuntimeException(ValidationMessages.USER_NOT_COMPANY));
+        JobSeekerDetails jobSeeker = user.getJobSeekerDetails();
+        Optional<UserFlows> existingFlow = userFlowsRepository.findByUserAndCompany(jobSeeker, companyDetails);
+
+        if (existingFlow.isPresent()) {
+            userFlowsRepository.delete(existingFlow.get());
+            return ValidationMessages.UNFOLLOWED;
+        } else {
+            UserFlows userFlows = new UserFlows();
+            userFlows.setUser(jobSeeker);
+            userFlows.setCompany(companyDetails);
+            userFlowsRepository.save(userFlows);
+            return ValidationMessages.FOLLOWED;
+        }
+    }
+
+
+    @Override
+    public InterviewSession getInterviewQuestionsForJobSeeker(String email) {
+        Users user = usersRepository.findByEmail(email)
+                .orElseThrow(() -> new RuntimeException(ValidationMessages.USER_NOT_FOUND));
+        String cvData = user.getJobSeekerDetails().getCvJson();
+        return AIClientApiService.startInterview(cvData);
+    }
+
+    @Override
+    public InterviewResponse answerInterviewQuestion(String sessionId, String answer) {
+        return AIClientApiService.sendAnswer(sessionId, answer);
+    }
+
+
+
 }

@@ -26,12 +26,12 @@ const AppliedCandidates = ({ vacancies, selectedVacancy, onSelectVacancy }) => {
     : applications.filter(app => app.status === selectedStatus);
 
   return (
-    <div className="bg-transparent p-6 rounded-2xl shadow-md  border-gray-100">
+    <div className="bg-white rounded-2xl  p-4 border-gray-100">
       <div className="flex flex-col md:flex-row justify-between items-start md:items-center mb-6 gap-4">
-        <h2 className="text-2xl font-semibold ">🎯 Applied Candidates</h2>
+        <h2 className="text-xl font-bold text-indigo-600 flex items-center gap-2">🎯 Applied Candidates</h2>
         <div className="flex gap-3">
           <select
-            className="bg-gray-800 border border-gray-600  rounded-xl px-4 py-2 text-sm  focus:ring-2 focus:ring-indigo-300"
+            className="text-xs border border-gray-200 rounded-xl px-3 py-1.5 focus:ring-1 focus:ring-indigo-400"
             value={selectedVacancy?.id || ''}
             onChange={(e) => {
               const vacancy = vacancies.find(v => v.id.toString() === e.target.value);
@@ -47,7 +47,7 @@ const AppliedCandidates = ({ vacancies, selectedVacancy, onSelectVacancy }) => {
           </select>
 
           <select
-            className="bg-gray-800 border border-gray-600  rounded-xl px-4 py-2 text-sm  focus:ring-2 focus:ring-indigo-300"
+            className="text-xs border border-gray-200 rounded-xl px-3 py-1.5 focus:ring-1 focus:ring-indigo-400"
             value={selectedStatus}
             onChange={(e) => setSelectedStatus(e.target.value)}
             disabled={!selectedVacancy}

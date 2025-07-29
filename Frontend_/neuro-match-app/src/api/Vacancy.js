@@ -60,7 +60,26 @@ export const postJobVacancy = async (formData, email) => {
 
 
 
-export const getRecommendedJobPosts = async (email) => {
-  const res = await axios.get(`${API_BASE_URL}/job-post/recommended/${email}`);
-  return res.data;
+export const getRecommendedJobPosts = async (email, companyId, type) => {
+  try {
+    let url;
+
+    if (type === "company") {
+      url = `${API_BASE_URL}/job-post/company/${companyId}/job-posts?email=${encodeURIComponent(
+        email
+      )}`;
+    } else {
+      url = `${API_BASE_URL}/job-post/recommended/${encodeURIComponent(email)}`;
+    }
+
+    const res = await axios.get(url);
+    return res.data;
+  } catch (err) {
+    console.error("Error fetching job posts:", err);
+    return {
+      statusCode: 500,
+      statusMessage: "Failed to fetch job posts",
+      data: [],
+    };
+  }
 };

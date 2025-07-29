@@ -1,33 +1,187 @@
-.hirin-dash{
-    background: rgb(17 24 39 / var(--tw-bg-opacity, 1));;
-}
-.bg-in-box{
-    /* background-color: rgba(30, 41, 59, 0.5); */
-    background: rgba(15, 23, 42, 0.8);
-    border-radius: 12px;
-    /* padding: 20px; */
-    box-shadow: 0 4px 20px rgba(0, 0, 0, 0.3);
-    border: 1px solid rgba(255, 255, 255, 0.1);
+.hirin-dash {
+    background: #f9fafb;
+    color: #111827;
 }
 
-.bg-in-post{
-    background-color: rgba(30, 41, 59, 0.5);
+.bg-in-box {
+    background: rgba(255, 255, 255, 0.9);
     border-radius: 12px;
-    /* padding: 20px; */
-    box-shadow: 0 4px 20px rgba(0, 0, 0, 0.3);
-    border: 1px solid rgba(255, 255, 255, 0.1);
+    box-shadow: 0 4px 6px rgba(0, 0, 0, 0.05);
+    border: 1px solid rgba(0, 0, 0, 0.05);
+    color: #111827;
 }
-.bg-in-in-box{
-    background-color: rgb(31 41 55 / 0.5);
+
+.bg-in-box .text-secondary {
+    color: #6b7280; 
 }
-.bg-in-in-in-box{
-    background-color: rgb(17 24 39 / 0.5);
+
+.bg-in-post {
+    background-color: #f3f4f6;
+    border-radius: 12px;
+    box-shadow: 0 4px 6px rgba(0, 0, 0, 0.05);
+    border: 1px solid rgba(0, 0, 0, 0.05);
+    color: #111827; 
 }
+
+.bg-in-post .text-secondary {
+    color: #6b7280; 
+}
+
+.bg-in-in-box {
+    background-color: rgb(243, 244, 246);
+    color: #111827;
+}
+
+.bg-in-in-box .text-secondary {
+    color: #6b7280; 
+}
+
+.bg-in-in-in-box {
+    background-color: rgb(249, 250, 251);
+    color: #111827; 
+}
+
+.bg-in-in-in-box .text-secondary {
+    color: #6b7280;
+}
+
 .text-sm {
     font-size: 0.75rem;
     line-height: 1.25rem;
+    /* color: #4b5563; */
 }
-.bg-indigo-600 {
-    --tw-bg-opacity: 1;
-    background-color: rgb(79 70 229 / 40%);
+
+
+.text-primary {
+    color: #111827; 
+}
+
+.text-secondary {
+    color: #6b7280; 
+}
+
+.text-accent {
+    color: #4f46e5; 
+}
+
+.text-muted {
+    color: #9ca3af;
+}
+.job-feed {
+  padding: 20px;
+  background-color: #ffffff;
+  border-radius: 16px;
+  /* box-shadow: 0 8px 30px rgba(0,0,0,0.1); */
+  border: 1px solid rgba(209, 213, 219, 0.8);
+  /*  */
+    overflow: auto;
+    max-height: 910px;
+    scrollbar-width: none;
+}
+
+.feed-title {
+  margin-bottom: 24px;
+  /* font-size: 1.25rem; */
+  /* font-weight: 600; */
+  /* color: #111827; */
+  padding-bottom: 12px;
+  border-bottom: 1px solid rgba(156, 163, 175, 0.3);
+}
+
+.job-card {
+  background: #ffffff;
+  border-radius: 16px;
+  overflow: hidden;
+  border: 1px solid rgba(209, 213, 219, 0.8);
+  transition: all 0.3s ease;
+}
+
+.job-card:hover {
+  transform: translateY(-3px);
+  /* box-shadow: 0 8px 25px rgba(0,0,0,0.1); */
+  border-color: rgba(156, 163, 175, 0.5);
+}
+
+.job-image {
+  width: 100%;
+  height: 250px;
+  object-fit: cover;
+  border-right: 1px solid rgba(209, 213, 219, 0.8);
+}
+
+.job-image-placeholder {
+  height: 200px;
+  display: flex;
+  flex-direction: column;
+  align-items: center;
+  justify-content: center;
+  background: #f3f4f6;
+  border-right: 1px solid rgba(209, 213, 219, 0.8);
+}
+
+.job-details {
+  padding: 20px;
+  flex: 1;
+  color: #374151;
+}
+
+.job-apply-btn {
+  background: linear-gradient(135deg, #7c3aed, #4f46e5);
+  color: white;
+  border: none;
+  padding: 8px 20px;
+  border-radius: 20px;
+  font-size: 14px;
+  font-weight: 500;
+  display: flex;
+  align-items: center;
+  cursor: pointer;
+  transition: all 0.2s;
+}
+
+.job-apply-btn:hover {
+  transform: translateY(-2px);
+  box-shadow: 0 4px 12px rgba(124, 58, 237, 0.3);
+}
+
+.create-post-btn {
+  position: fixed;
+  bottom: 30px;
+  right: 30px;
+  background: linear-gradient(135deg, #7c3aed, #4f46e5);
+  color: white;
+  border: none;
+  width: 56px;
+  height: 56px;
+  border-radius: 50%;
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  box-shadow: 0 6px 20px rgba(124, 58, 237, 0.3);
+  cursor: pointer;
+  transition: all 0.3s;
+  z-index: 10;
+}
+
+.create-post-btn:hover {
+  transform: scale(1.1) rotate(90deg);
+  box-shadow: 0 8px 25px rgba(124, 58, 237, 0.4);
+}
+
+@media (max-width: 768px) {
+  .job-image {
+    height: 160px;
+    border-right: none;
+    border-bottom: 1px solid rgba(209, 213, 219, 0.8);
+  }
+  
+  .job-image-placeholder {
+    height: 160px;
+    border-right: none;
+    border-bottom: 1px solid rgba(209, 213, 219, 0.8);
+  }
+  
+  .job-details {
+    padding: 16px;
+  }
 }

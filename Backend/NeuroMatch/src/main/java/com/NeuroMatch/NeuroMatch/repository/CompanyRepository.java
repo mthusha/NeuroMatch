@@ -15,4 +15,7 @@ public interface CompanyRepository extends JpaRepository<CompanyDetails, Long> {
             "SELECT uf.company.id FROM UserFlows uf WHERE uf.user.user.email = :email)")
     List<CompanyDetails> findFollowedCompaniesByJobSeekerEmail(@Param("email") String email);
 
+    @Query("SELECT c FROM CompanyDetails c WHERE c.name LIKE %:name%")
+    List<CompanyDetails> searchByNameLike(@Param("name") String name);
+
 }

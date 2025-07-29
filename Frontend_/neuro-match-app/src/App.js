@@ -3,9 +3,10 @@ import Home from "./home/Home";
 import Login from "./auth/login";
 import Register from "./auth/Register";
 import Dashboard from "./profiles/job_seeker/Jobseeker";
+import CompanyView from "./profiles/job_seeker/components/company/CompanyView"
 import { AuthProvider } from "./context/AuthContext";
-import PrivateRoute from "./routes/PrivateRoutes";
-import logo from "./logo.svg";
+// import PrivateRoute from "./routes/PrivateRoutes";
+// import logo from "./logo.svg";
 import "./App.css";
 import UserTypeRedirect from "./routes/UserTypeRedirect";
 import HiringDashboard from "./profiles/hiring_parties/HiringDashboard";
@@ -33,7 +34,7 @@ function App() {
             path="/employer/*"
             element={
               // <PrivateRoute allowedRoles={["employer", "recruiter"]}>
-                <HiringDashboard />
+              <HiringDashboard />
               // </PrivateRoute>
             }
           />
@@ -43,12 +44,16 @@ function App() {
             path="/dashboard"
             element={
               // <PrivateRoute>
-                <UserTypeRedirect />
+              <UserTypeRedirect />
               // </PrivateRoute>
             }
           />
           {/* Fallback */}
           <Route path="*" element={<Home />} />
+
+          {/* view search */}
+          <Route path="/company/:id" element={<CompanyView />} />
+          {/* <Route path="/user/:id" element={<UserView />} /> */}
         </Routes>
       </AuthProvider>
     </Router>

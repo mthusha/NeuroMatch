@@ -20,5 +20,7 @@ public interface JobPostRepository extends JpaRepository<JobPost, Long> {
             "SELECT uf.company.id FROM UserFlows uf WHERE uf.user.user.email = :email)")
     List<JobPost> findJobPostsByNotFollowedCompanies(@Param("email") String email);
 
+    @Query("SELECT jp FROM JobPost jp WHERE jp.companyDetails.id = :companyId")
+    List<JobPost> findByCompanyId(@Param("companyId") Long companyId);
 
 }

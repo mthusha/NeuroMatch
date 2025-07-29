@@ -64,6 +64,26 @@ public class JobPostController {
         }
     }
 
+    @GetMapping(EndpointBundle.GET_JOBS_POST_BY_COMPANY)
+    public ResponseEntity<ResponseWrapper<List<JobPostDto>>> getAllByCompanyIdAndEmail(
+            @PathVariable Long id,
+            @RequestParam String email) {
+        try {
+            List<JobPostDto> jobPosts = jobPostService.getAllJobPostsByCompanyId(id, email);
+            return ResponseEntity.ok(new ResponseWrapper<>(
+                    RestApiResponseStatusCodes.SUCCESS.getCode(),
+                    ValidationMessages.JOB_POST_RETRIEVED_SUCCESSFULLY,
+                    jobPosts
+            ));
+        } catch (Exception e) {
+            return ResponseEntity.status(HttpStatus.INTERNAL_SERVER_ERROR).body(new ResponseWrapper<>(
+                    RestApiResponseStatusCodes.INTERNAL_SERVER_ERROR.getCode(),
+                    e.getMessage(),
+                    null
+            ));
+        }
+    }
+
     @GetMapping( EndpointBundle.RECOMMENDED_COMPANY_LIST +  EndpointBundle.EMAIL)
     public ResponseEntity<ResponseWrapper<List<JobPostDto>>> getRecommendJobPostsByJoSeeker(@PathVariable String email) {
         try {

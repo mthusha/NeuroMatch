@@ -45,5 +45,7 @@ public class JobSeekerDetails {
     @OneToMany(mappedBy = "user")
     private List<UserFlows> userFlows = new ArrayList<>();
 
-
+    @JsonIgnore
+    @OneToMany(mappedBy = "jobSeeker")
+    private List<LikedJobs> likedJobs = new ArrayList<>();
 }

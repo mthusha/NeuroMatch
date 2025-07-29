@@ -89,7 +89,6 @@ export function AuthProvider({ children }) {
   };
 
   const register = async (userData) => {
-    // registration logic
     const mockUser = {
       id: "1",
       email: userData.email,

@@ -117,7 +117,7 @@ const ProfileCard = () => {
 
           <div className="pt-12">
             <h2 className="text-lg font-semibold">{profile.name || 'Not Set'}</h2>
-            <p className="text-sm text-gray-300 mt-1">
+            <p className="text-sm text-gray-500 mt-1">
               {profile.description || 'Not Set'}
             </p>
             <p className="text-xs text-gray-400 mt-2 flex items-center gap-1">
