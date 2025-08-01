@@ -30,7 +30,7 @@ public class JobSeekerServiceImpl implements JobSeekerService {
     @Autowired
     private UserFlowsRepository userFlowsRepository;
     @Autowired
-    private JobSeekerRepository jobSeekerRepository;
+    private LikedJobsRepository likedJobsRepository;
 
     @Override
     public void updateCv(Map<String, Object> requestData) throws JsonProcessingException {
@@ -123,6 +123,29 @@ public class JobSeekerServiceImpl implements JobSeekerService {
             return ValidationMessages.FOLLOWED;
         }
     }
+
+    @Override
+    public LikedJobs likePost(String email, Long postId) {
+        Users user = usersRepository.findByEmail(email)
+                .orElseThrow(() -> new RuntimeException(ValidationMessages.USER_NOT_FOUND));
+        JobSeekerDetails jobSeeker = user.getJobSeekerDetails();
+        JobPost jobPost = jobPostRepository.findById(postId)
+                .orElseThrow(() -> new RuntimeException(ValidationMessages.JOB_POST_NOT_FOUND));
+
+        Optional<LikedJobs> existingLike = likedJobsRepository.findByJobSeekerAndJobPost(jobSeeker, jobPost);
+
+        if (existingLike.isPresent()) {
+            likedJobsRepository.delete(existingLike.get());
+            return null;
+        }
+
+        LikedJobs likedJobs = new LikedJobs();
+        likedJobs.setJobSeeker(jobSeeker);
+        likedJobs.setJobPost(jobPost);
+        jobPost.setLikes(jobPost.getLikes());
+        return likedJobsRepository.save(likedJobs);
+    }
+
 
 
     @Override

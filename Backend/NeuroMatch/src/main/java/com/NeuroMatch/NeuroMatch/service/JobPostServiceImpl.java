@@ -5,6 +5,7 @@ import com.NeuroMatch.NeuroMatch.model.entity.CompanyDetails;
 import com.NeuroMatch.NeuroMatch.model.entity.JobPost;
 import com.NeuroMatch.NeuroMatch.model.entity.JobSeekerDetails;
 import com.NeuroMatch.NeuroMatch.model.entity.Users;
+import com.NeuroMatch.NeuroMatch.repository.AppliedJobsRepository;
 import com.NeuroMatch.NeuroMatch.repository.JobPostRepository;
 import com.NeuroMatch.NeuroMatch.repository.LikedJobsRepository;
 import com.NeuroMatch.NeuroMatch.repository.UsersRepository;
@@ -30,6 +31,8 @@ public class JobPostServiceImpl implements JobPostService {
     private AIClientApiService AIClientApiService;
     @Autowired
     private LikedJobsRepository likedJobsRepository;
+    @Autowired
+    private AppliedJobsRepository appliedJobsRepository;
 
     @Override
     public JobPost createJobPost (JobPostDto jobPostDto, String email) {
@@ -128,6 +131,10 @@ public class JobPostServiceImpl implements JobPostService {
             boolean isLikedOrApplied =
                             likedJobsRepository.existsByJobSeekerAndJobPost(js, job);
             dto.setIsLiked(isLikedOrApplied);
+
+            boolean isApplied = appliedJobsRepository
+                    .existsByJobSeekerAndJobPost(js, job);
+            dto.setIsApplied(isApplied);
             dto.setSuggestionsType("following");
             dto.setPostedBy(job.getCompanyDetails().getName());
             if (job.getPosterImage() != null) {
@@ -152,6 +159,9 @@ public class JobPostServiceImpl implements JobPostService {
                 boolean isLikedOrApplied =
                         likedJobsRepository.existsByJobSeekerAndJobPost(js, job);
                 dto.setIsLiked(isLikedOrApplied);
+                boolean isApplied = appliedJobsRepository
+                        .existsByJobSeekerAndJobPost(js, job);
+                dto.setIsApplied(isApplied);
                 dto.setSuggestionsType("recommended");
                 dto.setPostedBy(job.getCompanyDetails().getName());
                 if (job.getPosterImage() != null) {

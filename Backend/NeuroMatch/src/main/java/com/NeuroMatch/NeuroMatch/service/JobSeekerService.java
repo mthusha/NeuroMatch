@@ -3,6 +3,7 @@ package com.NeuroMatch.NeuroMatch.service;
 import com.NeuroMatch.NeuroMatch.model.dto.InterviewResponse;
 import com.NeuroMatch.NeuroMatch.model.dto.InterviewSession;
 import com.NeuroMatch.NeuroMatch.model.dto.JobSeekerDto;
+import com.NeuroMatch.NeuroMatch.model.entity.LikedJobs;
 import com.NeuroMatch.NeuroMatch.model.entity.Users;
 import com.fasterxml.jackson.core.JsonProcessingException;
 
@@ -16,4 +17,5 @@ public interface JobSeekerService {
     InterviewSession getInterviewQuestionsForJobSeeker(String email);
     InterviewResponse answerInterviewQuestion(String sessionId, String answer);
     String followCompany(String email, Long companyId);
+    LikedJobs likePost(String email, Long postId);
 }

@@ -34,35 +34,20 @@ const CandidateCard = ({ candidate, applicationStatus, applicationDate, showActi
                 <h3 className="text-base font-semibold text-gray-800 truncate max-w-[180px]">
                   {candidate.name}
                 </h3>
-                <span className="text-xs text-indigo-600 font-medium whitespace-nowrap">
-                  Score: {candidate.score}
-                </span>
+                  {/* <div> */}
+                     {candidate.recommended && renderRecommendedIcon()}
+                {/* </div> */}
               </div>
 
-              <p className="text-xs text-gray-500 truncate">{candidate.email}</p>
+              <p className="text-xs text-gray-500" style={{margin:'5px auto'}}>{candidate.bio}</p>
             </div>
 
-            {showActionButton && (
-              <button className="p-1.5 rounded-full bg-gray-100 hover:bg-gray-200 transition ml-2">
-                <svg
-                  xmlns="http://www.w3.org/2000/svg"
-                  width="18"
-                  height="18"
-                  viewBox="0 0 24 24"
-                  fill="none"
-                  stroke="currentColor"
-                  strokeWidth="2"
-                  strokeLinecap="round"
-                  strokeLinejoin="round"
-                  className="text-indigo-500 group-hover:text-indigo-600 transition-colors duration-200"
-                >
-                  <path d="M2.062 12.348a1 1 0 0 1 0-.696 10.75 10.75 0 0 1 19.876 0 1 1 0 0 1 0 .696 10.75 10.75 0 0 1-19.876 0"></path>
-                  <circle cx="12" cy="12" r="3"></circle>
-                </svg>
-              </button>
-            )}
+            <span className="text-xs text-indigo-600 font-medium whitespace-nowrap  px-3 py-1 bg-blue-50 text-blue-700" style={{borderRadius:"10px"}}>
+                  Score: {candidate.score}
+            </span>
           </div>
           
+          <div style={{display:"flex", justifyContent:'space-between'}}>
           <div className="flex flex-wrap gap-1.5 mt-2">
             {skills.slice(0, 4).map((skill) => (
               <span key={skill} className="text-xs bg-indigo-50 text-indigo-600 px-2.5 py-1 rounded-full">
@@ -70,14 +55,12 @@ const CandidateCard = ({ candidate, applicationStatus, applicationDate, showActi
               </span>
             ))}
             {skills.length > 4 && (
-              <span className="text-xs text-gray-500">+{skills.length - 4} more</span>
+              <span className="text-xs text-gray-500 place-content-center">+{skills.length - 4} more</span>
             )}
           </div>
 
           <div className="flex flex-wrap items-center justify-between mt-3">
-            <div>
-              {candidate.recommended && renderRecommendedIcon()}
-            </div>
+          
 
             {applicationStatus && (
               <div className="flex items-center gap-2 text-xs">
@@ -101,6 +84,10 @@ const CandidateCard = ({ candidate, applicationStatus, applicationDate, showActi
               </div>
             )}
           </div>
+
+          </div>
+
+          
         </div>
       </div>
     </div>

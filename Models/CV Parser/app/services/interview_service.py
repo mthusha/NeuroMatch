@@ -16,11 +16,16 @@ class InterviewService:
         chat = model.start_chat()
         chat_sessions[session_id] = chat
 
-        prompt = f"""You are a technical interviewer. Start an interview based on the following CV. Ask one technical question at a time. Wait for the candidate's response before continuing.
+        prompt = f"""You are a technical interviewer. Begin the interview by introducing yourself, mentioning your name and role, and welcoming the candidate.
+
+Then, based on the following CV, ask the candidate to introduce themselves as your first question.
+After they respond, you will proceed to ask one technical question at a time, waiting for their answer before continuing.
 
 CV: {cv_data}
 
-Begin by asking your first question."""
+Begin now with your introduction and ask for the candidate's self-introduction."""
+
+
         response = chat.send_message(prompt)
         return response.text.strip()
 

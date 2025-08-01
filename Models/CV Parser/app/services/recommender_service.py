@@ -1,35 +1,42 @@
-import pickle
-import numpy as np
+SKILL_ALIASES = {
+    "js": "javascript",
+    "javascript": "javascript",
+    "py": "python",
+    "python": "python",
+    "ml": "machine learning",
+    "machine learning": "machine learning",
+    "reactjs": "react",
+    "react.js": "react",
+    "react": "react",
+    "sql": "sql",
+    "structured query language": "sql",
+    "html5": "html",
+    "html": "html",
+    "css3": "css",
+    "css": "css",
+}
 
-model_path = "ml/recommend_model.pkl"
-encoder_path = "ml/skill_encoder.pkl"
+def normalize_skill(skill: str) -> str:
+    skill = skill.strip().lower()
+    return SKILL_ALIASES.get(skill, skill) 
 
-model = pickle.load(open(model_path, "rb"))
-mlb = pickle.load(open(encoder_path, "rb"))
-
-def predict_recommendation(user_skills: list, job_skills: list):
+def predict_recommendation(user_skills: list, job_skills: list, threshold: float = 0.7):
     try:
-        user_skills = [s.strip().lower() for s in user_skills]
-        job_skills = [s.strip().lower() for s in job_skills]
+        user_skills = set(normalize_skill(s) for s in user_skills if s.strip())
+        job_skills = set(normalize_skill(s) for s in job_skills if s.strip())
 
-        u_vec = mlb.transform([user_skills])[0]
-        j_vec = mlb.transform([job_skills])[0]
+        if not job_skills:
+            return {"recommended": False, "confidence": 0.0}
 
-        overlap = np.sum(u_vec & j_vec)
-        union = np.sum(u_vec | j_vec)
-        jaccard = overlap / union if union > 0 else 0
+        overlap = user_skills & job_skills
+        match_ratio = len(overlap) / len(job_skills)
 
-        match_score = len(set(user_skills) & set(job_skills)) / len(set(job_skills)) if job_skills else 0
-
-        extra_features = np.array([[overlap, jaccard, match_score]])
-        x_input = np.hstack((u_vec.reshape(1, -1), j_vec.reshape(1, -1), extra_features))
-
-        prediction = model.predict(x_input)[0]
-        confidence = model.predict_proba(x_input)[0][1]
+        recommended = match_ratio >= threshold
 
         return {
-            "recommended": bool(prediction),
-            "confidence": round(confidence * 100, 2)
+            "recommended": recommended,
+            "confidence": round(match_ratio * 100, 2),
+            "matched_skills": list(overlap)
         }
 
     except Exception as e:

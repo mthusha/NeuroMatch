@@ -2,12 +2,16 @@ import { useEffect, useRef, useState } from 'react';
 import { FaMapMarkerAlt, FaEllipsisH } from 'react-icons/fa';
 import { useAuth } from '../../../context/AuthContext';
 import { uploadImage } from '../../../api/Users';
+import { useNavigate } from 'react-router-dom';
+import FullscreenLoader from './../../comman/FullscreenLoader'
 
 const ProfileCard = () => {
   const { user, fetchUserProfile } = useAuth();
   const [profile, setProfile] = useState(null);
   const profileInputRef = useRef(null);
   const coverInputRef = useRef(null);
+  const [loadingInterview, setLoadingInterview] = useState(false);
+  const navigate = useNavigate();
 
  useEffect(() => {
   const loadProfile = async () => {
@@ -18,6 +22,13 @@ const ProfileCard = () => {
   };
   loadProfile();
 }, [user, fetchUserProfile]);
+
+const handleNeuroSyncClick = () => {
+    setLoadingInterview(true);
+    setTimeout(() => {
+      navigate('/seeker-interview');
+    }, 2000);
+  };
 
 
   const handleProfilePicClick = () => {
@@ -77,6 +88,8 @@ const ProfileCard = () => {
 
 
   return (
+    <>
+      {loadingInterview && <FullscreenLoader />}
     <div className="profile-card">
       <div
         className="profile-banner"
@@ -139,7 +152,7 @@ const ProfileCard = () => {
         <a href="/neuro-profile" className="contact-info"><i class="fas fa-link" style={{marginRight: 5}}></i>View Neural Compatibility</a>
         
         <div className="action-buttons">
-         <button className="btn-primary">NeuroSync Interview</button>
+         <button className="btn-primary" onClick={handleNeuroSyncClick} disabled={loadingInterview}>NeuroSync Interview</button>
           <button className="btn-secondary">View Submissions</button>
           <button className="more-btn"><FaEllipsisH /></button>
         </div>
@@ -164,6 +177,7 @@ const ProfileCard = () => {
         </div>
       </div>
     </div>
+     </>
   );
 };
 

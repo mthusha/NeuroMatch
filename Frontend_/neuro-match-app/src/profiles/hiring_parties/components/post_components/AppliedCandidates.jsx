@@ -73,7 +73,8 @@ const AppliedCandidates = ({ vacancies, selectedVacancy, onSelectVacancy }) => {
                     recommended: application.recommended,
                     score: application.score,
                     skill: application.skill,
-                    profilePictureBase64: application.profilePictureBase64
+                    profilePictureBase64: application.profilePictureBase64,
+                    bio : application.bio
                   }}
                   applicationStatus={selectedStatus}
                   applicationDate={application.appliedDate}

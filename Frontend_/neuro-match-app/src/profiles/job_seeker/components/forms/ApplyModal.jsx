@@ -1,6 +1,6 @@
 import React from 'react';
 import Modal from 'react-modal';
-import { FaTimesCircle } from 'react-icons/fa';
+// import { FaTimesCircle } from 'react-icons/fa';
 
 Modal.setAppElement('#root');
 
@@ -12,13 +12,13 @@ function ApplyModal({ isOpen, onClose, job, formData, setFormData, onSubmit }) {
       overlayClassName="fixed inset-0 bg-black bg-opacity-50 flex items-center justify-center z-50"
       className="bg-white text-gray-800 rounded-xl shadow-xl p-6 w-full max-w-md mx-auto transition-all duration-300 relative border border-gray-200 text-sm"
     >
-      <button
+      {/* <button
         onClick={onClose}
         className="absolute top-3 right-3 text-gray-500 hover:text-red-500 text-xl transition"
         title="Close"
       >
         <FaTimesCircle />
-      </button>
+      </button> */}
 
       <h2 className="text-xl font-bold mb-5 text-center">
         Apply for <span className="text-indigo-600">{job?.title}</span>

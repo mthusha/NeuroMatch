@@ -8,4 +8,5 @@ import lombok.Setter;
 public class InterviewSession {
     private String sessionId;
     private String question;
+    private String audioBase64;
 }

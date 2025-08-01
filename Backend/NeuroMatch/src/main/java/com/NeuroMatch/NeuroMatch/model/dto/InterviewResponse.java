@@ -6,5 +6,7 @@ import lombok.Setter;
 @Getter
 @Setter
 public class InterviewResponse {
+    private String sessionId;
     private String response;
+    private String audioBase64;
 }

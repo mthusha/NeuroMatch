@@ -5,11 +5,14 @@ import Register from "./auth/Register";
 import Dashboard from "./profiles/job_seeker/Jobseeker";
 import CompanyView from "./profiles/job_seeker/components/company/CompanyView"
 import { AuthProvider } from "./context/AuthContext";
+import AppliedJobs from './profiles/job_seeker/AppliedJobs'
 // import PrivateRoute from "./routes/PrivateRoutes";
 // import logo from "./logo.svg";
 import "./App.css";
 import UserTypeRedirect from "./routes/UserTypeRedirect";
 import HiringDashboard from "./profiles/hiring_parties/HiringDashboard";
+import InterviewPanel from "./profiles/job_seeker/components/InterviewPanel"
+
 function App() {
   return (
     <Router>
@@ -53,6 +56,8 @@ function App() {
 
           {/* view search */}
           <Route path="/company/:id" element={<CompanyView />} />
+          <Route path="/view-applied-jobs" element={<AppliedJobs />} />
+          <Route path="/seeker-interview" element={<InterviewPanel />} />
           {/* <Route path="/user/:id" element={<UserView />} /> */}
         </Routes>
       </AuthProvider>

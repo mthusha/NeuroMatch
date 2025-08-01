@@ -21,4 +21,5 @@ public class ApplicantResponseDto {
     private String score;
     private Map<String, List<String>> skill = new HashMap<>();
     private String profilePictureBase64;
+    private String bio;
 }

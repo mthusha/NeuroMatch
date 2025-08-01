@@ -1,11 +1,9 @@
 package com.NeuroMatch.NeuroMatch.service;
 
 import com.NeuroMatch.NeuroMatch.model.dto.ApplicantResponseDto;
+import com.NeuroMatch.NeuroMatch.model.dto.AppliedJobsListDot;
 import com.NeuroMatch.NeuroMatch.model.dto.ApplyJobDto;
-import com.NeuroMatch.NeuroMatch.model.entity.AppliedJobs;
-import com.NeuroMatch.NeuroMatch.model.entity.JobPost;
-import com.NeuroMatch.NeuroMatch.model.entity.JobSeekerDetails;
-import com.NeuroMatch.NeuroMatch.model.entity.Users;
+import com.NeuroMatch.NeuroMatch.model.entity.*;
 import com.NeuroMatch.NeuroMatch.repository.AppliedJobsRepository;
 import com.NeuroMatch.NeuroMatch.repository.JobPostRepository;
 import com.NeuroMatch.NeuroMatch.repository.UsersRepository;
@@ -97,7 +95,8 @@ public class AppliedJobsServiceImpl implements AppliedJobsService {
                     isRecommended,
                     seeker.getNeuroScore(),
                     userSkillsMap,
-                    profilePictureBase64
+                    profilePictureBase64,
+                    seeker.getBio()
             );
 
             result.add(dto);
@@ -105,5 +104,41 @@ public class AppliedJobsServiceImpl implements AppliedJobsService {
 
         return result;
     }
+
+    @Override
+    public List<AppliedJobsListDot> getAppliedJobsListByJobSeeker(String email) {
+        Users user = usersRepository.findByEmail(email)
+                .orElseThrow(() -> new RuntimeException(ValidationMessages.USER_NOT_FOUND));
+        JobSeekerDetails jobSeekerDetails = user.getJobSeekerDetails();
+
+        List<AppliedJobs> appliedJobsList = appliedJobsRepository.findByJobSeeker(jobSeekerDetails);
+
+        List<AppliedJobsListDot> result = new ArrayList<>();
+
+        for (AppliedJobs appliedJob : appliedJobsList) {
+            JobPost jobPost = appliedJob.getJobPost();
+            CompanyDetails company = jobPost.getCompanyDetails();
+
+            AppliedJobsListDot dto = new AppliedJobsListDot();
+            dto.setId(appliedJob.getId());
+            dto.setAppliedJob(jobPost.getTitle());
+            dto.setAppliedJobDescription(jobPost.getDescription());
+            dto.setLocation(company.getAddress());
+            dto.setCompany(company.getName());
+            dto.setAppliedDate(appliedJob.getAppliedDate());
+            dto.setStatus(appliedJob.getStatus());
+
+            if (jobPost.getPosterImage() != null) {
+                dto.setPosterImageBase64(Base64.getEncoder().encodeToString(jobPost.getPosterImage()));
+            }
+            if (company.getProfilePicture() != null) {
+                dto.setCompanyProfileImageBase64(Base64.getEncoder().encodeToString(company.getProfilePicture()));
+            }
+            result.add(dto);
+        }
+
+        return result;
+    }
+
 
 }

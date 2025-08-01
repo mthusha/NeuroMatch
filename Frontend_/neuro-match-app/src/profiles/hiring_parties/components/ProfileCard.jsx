@@ -2,7 +2,7 @@ import React, { useEffect, useRef, useState } from 'react';
 import { FaMapMarkerAlt} from 'react-icons/fa';
 import { useAuth } from '../../../context/AuthContext';
 import { uploadImage } from '../../../api/Users';
-
+import PostViewBar from './PostViewBar'
 const ProfileCard = () => {
   const { user, fetchUserProfile } = useAuth();
   const [profile, setProfile] = useState(null);
@@ -75,7 +75,7 @@ const ProfileCard = () => {
   if (!profile) return <div>Loading profile...</div>;
 
   return (
-    <div>
+    <div className="max-h-[1450px] overflow-auto no-scrollbar">
       {/* Header */}
       <div className="relative rounded-2xl overflow-hidden shadow-xl  border-gray-700 bg-in-box">
         <div className="h-40 w-full">
@@ -127,6 +127,9 @@ const ProfileCard = () => {
           </div>
         </div>
       </div>
+
+              <PostViewBar/>
+      
     </div>
   );
 };

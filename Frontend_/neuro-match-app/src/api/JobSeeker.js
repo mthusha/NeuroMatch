@@ -55,3 +55,15 @@ export const toggleFollowCompany = async (email, companyId) => {
   return response.data;
 };
 
+export const likeJobPost = async (email, jobPostId) => {
+  try {
+    const response = await axios.post(`${API_BASE_URL}/job-seeker/like`, null, {
+      params: { email, jobPostId },
+    });
+    return response.data;
+  } catch (error) {
+    console.error("Error liking job post:", error);
+    return { statusCode: 500, message: "Server Error" };
+  }
+};
+

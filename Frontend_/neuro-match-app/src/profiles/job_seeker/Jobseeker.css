@@ -89,7 +89,7 @@
 .nav-icon {
     width: 24px;
     height: 24px;
-    color: #6b7280;
+    /* color: #6b7280; */
     cursor: pointer;
     transition: all 0.2s;
     display: flex;
@@ -593,8 +593,50 @@
     transform: scale(1.05);
     box-shadow: 0 0 8px rgba(124, 58, 237, 0.3);
 }
+.post-detail-box{
+    display: flex;
+    gap: 20px;
+}
+.post-text-box {
+    width: 50%;
+    padding: 15px;
+    background-color: #fbfbfb;
+    color: #2e2e2e;
+    font-family: 'Segoe UI', Tahoma, Geneva, Verdana, sans-serif;
+    font-size: 16px;
+    line-height: 1.7;
+    text-align: justify;
+    border-radius: 12px;
+    transition: transform 0.3s ease;
+}
 
+.job-description {
+    margin-bottom: 16px;
+}
+
+.job-meta p {
+    margin: 6px 0;
+    text-align: left;
+}
+
+.post-img-box{
+    width: 50%;
+}
 /* Responsive */
+@media (max-width:1200px) {
+    .post-detail-box{
+       display: block;
+    }
+    .post-text-box{
+        width: 100%;
+        background-color: rgb(255, 255, 255);
+        padding: 0;
+    }
+    .post-img-box{
+        width: 100%;
+    }
+}
+
 @media (max-width: 768px) {
     .container {
         grid-template-columns: 1fr;
@@ -635,4 +677,5 @@
     .neuromatch-logo {
         display: none;
     }
+    
 }

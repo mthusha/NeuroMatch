@@ -1,8 +1,6 @@
 package com.NeuroMatch.NeuroMatch.controller;
 
-import com.NeuroMatch.NeuroMatch.model.dto.ApplicantResponseDto;
-import com.NeuroMatch.NeuroMatch.model.dto.ApplyJobDto;
-import com.NeuroMatch.NeuroMatch.model.dto.JobPostDto;
+import com.NeuroMatch.NeuroMatch.model.dto.*;
 import com.NeuroMatch.NeuroMatch.model.entity.AppliedJobs;
 import com.NeuroMatch.NeuroMatch.model.entity.JobPost;
 import com.NeuroMatch.NeuroMatch.model.enums.RestApiResponseStatusCodes;
@@ -58,6 +56,24 @@ public class AppliedJobsController {
             return ResponseEntity.status(HttpStatus.INTERNAL_SERVER_ERROR).body(new ResponseWrapper<>(
                     RestApiResponseStatusCodes.BAD_REQUEST.getCode(),
 //                    RestApiResponseStatusCodes.INTERNAL_SERVER_ERROR.getMessage(),
+                    e.getMessage(),
+                    null
+            ));
+        }
+    }
+
+    @GetMapping(EndpointBundle.EMAIL)
+    public ResponseEntity<ResponseWrapper<List<AppliedJobsListDot>>> getAppliedJobsListByJobSeeker(@PathVariable String email){
+        try{
+            List<AppliedJobsListDot> appliedJobsList = appliedJobsService.getAppliedJobsListByJobSeeker(email);
+            return ResponseEntity.status(HttpStatus.CREATED).body(new ResponseWrapper<>(
+                    RestApiResponseStatusCodes.SUCCESS.getCode(),
+                    ValidationMessages.APPLIED_JOBS_RETRIEVED,
+                    appliedJobsList
+            ));
+        }catch (Exception e){
+            return ResponseEntity.status(HttpStatus.INTERNAL_SERVER_ERROR).body(new ResponseWrapper<>(
+                    RestApiResponseStatusCodes.INTERNAL_SERVER_ERROR.getCode(),
                     e.getMessage(),
                     null
             ));

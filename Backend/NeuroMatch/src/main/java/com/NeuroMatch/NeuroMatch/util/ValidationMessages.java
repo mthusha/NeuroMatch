@@ -31,4 +31,7 @@ public class ValidationMessages {
     public static final String ANSWER_PROCESSED = "Answer processed";
     public static final String UNFOLLOWED = "Unfollowed";
     public static final String FOLLOWED = "Followed";
+    public static final String LIKED = "Liked";
+    public static final String APPLIED_JOBS_RETRIEVED = "Applied jobs retrieved successfully";
+    public static final String SPEAK_MODEL = "cheerful";
 }

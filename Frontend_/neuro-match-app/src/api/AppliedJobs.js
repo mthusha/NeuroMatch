@@ -33,3 +33,23 @@ export const getApplicantsByJobPostId = async (jobPostId) => {
     return { statusCode: 500, statusMessage: "API error", data: [] };
   }
 };
+
+
+export const fetchAppliedJobsByEmail = async (email) => {
+  const encodedEmail = encodeURIComponent(email);
+  const response = await fetch(`${API_BASE_URL}/applied-jobs/${encodedEmail}`);
+
+  if (!response.ok) {
+    throw new Error('Failed to fetch applied jobs');
+  }
+
+  const data = await response.json();
+  
+  return Array.isArray(data.data)
+    ? data.data.map(job => ({
+        ...job,
+        status: job.status || 'pending'
+      }))
+    : [];
+};
+

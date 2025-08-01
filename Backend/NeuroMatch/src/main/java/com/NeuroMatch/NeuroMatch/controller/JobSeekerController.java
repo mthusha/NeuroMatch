@@ -1,8 +1,10 @@
 package com.NeuroMatch.NeuroMatch.controller;
 
+import com.NeuroMatch.NeuroMatch.model.dto.AppliedJobsListDot;
 import com.NeuroMatch.NeuroMatch.model.dto.InterviewResponse;
 import com.NeuroMatch.NeuroMatch.model.dto.InterviewSession;
 import com.NeuroMatch.NeuroMatch.model.dto.JobSeekerDto;
+import com.NeuroMatch.NeuroMatch.model.entity.LikedJobs;
 import com.NeuroMatch.NeuroMatch.model.enums.RestApiResponseStatusCodes;
 import com.NeuroMatch.NeuroMatch.service.JobSeekerService;
 import com.NeuroMatch.NeuroMatch.util.EndpointBundle;
@@ -104,6 +106,26 @@ public class JobSeekerController {
     }
 
 
+    @PostMapping(EndpointBundle.LIKE)
+    public ResponseEntity<ResponseWrapper<LikedJobs>> likeJobSeekers(
+            @RequestParam String email,
+            @RequestParam Long jobPostId
+    ) {
+       try{
+           LikedJobs likedJobs = jobSeekerService.likePost(email, jobPostId);
+           return ResponseEntity.ok(new ResponseWrapper<>(
+                   RestApiResponseStatusCodes.SUCCESS.getCode(),
+                   ValidationMessages.LIKED,
+                   likedJobs
+           ));
+       }catch (Exception e) {
+           return ResponseEntity.status(HttpStatus.INTERNAL_SERVER_ERROR).body(new ResponseWrapper<>(
+                   RestApiResponseStatusCodes.INTERNAL_SERVER_ERROR.getCode(),
+                   e.getMessage(),
+                   null
+           ));
+       }
+    }
 
     @GetMapping(EndpointBundle.INTERVIEW_QUESTIONS + EndpointBundle.EMAIL)
     public ResponseEntity<ResponseWrapper<InterviewSession>> startInterviewByEmail(@PathVariable String email) {

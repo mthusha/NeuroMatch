@@ -1,7 +1,13 @@
 import React from 'react';
-
+import Insights from './../hiring_parties/components/post_components/Insights'
+import { useLocation } from "react-router-dom";
 const RecruitmentMetrics = () => {
+  const location = useLocation();
+  const path = location.pathname;
+  const hideInsights = path.startsWith("/company/");
+
   return (
+    <div>
     <div className="bg-in-box rounded-xl p-5 shadow-sm border border-gray-200 max-w-full mb-6">
       <h3 className="text-lg font-semibold text-gray-800 mb-4 border-b border-gray-200 pb-2">
         Recruitment Metrics
@@ -48,7 +54,11 @@ const RecruitmentMetrics = () => {
           <div className="bg-gradient-to-r from-indigo-500 to-purple-600 h-2 rounded-full" style={{ width: '65%' }}></div>
         </div>
       </div>
+      
     </div>
+    {/* Chart */}
+    {!hideInsights && <Insights />}
+        </div>
   );
 };
 

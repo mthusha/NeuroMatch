@@ -1,9 +1,11 @@
 import React, { useState, useEffect } from 'react';
-import { FaThumbsUp, FaShareSquare } from 'react-icons/fa';
+import { FaThumbsUp } from 'react-icons/fa';
 import { getRecommendedJobPosts } from '../../../api/Vacancy';
 import { applyToJobPost } from '../../../api/AppliedJobs';
 import ApplyModal from './forms/ApplyModal';
 import { useAuth } from '../../../context/AuthContext';
+import { likeJobPost } from '../../../api/JobSeeker';
+import ApplyButton from '../components/forms/ApplyButton'
 function JobFeed({ companyId, type }) {
   const [jobs, setJobs] = useState([]);
   const [userInteractions, setUserInteractions] = useState({});
@@ -35,7 +37,8 @@ function JobFeed({ companyId, type }) {
             suggestionType: job.suggestionsType,
             postedBy: job.postedBy,
             profileImageBase64: `data:image/png;base64,${job.profileImageBase64}`,
-            isLiked: job.isLiked
+            isLiked: job.isLiked,
+            isApplied: job.isApplied
           }));
           setJobs(formattedJobs);
         } else {
@@ -60,6 +63,12 @@ function JobFeed({ companyId, type }) {
     const response = await applyToJobPost(payload);
     if (response.statusCode === 201) {
       // alert("Successfully applied!");
+      const updatedJobs = jobs.map(job => 
+        job.id === selectedJob.id 
+          ? { ...job, isApplied: true, applied: job.applied + 1 } 
+          : job
+      );
+      setJobs(updatedJobs);
       setIsModalOpen(false);
     } else {
       alert("Failed to apply.");
@@ -70,28 +79,41 @@ function JobFeed({ companyId, type }) {
   }
 };
 
-  const toggleInteraction = (jobId, type) => {
-    const hasInteracted = userInteractions[jobId]?.[type] || false;
+  const toggleInteraction = async (jobId, type) => {
+  const hasInteracted = userInteractions[jobId]?.[type] || false;
 
-    setJobs(prev =>
-      prev.map(job =>
-        job.id === jobId
-          ? {
-              ...job,
-              [type]: hasInteracted ? job[type] - 1 : job[type] + 1
-            }
-          : job
-      )
-    );
+  setJobs(prev =>
+    prev.map(job =>
+      job.id === jobId
+        ? {
+            ...job,
+            [type]: hasInteracted ? job[type] - 1 : job[type] + 1,
+            isLiked: !hasInteracted
+          }
+        : job
+    )
+  );
 
-    setUserInteractions(prev => ({
-      ...prev,
-      [jobId]: {
-        ...prev[jobId],
-        [type]: !hasInteracted
+  setUserInteractions(prev => ({
+    ...prev,
+    [jobId]: {
+      ...prev[jobId],
+      [type]: !hasInteracted
+    }
+  }));
+
+  if (type === 'likes' && !hasInteracted) {
+    try {
+      const response = await likeJobPost(user.email, jobId);
+      if (response.statusCode !== 200) {
+        console.warn("Like API failed:", response.message);
       }
-    }));
-  };
+    } catch (error) {
+      console.error("Error calling like API:", error);
+    }
+  }
+};
+
     const getSuggestionBadge = (type) => {
     const types = {
       following: {
@@ -173,11 +195,22 @@ function JobFeed({ companyId, type }) {
                 fontSize:'11px'
               }}
               >{job.postedTime}</p> */}
-              <p>{job.description}</p>
-              <p><strong>Location:</strong> {job.location}</p>
-              <p><strong>Salary:</strong> {job.salary}</p>
-              
-              <img src={job.image} alt="Job Visual" className="job-image-j" />
+              <div className='post-detail-box'>
+                <div className="post-text-box">
+                  <p className="job-description">{job.description}</p>
+                  <div className="job-meta">
+                    <p><strong>📍 Location:</strong> {job.location}</p>
+                    <p><strong>💰 Salary:</strong> {job.salary}</p>
+                  </div>
+                </div>
+
+
+                <div className='post-img-box'>
+                  <img src={job.image} alt="Job Visual" className="job-image-j" />
+                </div>
+              </div>
+
+
               <div className="job-actions">
                 <button
                   onClick={() => toggleInteraction(job.id, 'likes')}
@@ -187,15 +220,15 @@ function JobFeed({ companyId, type }) {
                   <FaThumbsUp />
                   <span>{job.likes}</span>
                 </button>
-
-                <button
+                <ApplyButton job={job} openApplyForm={openApplyForm} />
+                {/* <button
                    onClick={() => openApplyForm(job)}
-                  style={{ color: job.applied ? 'purple' : 'black', display: 'flex', alignItems: 'center', gap: '6px' }}
+                  style={{ color: job.isApplied ? 'purple' : 'black', display: 'flex', alignItems: 'center', gap: '6px' }}
                   title="Applied"
                 >
                   <FaShareSquare />
                   <span>{job.applied}</span>
-                </button>
+                </button> */}
               </div>
             </div>
             

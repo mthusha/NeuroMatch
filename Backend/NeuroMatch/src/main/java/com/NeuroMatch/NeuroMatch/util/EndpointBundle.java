@@ -26,6 +26,8 @@ public class EndpointBundle {
     public static final String INTERVIEW_QUESTIONS = "/interview/generate_questions";
     public static final String INTERVIEW_ANSWERS = "/answer";
     public static final String FOLLOW = "/follow";
+    public static final String LIKE = "/like";
+
 
     //utils
     public static final String CREATE = "/create";
@@ -42,6 +44,7 @@ public class EndpointBundle {
     //Applied Jobs
     public static final String APPLIED_JOBS = BASE_URL + "/applied-jobs";
     public static final String RECOMMENDED_APPLIED_JOBS = "/{jobPostId}/applicants";
+//    public static final String APPLIED_JOBS_GET = "/applied-jobs";
 
     // python server
     public static final String AI_CLIENT_URL_RECOMMEND = "http://localhost:5000/api/recommend/predict";
