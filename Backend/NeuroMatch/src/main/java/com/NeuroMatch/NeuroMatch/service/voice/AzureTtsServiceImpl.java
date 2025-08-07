@@ -1,10 +1,11 @@
-package com.NeuroMatch.NeuroMatch.service;
+package com.NeuroMatch.NeuroMatch.service.voice;
 
 import org.springframework.beans.factory.annotation.Value;
 import org.springframework.stereotype.Service;
 import org.springframework.http.*;
 import org.springframework.web.client.RestTemplate;
 import java.util.Base64;
+import java.util.List;
 
 @Service
 public class AzureTtsServiceImpl implements AzureTtsService {
@@ -14,6 +15,16 @@ public class AzureTtsServiceImpl implements AzureTtsService {
 
     @Value("${azure.tts.region}")
     private String azureRegion;
+
+    @Value("${elevenlabs.tts.key}")
+    private String elevenLabsKey;
+
+    @Value("${elevenlabs.voice.id}")
+    private String voiceId;
+
+    @Value("${elevenlabs.api.url}")
+    private String baseApiUrl;
+
 
     private final RestTemplate restTemplate = new RestTemplate();
 
@@ -59,4 +70,8 @@ public class AzureTtsServiceImpl implements AzureTtsService {
             throw new RuntimeException("Azure TTS failed: " + e.getMessage(), e);
         }
     }
+
+
+
+
 }

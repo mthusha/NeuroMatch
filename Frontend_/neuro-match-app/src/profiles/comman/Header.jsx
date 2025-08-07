@@ -11,7 +11,7 @@ const Header = ({ searchType = 'company' }) => {
   const { user } = useAuth();
    const paths = {
     home: user?.role === 'employer' ? '/employer' : '/jobseeker',
-    applied: user?.role === 'employer' ? '/employer' : '/view-applied-jobs',
+    applied: user?.role === 'employer' ? '/view-applied-jobs-co' : '/view-applied-jobs',
     notifications: '/notifications',
     messages: '/messages',
     profile: '/profile',
@@ -27,9 +27,9 @@ const Header = ({ searchType = 'company' }) => {
 
   // path based on user role
   const homePath = user?.role === 'employer' ? '/employer' : '/jobseeker';
-  const viewApliedPath = user?.role === 'employer' ? '/employer' : '/view-applied-jobs';
+  const viewApliedPath = user?.role === 'employer' ? '/view-applied-jobs-co' : '/view-applied-jobs';
 
-
+console.log(user?.role)
 
   return (
     <div className="header relative flex items-center justify-between p-4 bg-white shadow-md">

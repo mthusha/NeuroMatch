@@ -67,3 +67,20 @@ export const likeJobPost = async (email, jobPostId) => {
   }
 };
 
+export async function fetchCvData(email) {
+  try {
+    const res = await fetch(`${API_BASE_URL}/job-seeker/cv/${email}`);
+    const json = await res.json();
+
+    if (json.statusCode === 200 && json.data) {
+      return JSON.parse(json.data);
+    } else {
+      throw new Error(json.statusMessage || "Failed to load CV data");
+    }
+  } catch (err) {
+    console.error("Error fetching CV:", err);
+    throw err;
+  }
+}
+
+

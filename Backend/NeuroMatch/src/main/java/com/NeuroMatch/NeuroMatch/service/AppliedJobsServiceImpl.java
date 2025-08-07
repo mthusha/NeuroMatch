@@ -87,6 +87,7 @@ public class AppliedJobsServiceImpl implements AppliedJobsService {
             }
             String fullName = seeker.getName();
             ApplicantResponseDto dto = new ApplicantResponseDto(
+                    app.getId(),
                     fullName,
                     user.getEmail(),
                     app.getSubject(),
@@ -96,13 +97,23 @@ public class AppliedJobsServiceImpl implements AppliedJobsService {
                     seeker.getNeuroScore(),
                     userSkillsMap,
                     profilePictureBase64,
-                    seeker.getBio()
+                    seeker.getBio(),
+                    app.getStatus()
             );
 
             result.add(dto);
         }
 
         return result;
+    }
+
+    @Override
+    public String updateApplicantStatus(Long id, String status) {
+        AppliedJobs appliedJobs = appliedJobsRepository.
+                findById(id).orElseThrow(() -> new RuntimeException(ValidationMessages.APPLIED_JOB_NOT_FOUND));
+        appliedJobs.setStatus(status);
+        appliedJobsRepository.save(appliedJobs);
+        return status;
     }
 
     @Override

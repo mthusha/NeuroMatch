@@ -14,14 +14,20 @@ export const CvConfirmationModal = ({
   onClose,
   onConfirm,
   isLoading,
+  showConfirmButton = true 
 }) => {
+
+  const titleText = showConfirmButton ? "Confirm Your CV Details" : "CV Details";
   return (
     <div className="fixed inset-0 bg-black bg-opacity-50 flex items-center justify-center p-4 z-50">
       <div className="bg-white rounded-lg shadow-xl max-w-2xl w-full max-h-[90vh] flex flex-col border border-gray-200">
-        <div className="p-6 overflow-y-auto text-sm text-gray-700 flex-grow" style={{scrollbarWidth:"none"}}>
-          <h3 className="text-lg font-bold text-transparent bg-clip-text bg-gradient-to-r from-blue-600 to-indigo-600 mb-4">
-            Confirm Your CV Details
+         <h3 style={{
+          padding:'10px'
+         }} className="text-lg font-bold text-transparent bg-clip-text bg-gradient-to-r from-blue-600 to-indigo-600 mb-4">
+             {titleText}
           </h3>
+        <div className="p-6 overflow-y-auto text-sm text-gray-700 flex-grow" style={{scrollbarWidth:"none"}}>
+         
 
           <DataSection title="Personal Information">
             <div className="grid grid-cols-1 md:grid-cols-2 gap-4">
@@ -143,13 +149,15 @@ export const CvConfirmationModal = ({
           >
             Cancel
           </button>
-          <button
-            onClick={onConfirm}
-            className="px-4 py-2 bg-gradient-to-r from-blue-600 to-indigo-600 text-white rounded-md hover:opacity-90 text-sm font-medium transition-colors disabled:opacity-50"
-            disabled={isLoading}
-          >
-            {isLoading ? 'Saving...' : 'Confirm and Save'}
-          </button>
+          {showConfirmButton && (
+            <button
+              onClick={onConfirm}
+              className="px-4 py-2 bg-gradient-to-r from-blue-600 to-indigo-600 text-white rounded-md hover:opacity-90 text-sm font-medium transition-colors disabled:opacity-50"
+              disabled={isLoading}
+            >
+              {isLoading ? "Saving..." : "Confirm and Save"}
+            </button>
+          )}
         </div>
       </div>
     </div>

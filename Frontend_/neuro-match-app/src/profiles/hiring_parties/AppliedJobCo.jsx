@@ -1,13 +1,32 @@
-import React, { useState, useEffect } from 'react';
+import React, { useState, useEffect, useCallback } from 'react';
 import VacancyForm from './components/post_components/VacancyForm';
-import ProfileCard from './components/ProfileCard';
 import Header from '../comman/Header';
 import RecruitmentMetrics from './../comman/RecruitmentMetrics';
-// import PostViewBar from './components/PostViewBar'
-import './hiringDash.css';
-
-const HiringDashboard = () => {
+import { getJobPostsByEmail } from '../../api/Vacancy';
+import { useAuth } from '../../context/AuthContext';
+import AppliedCandidates from './components/post_components/AppliedCandidates';
+const AppliedJobCo = () => {
   const [showForm, setShowForm] = useState(false);
+  const { user } = useAuth();
+  const [vacancies, setVacancies] = useState([]);
+   const [selectedVacancy, setSelectedVacancy] = useState(null);
+  
+
+  const fetchVacancies = useCallback(async () => {
+      if (!user?.email) return;
+      try {
+        const response = await getJobPostsByEmail(user.email);
+        setVacancies(response.data.data || []);
+      } catch (error) {
+        console.error('Failed to fetch vacancies:', error);
+      }
+    }, [user?.email]);
+  
+    useEffect(() => {
+      fetchVacancies();
+    }, [fetchVacancies]);
+
+
   useEffect(() => {
 
   }, []);
@@ -29,7 +48,11 @@ const HiringDashboard = () => {
 
       <div class="container mx-auto px-4 pt-5 pb-0">
         <Header />
-        <ProfileCard />
+         <AppliedCandidates
+            vacancies={vacancies}
+            selectedVacancy={selectedVacancy}
+            onSelectVacancy={setSelectedVacancy}
+          />
         <RecruitmentMetrics />
         {/* <PostViewBar/> */}
         <div></div>
@@ -49,4 +72,4 @@ const HiringDashboard = () => {
   );
 };
 
-export default HiringDashboard;
+export default AppliedJobCo;

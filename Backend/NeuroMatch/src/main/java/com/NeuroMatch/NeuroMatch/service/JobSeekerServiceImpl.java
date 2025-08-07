@@ -1,6 +1,6 @@
 package com.NeuroMatch.NeuroMatch.service;
 import com.NeuroMatch.NeuroMatch.model.dto.InterviewResponse;
-import com.NeuroMatch.NeuroMatch.model.dto.InterviewSession;
+import com.NeuroMatch.NeuroMatch.model.dto.InterviewRequest;
 import com.NeuroMatch.NeuroMatch.model.dto.JobSeekerDto;
 import com.NeuroMatch.NeuroMatch.model.entity.*;
 import com.NeuroMatch.NeuroMatch.repository.*;
@@ -146,14 +146,21 @@ public class JobSeekerServiceImpl implements JobSeekerService {
         return likedJobsRepository.save(likedJobs);
     }
 
+    public String getCVByJobSeeker(String email) {
+        JobSeekerDetails jobSeeker = usersRepository.findByEmail(email)
+                .orElseThrow(()-> new RuntimeException(ValidationMessages.USER_NOT_FOUND))
+                .getJobSeekerDetails();
+        return jobSeeker.getCvJson();
+    }
+
 
 
     @Override
-    public InterviewSession getInterviewQuestionsForJobSeeker(String email) {
+    public InterviewRequest getInterviewQuestionsForJobSeeker(String email) {
         Users user = usersRepository.findByEmail(email)
                 .orElseThrow(() -> new RuntimeException(ValidationMessages.USER_NOT_FOUND));
         String cvData = user.getJobSeekerDetails().getCvJson();
-        return AIClientApiService.startInterview(cvData);
+        return AIClientApiService.startInterview(cvData, email);
     }
 
     @Override

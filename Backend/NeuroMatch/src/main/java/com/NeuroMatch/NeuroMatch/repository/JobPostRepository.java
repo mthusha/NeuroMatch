@@ -23,4 +23,8 @@ public interface JobPostRepository extends JpaRepository<JobPost, Long> {
     @Query("SELECT jp FROM JobPost jp WHERE jp.companyDetails.id = :companyId")
     List<JobPost> findByCompanyId(@Param("companyId") Long companyId);
 
+    int countByCompanyDetailsIdAndIsActiveTrue(Long companyId);
+    List<JobPost> findByCompanyDetailsId(Long companyId);
+
+
 }

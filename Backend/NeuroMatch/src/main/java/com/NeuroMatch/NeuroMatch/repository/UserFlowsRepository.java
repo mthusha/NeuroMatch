@@ -20,4 +20,8 @@ public interface UserFlowsRepository extends JpaRepository<UserFlows, Long> {
     boolean existsByCompanyIdAndUserUserEmail(@Param("companyId") Long companyId, @Param("email") String email);
     Optional<UserFlows> findByUserAndCompany(JobSeekerDetails user, CompanyDetails company);
 
+    int countByCompanyId(Long companyId);
+
+
+
 }

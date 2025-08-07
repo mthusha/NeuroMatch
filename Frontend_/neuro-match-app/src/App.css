@@ -24,6 +24,11 @@
     background: rgb(0 0 0 / 55%);
     backdrop-filter: blur(2px) !important;
 }
+#webgazerVideoContainer,
+#webgazerGazeDot {
+  display: none !important;
+}
+
 @media (prefers-reduced-motion: no-preference) {
   .App-logo {
     animation: App-logo-spin infinite 20s linear;

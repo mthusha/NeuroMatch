@@ -11,4 +11,5 @@ public interface AppliedJobsService {
     AppliedJobs applyToJob(ApplyJobDto request);
     List<ApplicantResponseDto> getApplicantsByJobPostId(Long jobPostId);
     List<AppliedJobsListDot> getAppliedJobsListByJobSeeker(String email);
+    String updateApplicantStatus(Long id, String status);
 }

@@ -53,3 +53,24 @@ export const fetchAppliedJobsByEmail = async (email) => {
     : [];
 };
 
+
+export const updateCandidateStatus = async (candidateId, newStatus, token) => {
+  const response = await fetch(
+    `${API_BASE_URL}/applied-jobs/status-update?id=${candidateId}&status=${newStatus}`,
+    {
+      method: "POST",
+      headers: {
+        "Content-Type": "application/json",
+        Authorization: `Bearer ${token}`,
+      },
+    }
+  );
+
+  if (!response.ok) {
+    const errText = await response.text();
+    throw new Error(errText || "Failed to update status");
+  }
+
+  return await response.json(); // if your backend returns a response body
+};
+

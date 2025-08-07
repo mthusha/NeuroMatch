@@ -31,6 +31,7 @@ public class JobPost {
     private byte[] posterImage;
     private Long likes;
     private Long applies;
+    private Boolean isActive;
 
     @ManyToOne
     @JoinColumn(name = "company_id")

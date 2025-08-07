@@ -12,7 +12,7 @@ const AppliedJobs = () => {
    <div id='Jobseeker' >
       <div className="container" >
         <Header searchType="company" />
-        <div style={{maxHeight:"900px", overflow:"auto",scrollbarWidth:"none"}} className="main-content">
+        <div style={{maxHeight:"900px", scrollbarWidth:"none"}} className="main-content">
           {/* <ProfileCard /> */}
           {/* <JobFeed companyId={null} type="user" /> */}
           <AppliedJobsList/>

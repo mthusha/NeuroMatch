@@ -75,7 +75,7 @@ const ProfileCard = () => {
   if (!profile) return <div>Loading profile...</div>;
 
   return (
-    <div className="max-h-[1450px] overflow-auto no-scrollbar">
+    <div className="max-h-[850px] overflow-auto no-scrollbar">
       {/* Header */}
       <div className="relative rounded-2xl overflow-hidden shadow-xl  border-gray-700 bg-in-box">
         <div className="h-40 w-full">

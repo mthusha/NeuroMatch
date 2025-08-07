@@ -1,8 +1,7 @@
 package com.NeuroMatch.NeuroMatch.controller;
 
-import com.NeuroMatch.NeuroMatch.model.dto.AppliedJobsListDot;
 import com.NeuroMatch.NeuroMatch.model.dto.InterviewResponse;
-import com.NeuroMatch.NeuroMatch.model.dto.InterviewSession;
+import com.NeuroMatch.NeuroMatch.model.dto.InterviewRequest;
 import com.NeuroMatch.NeuroMatch.model.dto.JobSeekerDto;
 import com.NeuroMatch.NeuroMatch.model.entity.LikedJobs;
 import com.NeuroMatch.NeuroMatch.model.enums.RestApiResponseStatusCodes;
@@ -127,25 +126,43 @@ public class JobSeekerController {
        }
     }
 
+    @GetMapping(EndpointBundle.CV + EndpointBundle.EMAIL)
+    public ResponseEntity<ResponseWrapper<String>> getCVByJobSeeker(@PathVariable String email){
+       try {
+           String cv = jobSeekerService.getCVByJobSeeker(email);
+           return ResponseEntity.ok(new ResponseWrapper<>(
+                   RestApiResponseStatusCodes.SUCCESS.getCode(),
+                   ValidationMessages.CV_GENERATED,
+                   cv
+           ));
+       }catch (Exception e) {
+           return ResponseEntity.status(HttpStatus.INTERNAL_SERVER_ERROR).body(new ResponseWrapper<>(
+                   RestApiResponseStatusCodes.INTERNAL_SERVER_ERROR.getCode(),
+                   e.getMessage(),
+                   null
+           ));
+       }
+    }
+
     @GetMapping(EndpointBundle.INTERVIEW_QUESTIONS + EndpointBundle.EMAIL)
-    public ResponseEntity<ResponseWrapper<InterviewSession>> startInterviewByEmail(@PathVariable String email) {
+    public ResponseEntity<ResponseWrapper<InterviewRequest>> startInterviewByEmail(@PathVariable String email) {
         try {
-            InterviewSession questions = jobSeekerService.getInterviewQuestionsForJobSeeker(email);
-            ResponseWrapper<InterviewSession> response = new ResponseWrapper<>(
+            InterviewRequest questions = jobSeekerService.getInterviewQuestionsForJobSeeker(email);
+            ResponseWrapper<InterviewRequest> response = new ResponseWrapper<>(
                     RestApiResponseStatusCodes.SUCCESS.getCode(),
                     ValidationMessages.INTERVIEW_QA_GENERATED,
                     questions
             );
             return ResponseEntity.ok(response);
         } catch (RuntimeException ex) {
-            ResponseWrapper<InterviewSession> response = new ResponseWrapper<>(
+            ResponseWrapper<InterviewRequest> response = new ResponseWrapper<>(
                     RestApiResponseStatusCodes.BAD_REQUEST.getCode(),
                     ex.getMessage(),
                     null
             );
             return ResponseEntity.badRequest().body(response);
         } catch (Exception ex) {
-            ResponseWrapper<InterviewSession> response = new ResponseWrapper<>(
+            ResponseWrapper<InterviewRequest> response = new ResponseWrapper<>(
                     RestApiResponseStatusCodes.INTERNAL_SERVER_ERROR.getCode(),
                     ex.getMessage(),
                     null

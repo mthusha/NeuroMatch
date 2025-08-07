@@ -1,4 +1,4 @@
-import React, { useRef, useEffect } from "react";
+import React, { useRef, useEffect, useState } from "react";
 import { FaMicrophone, FaPlay } from "react-icons/fa";
 
 const VoiceChatPanel = ({
@@ -10,15 +10,65 @@ const VoiceChatPanel = ({
   startInterview
 }) => {
   const chatEndRef = useRef(null);
+  const [displayedMessages, setDisplayedMessages] = useState([]);
+
+useEffect(() => {
+  if (!conversation.length) return;
+  const lastMessage = conversation[conversation.length - 1];
+  if (lastMessage.speaker === "ai") {
+    let i = 0;
+    const charsPerSecond = 120;
+    const startTime = performance.now();
+    let cursorVisible = true;
+    let cursorBlinkTime = 0;
+
+    const animate = (now) => {
+      const elapsed = (now - startTime) / 1000; 
+      const targetChars = Math.min(
+        Math.floor(elapsed * charsPerSecond),
+        lastMessage.text.length
+      );
+      if (now - cursorBlinkTime > 300) {
+        cursorVisible = !cursorVisible;
+        cursorBlinkTime = now;
+      }
+      if (targetChars !== i) {
+        i = targetChars;
+      }
+      const currentText = lastMessage.text.slice(0, i);
+      setDisplayedMessages([
+        ...conversation.slice(0, -1),
+        { 
+          ...lastMessage, 
+          text: currentText + (cursorVisible ? "▋" : "") 
+        }
+      ]);
+
+      if (i < lastMessage.text.length) {
+        requestAnimationFrame(animate);
+      } else {
+        setDisplayedMessages([...conversation]);
+      }
+    };
+    requestAnimationFrame(animate);
+  } else {
+    setDisplayedMessages(conversation);
+  }
+}, [conversation]);
+
+
+
+
 
   useEffect(() => {
-    chatEndRef.current?.scrollIntoView({ behavior: "smooth" });
-  }, [conversation]);
+   chatEndRef.current?.scrollIntoView({ behavior: "smooth" });
+ }, [displayedMessages]);
+
 
   return (
     <div className="fixed right-0 top-0 h-screen w-full md:w-1/3 lg:w-1/4 bg-gradient-to-b from-gray-50 to-gray-100 border-l border-gray-200 flex flex-col">
       <div className="flex-1 overflow-y-auto p-4 space-y-4 no-scrollbar">
-        {conversation.map((msg, index) => (
+        {displayedMessages.map((msg, index) => (
           <div
             key={index}
             className={`flex ${msg.speaker === "ai" ? "justify-start" : "justify-end"}`}
@@ -71,11 +121,16 @@ const VoiceChatPanel = ({
       <div className="p-4 md:p-6 flex flex-col items-center justify-center border-t border-gray-200 bg-white min-h-[140px]">
         {!interviewStarted ? (
           <button
-            onClick={startInterview}
-            className="p-4 rounded-full bg-indigo-600 text-white flex items-center justify-center transition-all duration-300 transform hover:scale-105 shadow-lg hover:shadow-indigo-200"
-          >
-            <FaPlay className="text-xl" />
-          </button>
+              onClick={startInterview}
+              className="
+                p-5 rounded-full bg-indigo-600 text-white flex items-center justify-center
+                transition-transform duration-300 ease-in-out
+                hover:scale-110 hover:shadow-lg hover:shadow-indigo-400
+                animate-pulse-slow
+                "
+            >
+              <FaPlay className="text-2xl drop-shadow-md" />
+            </button>
         ) : (
           <>
             <button

@@ -105,7 +105,7 @@ const AppliedJobsList = () => {
           <p className="text-xs text-gray-500">You haven't applied to any jobs yet.</p>
         </div>
       ) : (
-        <div className="bg-white rounded-xl border border-gray-200 overflow-hidden shadow-sm">
+        <div className="bg-white rounded-xl border border-gray-200 overflow-hidden shadow-[0_4px_6px_rgba(0,0,0,0.05)]">
           <div className="hidden md:grid grid-cols-12 bg-white px-6 py-3 border-b border-gray-200">
             <div className="col-span-5 text-xs font-medium text-gray-500">POSITION</div>
             <div className="col-span-3 text-xs font-medium text-gray-500">COMPANY</div>

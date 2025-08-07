@@ -1,20 +1,21 @@
 package com.NeuroMatch.NeuroMatch.service;
 
+import com.NeuroMatch.NeuroMatch.model.dto.CompanyDashboardDto;
 import com.NeuroMatch.NeuroMatch.model.dto.CompanyDto;
 import com.NeuroMatch.NeuroMatch.model.dto.CompanyViewDto;
+import com.NeuroMatch.NeuroMatch.model.entity.AppliedJobs;
 import com.NeuroMatch.NeuroMatch.model.entity.CompanyDetails;
+import com.NeuroMatch.NeuroMatch.model.entity.JobPost;
 import com.NeuroMatch.NeuroMatch.model.entity.Users;
-import com.NeuroMatch.NeuroMatch.repository.CompanyRepository;
-import com.NeuroMatch.NeuroMatch.repository.UserFlowsRepository;
-import com.NeuroMatch.NeuroMatch.repository.UsersRepository;
+import com.NeuroMatch.NeuroMatch.repository.*;
 import com.NeuroMatch.NeuroMatch.util.ValidationMessages;
 import org.springframework.beans.BeanUtils;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Service;
 
-import java.util.ArrayList;
-import java.util.Base64;
-import java.util.List;
+import java.time.LocalDate;
+import java.time.temporal.ChronoUnit;
+import java.util.*;
 import java.util.stream.Collectors;
 
 @Service
@@ -28,6 +29,14 @@ public class CompanyServiceImpl implements CompanyService{
 
     @Autowired
     private CompanyRepository companyRepository;
+    @Autowired
+    private UsersRepository usersRepository;
+    @Autowired
+    private JobPostRepository jobPostRepository;
+    @Autowired
+    private UserFlowsRepository flowsRepository;
+    @Autowired
+    private AppliedJobsRepository appliedJobsRepository;
 
     @Override
     public CompanyDto getCompanyByUser(Users user) {
@@ -116,6 +125,90 @@ public class CompanyServiceImpl implements CompanyService{
                 })
                 .collect(Collectors.toList());
     }
+
+    public CompanyDashboardDto getCompanyDashboard(String email) {
+        CompanyDetails company = usersRepository.findByEmail(email)
+                .orElseThrow(()-> new RuntimeException(ValidationMessages.USER_NOT_COMPANY))
+                .getCompanyDetails();
+        Long companyId = company.getId();
+
+        int openPositions = jobPostRepository.countByCompanyDetailsIdAndIsActiveTrue(companyId);
+        int followerCount = flowsRepository.countByCompanyId(companyId);
+        int avgTimeToHire = calculateAvgTimeToHire(companyId);
+        int hiringGoal = calculateHiringGoalPercent(companyId);
+
+        //
+        int totalApplied = appliedJobsRepository.countByJobPostCompanyDetailsId(companyId);
+        int shortlisted = appliedJobsRepository.countByJobPostCompanyDetailsIdAndStatus(companyId, "SHORTLISTED");
+        int inReview = appliedJobsRepository.countByJobPostCompanyDetailsIdAndStatus(companyId, "IN_REVIEW");
+        int pending = appliedJobsRepository.countByJobPostCompanyDetailsIdAndStatus(companyId, "PENDING");
+        int rejected = appliedJobsRepository.countByJobPostCompanyDetailsIdAndStatus(companyId, "REJECTED");
+
+        CompanyDashboardDto dto = new CompanyDashboardDto();
+        dto.setOpenPosition(openPositions);
+        dto.setFollowerCount(followerCount);
+        dto.setHiringGoal(hiringGoal);
+        dto.setAvgTimeToHire(avgTimeToHire);
+
+        dto.setTotalApplied(totalApplied);
+        dto.setShortlisted(shortlisted);
+        dto.setInReview(inReview);
+        dto.setPending(pending);
+        dto.setRejected(rejected);
+
+        if (totalApplied > 0) {
+            dto.setShortlistedPercent(shortlisted * 100 / totalApplied);
+            dto.setInReviewPercent(inReview * 100 / totalApplied);
+            dto.setPendingPercent(pending * 100 / totalApplied);
+            dto.setRejectedPercent(rejected * 100 / totalApplied);
+            dto.setTotalAppliedPercent(100);
+        } else {
+            dto.setShortlistedPercent(0);
+            dto.setInReviewPercent(0);
+            dto.setPendingPercent(0);
+            dto.setRejectedPercent(0);
+            dto.setTotalAppliedPercent(0);
+        }
+
+        return dto;
+
+    }
+
+
+    // support method
+    public int calculateAvgTimeToHire(Long companyId) {
+        List<JobPost> jobPosts = jobPostRepository.findByCompanyDetailsId(companyId);
+        List<Long> daysToFirstShortlist = new ArrayList<>();
+        for (JobPost job : jobPosts) {
+            LocalDate postedOn = job.getPostedOn();
+            if (postedOn == null || job.getAppliedJobs().isEmpty()) continue;
+            Optional<AppliedJobs> firstShortlist = job.getAppliedJobs().stream()
+                    .filter(app -> "SHORTLISTED".equalsIgnoreCase(app.getStatus()))
+                    .min(Comparator.comparing(AppliedJobs::getAppliedDate));
+            if (firstShortlist.isPresent()) {
+                long daysBetween = ChronoUnit.DAYS.between(postedOn, firstShortlist.get().getAppliedDate());
+                daysToFirstShortlist.add(daysBetween);
+            }
+        }
+        if (daysToFirstShortlist.isEmpty()) return 0;
+        long totalDays = daysToFirstShortlist.stream().mapToLong(Long::longValue).sum();
+        return (int) (totalDays / daysToFirstShortlist.size());
+    }
+
+    public int calculateHiringGoalPercent(Long companyId) {
+        int totalApplied = appliedJobsRepository.countByJobPostCompanyDetailsId(companyId);
+        int shortlisted = appliedJobsRepository.countByJobPostCompanyDetailsIdAndStatus(companyId, "SHORTLISTED");
+        int pending = appliedJobsRepository.countByJobPostCompanyDetailsIdAndStatus(companyId, "PENDING");
+        int inReview = appliedJobsRepository.countByJobPostCompanyDetailsIdAndStatus(companyId, "IN_REVIEW");
+
+        int remainingPool = totalApplied - shortlisted;
+        if (remainingPool == 0) return 0;
+
+        int goalValue = pending + inReview;
+        return (goalValue * 100) / remainingPool;
+    }
+
+
 
 
 

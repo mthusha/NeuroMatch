@@ -11,7 +11,9 @@ import AppliedJobs from './profiles/job_seeker/AppliedJobs'
 import "./App.css";
 import UserTypeRedirect from "./routes/UserTypeRedirect";
 import HiringDashboard from "./profiles/hiring_parties/HiringDashboard";
-import InterviewPanel from "./profiles/job_seeker/components/InterviewPanel"
+import InterviewPanel from "./profiles/job_seeker/components/InterviewPanel";
+import AppliedJobCo from "./profiles/hiring_parties/AppliedJobCo";
+import InterviewHistory from "./profiles/job_seeker/components/interview_componets/historice/InterviewHistory"
 
 function App() {
   return (
@@ -58,6 +60,8 @@ function App() {
           <Route path="/company/:id" element={<CompanyView />} />
           <Route path="/view-applied-jobs" element={<AppliedJobs />} />
           <Route path="/seeker-interview" element={<InterviewPanel />} />
+          <Route path="/view-applied-jobs-co" element={<AppliedJobCo />} />
+          <Route path="/interview-past" element={<InterviewHistory />} />
           {/* <Route path="/user/:id" element={<UserView />} /> */}
         </Routes>
       </AuthProvider>

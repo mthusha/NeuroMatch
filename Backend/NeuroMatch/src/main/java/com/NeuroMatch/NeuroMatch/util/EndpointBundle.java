@@ -18,6 +18,7 @@ public class EndpointBundle {
     //JobPost
     public static final String JOB_POST = BASE_URL + "/job-post";
     public static final String GET_JOBS_POST_BY_COMPANY = "/company/{id}/job-posts";
+    public static final String CV = "/cv";
 
     //jobSeeker
     public static final String JOB_SEEKER = BASE_URL + "/job-seeker";
@@ -44,6 +45,7 @@ public class EndpointBundle {
     //Applied Jobs
     public static final String APPLIED_JOBS = BASE_URL + "/applied-jobs";
     public static final String RECOMMENDED_APPLIED_JOBS = "/{jobPostId}/applicants";
+    public static final String UPDATE_STATUS = "/status-update";
 //    public static final String APPLIED_JOBS_GET = "/applied-jobs";
 
     // python server
@@ -51,6 +53,7 @@ public class EndpointBundle {
     public static final String AI_CLIENT_START_INTERVIEW = "http://localhost:5000/api/interview/start_interview";
     public static final String AI_CLIENT_ANSWER = "http://localhost:5000/api/interview/answer";
 
-
+    // Interview Session
+    public static final String INTERVIEW_SESSION = BASE_URL + "/interview-session";
 
 }

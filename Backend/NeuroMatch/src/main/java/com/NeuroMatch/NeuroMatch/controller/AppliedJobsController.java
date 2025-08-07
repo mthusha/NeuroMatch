@@ -80,6 +80,27 @@ public class AppliedJobsController {
         }
     }
 
+    @PostMapping(EndpointBundle.UPDATE_STATUS)
+    public ResponseEntity<ResponseWrapper<String>> updateAppliedJobsStatus(
+           @RequestParam Long id,
+           @RequestParam String status) {
+        try {
+            String updatedStatus = appliedJobsService.updateApplicantStatus(id, status);
+            return ResponseEntity.status(HttpStatus.CREATED).body(new ResponseWrapper<>(
+                    RestApiResponseStatusCodes.SUCCESS.getCode(),
+                    ValidationMessages.STATUS_UPDATED,
+                    updatedStatus
+
+            ));
+        }catch (Exception e){
+            return ResponseEntity.status(HttpStatus.INTERNAL_SERVER_ERROR).body(new ResponseWrapper<>(
+                    RestApiResponseStatusCodes.INTERNAL_SERVER_ERROR.getCode(),
+                    e.getMessage(),
+                    null
+            ));
+        }
+    }
+
 
 
 }

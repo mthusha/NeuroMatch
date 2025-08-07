@@ -1,18 +1,29 @@
-import React, { useState, useEffect, useCallback } from 'react';
+import React, { useState, useEffect,  useCallback, useRef  } from 'react';
 import AvatarPanel from './../components/interview_componets/avatar/AvatarPanel';
-import ChatPanel from './../components/interview_componets/chat/ChatPanel';
+import VoiceChatPanel from './../components/interview_componets/chat/VoiceChatPanel';
 import { useAuth } from "../../../context/AuthContext";
 import { fetchFirstQuestionApi, sendAnswerApi } from '../../../api/Interview';
+import { useEyeTracking } from './../../../service/useEyeTracking';
 
 const InterviewPanel = () => {
   const [conversation, setConversation] = useState([]);
-  const [liveTranscript, setLiveTranscript] = useState('');
+  // const [liveTranscript, setLiveTranscript] = useState('');
   const [isRecording, setIsRecording] = useState(false);
   const [sessionId, setSessionId] = useState(null);
   const [interviewStarted, setInterviewStarted] = useState(false);
+  const [countdown, setCountdown] = useState(null);
+  const [eyeTrackCameraReady, setEyeTrackCameraReady] = useState(false);
+  const countdownRef = useRef(null);
+  const [pendingAnswer, setPendingAnswer] = useState('');
+  const pendingAnswerRef = useRef(''); 
+  const sendTimerRef = useRef(null);
   const { user } = useAuth();
   const email = user?.email || '';
 
+  const { eyeDetected, trackingActive, lastDetectionTimeRef } = useEyeTracking(interviewStarted);
+
+
+  
   const playAudio = useCallback((audioBase64) => {
     if (!audioBase64) return;
     try {
@@ -82,7 +93,7 @@ const InterviewPanel = () => {
       console.error('Error sending answer:', err);
       const fallbackMessage = {
         speaker: 'ai',
-        text: 'Interesting. Can you tell me more about that?'
+        text: 'error'
       };
       setConversation(prev => [...prev, fallbackMessage]);
     }
@@ -115,15 +126,58 @@ const InterviewPanel = () => {
         }
       }
 
-      setLiveTranscript(interimTranscript);
+      const displayText = `${pendingAnswerRef.current} ${interimTranscript}`.trim();
+
+      setConversation((prev) => {
+          if (prev.length > 0 && prev[prev.length - 1].speaker === 'user') {
+            const updatedMessages = [...prev];
+            updatedMessages[updatedMessages.length - 1] = {
+              ...updatedMessages[updatedMessages.length - 1],
+              text: displayText,
+            };
+            return updatedMessages;
+          } else {
+            return [...prev, { speaker: 'user', text: displayText }];
+          }
+        });
+
 
       if (finalTranscript) {
-        const userMessage = { speaker: 'user', text: finalTranscript };
-        setConversation(prev => [...prev, userMessage]);
-        setLiveTranscript('');
-        sendAnswer(finalTranscript);
-      }
-    };
+          const updatedAnswer = pendingAnswerRef.current
+            ? `${pendingAnswerRef.current} ${finalTranscript}`.trim()
+            : finalTranscript;
+
+
+          setPendingAnswer(updatedAnswer);
+          pendingAnswerRef.current = updatedAnswer;
+
+          setConversation((prev) => {
+            if (prev.length > 0 && prev[prev.length - 1].speaker === 'user') {
+              const updatedMessages = [...prev];
+              updatedMessages[updatedMessages.length - 1] = {
+                ...updatedMessages[updatedMessages.length - 1],
+                text: updatedAnswer,
+              };
+              return updatedMessages;
+            } else {
+              return [...prev, { speaker: 'user', text: updatedAnswer }];
+            }
+          });
+
+          if (sendTimerRef.current) clearTimeout(sendTimerRef.current);
+          sendTimerRef.current = setTimeout(() => {
+            if (pendingAnswerRef.current) {
+              sendAnswer(pendingAnswerRef.current);
+              setPendingAnswer('');
+              pendingAnswerRef.current = '';
+            }
+          }, 15000);
+        } else {
+          if (sendTimerRef.current) {
+            clearTimeout(sendTimerRef.current);
+          }
+        }
+      };
 
     recognition.onerror = (event) => {
       console.error('Speech recognition error:', event.error);
@@ -139,7 +193,61 @@ const InterviewPanel = () => {
     return () => {
       recognition.stop();
     };
-  }, [isRecording, sendAnswer, interviewStarted]);
+  }, [isRecording, sendAnswer, interviewStarted, pendingAnswer]);
+
+  useEffect(() => {
+    pendingAnswerRef.current = pendingAnswer;
+  }, [pendingAnswer]);
+
+  // eye check
+  useEffect(() => {
+    if (!interviewStarted || !trackingActive) return; 
+
+    const interval = setInterval(() => {
+      const timeSinceLastDetection = Date.now() - lastDetectionTimeRef.current;
+
+      if (!eyeDetected && timeSinceLastDetection > 5000 && countdown === null) {
+        let timeLeft = 5;
+        setCountdown(timeLeft);
+
+        countdownRef.current = setInterval(() => {
+          timeLeft -= 1;
+          if (timeLeft > 0) {
+            setCountdown(timeLeft);
+          } else {
+            clearInterval(countdownRef.current);
+            setCountdown(null);
+            if (!eyeDetected) {
+              // alert("No eye detected for too long. Stopping interview.");
+              // setInterviewStarted(false);
+              // setIsRecording(false);
+            }
+          }
+        }, 10);
+      }
+
+      if (eyeDetected && countdown !== null) {
+        clearInterval(countdownRef.current);
+        setCountdown(null);
+      }
+    }, 10);
+     console.log(interviewStarted, trackingActive, eyeDetected, countdown)
+    return () => {
+      clearInterval(interval);
+      clearInterval(countdownRef.current);
+    };
+    // eslint-disable-next-line react-hooks/exhaustive-deps
+  }, [interviewStarted, trackingActive, eyeDetected, countdown]);
+
+  useEffect(() => {
+    if (trackingActive && !eyeTrackCameraReady) {
+      setEyeTrackCameraReady(true);
+    }
+  }, [trackingActive, eyeTrackCameraReady]);
+
+
+
+
 
   const startInterview = () => {
     setInterviewStarted(true);
@@ -148,22 +256,44 @@ const InterviewPanel = () => {
   };
 
   const toggleRecording = () => {
-    if (!interviewStarted) return;
-    setIsRecording(prev => !prev);
-  };
+  if (!interviewStarted) return;
+
+  if (isRecording) {
+    if (sendTimerRef.current) clearTimeout(sendTimerRef.current);
+
+    if (pendingAnswerRef.current || pendingAnswer) {
+      sendAnswer(pendingAnswerRef.current || pendingAnswer);
+      setPendingAnswer('');
+      pendingAnswerRef.current = '';
+    }
+  }
+
+  setIsRecording(prev => !prev);
+};
+
+
 
   return (
     <div className="flex flex-col h-screen bg-gray-100">
+       {/* {trackingActive && !eyeDetected && (
+         <div className="absolute top-4 left-1/2 transform -translate-x-1/2 bg-red-500 text-white px-4 py-2 rounded shadow-lg z-[99]">
+           ⚠ No eye detected — ending in {countdown}s if you don't look back
+         </div>
+       )} */}
+
       <div className="flex flex-1">
         <div className="w-3/4">
-          <AvatarPanel />
+          <AvatarPanel 
+              showCamera={eyeTrackCameraReady}
+              eyeDetected={eyeDetected}
+              trackingActive={trackingActive}
+            />
         </div>
-
-        <ChatPanel
+        <VoiceChatPanel
           conversation={conversation}
           isRecording={isRecording}
           toggleRecording={toggleRecording}
-          liveTranscript={liveTranscript}
+          // liveTranscript={liveTranscript}
           interviewStarted={interviewStarted}
           startInterview={startInterview}
         />

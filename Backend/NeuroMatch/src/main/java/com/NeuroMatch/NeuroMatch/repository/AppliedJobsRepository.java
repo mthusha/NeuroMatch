@@ -13,5 +13,7 @@ public interface AppliedJobsRepository extends JpaRepository<AppliedJobs, Long> 
     List<AppliedJobs> findByJobPost_Id(Long jobPostId);
     boolean existsByJobSeekerAndJobPost(JobSeekerDetails jobSeeker, JobPost jobPost);
     List<AppliedJobs> findByJobSeeker(JobSeekerDetails jobSeeker);
+    int countByJobPostCompanyDetailsId(Long companyId);
+    int countByJobPostCompanyDetailsIdAndStatus(Long companyId, String status);
 
 }

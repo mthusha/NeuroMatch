@@ -107,7 +107,8 @@ export default function RegisterPage() {
       className="glass p-6 rounded-xl border border-white/10 backdrop-blur-sm relative overflow-hidden"
       style={{
         animation: 'slideUp 1s ease-out',
-        boxShadow: '0 8px 32px rgba(0, 0, 0, 0.3)'
+        boxShadow: '0 8px 32px rgba(0, 0, 0, 0.3)',
+        background: 'rgb(177 180 255)'
       }}
     >
       {[...Array(3)].map((_, i) => (

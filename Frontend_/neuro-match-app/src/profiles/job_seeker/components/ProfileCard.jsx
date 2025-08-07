@@ -145,15 +145,30 @@ const handleNeuroSyncClick = () => {
           onChange={handleProfileChange}
         />
       </div>
+      
       <div className="profile-content">
-      <h1 className="profile-name">{profile.name}</h1>
-        <p className="profile-title"> {profile.job || 'Unknown'}{profile.jobRole ? ` | ${profile.jobRole}` : ''}</p>
-        <p className="profile-location"><FaMapMarkerAlt />  {profile.location || 'Not set'}</p>
-        <a href="/neuro-profile" className="contact-info"><i class="fas fa-link" style={{marginRight: 5}}></i>View Neural Compatibility</a>
-        
+      
+        <h1 className="text-2xl font-bold text-gray-800 mb-1">
+        {profile.name}
+      </h1>
+      <div style={{display:'flex',justifyContent:'space-between'}}>
+        <div>
+      <p className="text-gray-500 text-sm mb-1">
+        {profile.job || "Unknown"}
+        {profile.jobRole ? ` | ${profile.jobRole}` : ""}
+      </p>
+
+      <p className="flex items-center text-gray-500 text-sm mb-4">
+        <FaMapMarkerAlt className="text-red-500 mr-1" />{" "}
+        {profile.location || "Not set"}
+      </p>
+      </div>
+        <a href="/neuro-profile" className="contact-info"><i class="fas fa-link" style={{marginRight: 5}}></i></a>
+       
+      </div>
         <div className="action-buttons">
          <button className="btn-primary" onClick={handleNeuroSyncClick} disabled={loadingInterview}>NeuroSync Interview</button>
-          <button className="btn-secondary">View Submissions</button>
+          <button  onClick={() => navigate("/interview-past")} className="btn-secondary">View Submissions</button>
           <button className="more-btn"><FaEllipsisH /></button>
         </div>
 

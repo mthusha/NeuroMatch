@@ -33,5 +33,9 @@ public class ValidationMessages {
     public static final String FOLLOWED = "Followed";
     public static final String LIKED = "Liked";
     public static final String APPLIED_JOBS_RETRIEVED = "Applied jobs retrieved successfully";
+    public static final String APPLIED_JOB_NOT_FOUND = "Job not found";
     public static final String SPEAK_MODEL = "cheerful";
+    public static final String INTERVIEW_SESSION_LIST_RETRIEVED_SUCCESSFULLY = "Interview session list retrieved successfully";
+    public static final String CV_GENERATED = "CV generated successfully";
+    public static final String STATUS_UPDATED = "Status updated successfully";
 }

@@ -12,6 +12,7 @@ import java.util.Map;
 @Getter
 @AllArgsConstructor
 public class ApplicantResponseDto {
+    private Long id;
     private String name;
     private String email;
     private String subject;
@@ -22,4 +23,5 @@ public class ApplicantResponseDto {
     private Map<String, List<String>> skill = new HashMap<>();
     private String profilePictureBase64;
     private String bio;
+    private String status;
 }

@@ -465,6 +465,26 @@
 .connection-item:last-child {
     border-bottom: none;
 }
+@keyframes pulseSlow {
+  0%, 100% {
+    transform: scale(1);
+    box-shadow: 0 0 10px rgba(99, 102, 241, 0.6);
+  }
+  50% {
+    transform: scale(1.05);
+    box-shadow: 0 0 20px rgba(99, 102, 241, 0.9);
+  }
+}
+#Interview-history{
+    max-width: 1200px;
+    margin: 0 auto;
+    /* display: grid;
+    grid-template-columns: 1fr 320px; */
+    gap: 20px;
+}
+.animate-pulse-slow {
+  animation: pulseSlow 2.5s infinite ease-in-out;
+}
 
 .connection-avatar {
     width: 40px;

@@ -1,7 +1,7 @@
 import React, { useState, useEffect, useCallback } from 'react';
-import VacancyForm from './post_components/VacancyForm';
+// import VacancyForm from './post_components/VacancyForm';
 import SuggestedCandidates from './post_components/SuggestedCandidates';
-import AppliedCandidates from './post_components/AppliedCandidates';
+// import AppliedCandidates from './post_components/AppliedCandidates';
 import JobPosts from './post_components/JobPosts';
 import { useAuth } from '../../../context/AuthContext';
 import { getJobPostsByEmail } from '../../../api/Vacancy';
@@ -10,8 +10,8 @@ const PostViewBar = () => {
   const { user } = useAuth();
   const [activeTab, setActiveTab] = useState('post');
   const [vacancies, setVacancies] = useState([]);
-  const [selectedVacancy, setSelectedVacancy] = useState(null);
-  const [showForm, setShowForm] = useState(false);
+  // const [selectedVacancy, setSelectedVacancy] = useState(null);
+  // const [showForm, setShowForm] = useState(false);
 
   const fetchVacancies = useCallback(async () => {
     if (!user?.email) return;
@@ -28,7 +28,9 @@ const PostViewBar = () => {
   }, [fetchVacancies]);
 
   return (
-    <div className="flex flex-col mt-5">
+    <div className="flex flex-col mt-5" 
+    style={{maxHeight:'400ox'}}
+    >
       {/* Tabs */}
       <div className="flex space-x-2 mb-6 bg-in-box p-1 rounded-lg border border-gray-200">
         <button
@@ -57,7 +59,7 @@ const PostViewBar = () => {
             Suggested
           </div>
         </button>
-        <button
+        {/* <button
           className={`py-2 px-4 font-medium text-sm rounded-md transition-all ${
             activeTab === 'applications' ? 'bg-indigo-100 text-indigo-700 shadow-sm' : 'text-gray-600 hover:text-gray-800'
           }`}
@@ -69,7 +71,7 @@ const PostViewBar = () => {
             </svg>
             Applications
           </div>
-        </button>
+        </button> */}
       </div>
 
       {/* Tab Content */}
@@ -77,28 +79,28 @@ const PostViewBar = () => {
         {activeTab === 'post' && (
           <JobPosts 
             posts={vacancies} 
-            onCreateNew={() => setShowForm(true)} 
+            // onCreateNew={() => setShowForm(true)} 
           />
         )}
 
         {activeTab === 'suggested' && (
           <SuggestedCandidates
             vacancies={vacancies}
-            onSelectVacancy={setSelectedVacancy}
+            // onSelectVacancy={setSelectedVacancy}
           />
         )}
 
-        {activeTab === 'applications' && (
+        {/* {activeTab === 'applications' && (
           <AppliedCandidates
             vacancies={vacancies}
             selectedVacancy={selectedVacancy}
             onSelectVacancy={setSelectedVacancy}
           />
-        )}
+        )} */}
       </div>
 
       {/* Render the form modal if showForm is true */}
-      {showForm && (
+      {/* {showForm && (
         <VacancyForm 
           onClose={() => setShowForm(false)}
           onSuccess={() => {
@@ -106,7 +108,7 @@ const PostViewBar = () => {
             fetchVacancies();
           }}
         />
-      )}
+      )} */}
     </div>
   );
 };

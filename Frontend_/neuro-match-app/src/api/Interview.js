@@ -29,3 +29,21 @@ export const sendAnswerApi = async (sessionId, answer) => {
     throw err;
   }
 };
+
+
+export const getInterviewSessions = async (email) => {
+  try {
+    const response = await fetch(`${API_BASE_URL}/interview-session/${email}`);
+    console.log("is colled")
+
+    if (!response.ok) {
+      throw new Error(`Failed to fetch sessions: ${response.status}`);
+    }
+
+    return await response.json();
+  } catch (error) {
+    console.error("Error fetching interview sessions:", error);
+    throw error; 
+  }
+};
+

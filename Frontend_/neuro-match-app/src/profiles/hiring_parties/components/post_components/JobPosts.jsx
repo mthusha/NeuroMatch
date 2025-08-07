@@ -1,6 +1,6 @@
 import React from 'react';
 
-const JobPosts = ({ posts, onCreateNew }) => {
+const JobPosts = ({posts}) => {
   return (
     <div className="job-feed">
       <h3 className="feed-title text-xl font-bold text-indigo-600 flex items-center gap-2">Recent Job Posts</h3>
@@ -79,15 +79,7 @@ const JobPosts = ({ posts, onCreateNew }) => {
         ))}
       </div>
       
-      <button
-        onClick={onCreateNew}
-        className="create-post-btn"
-      >
-        <svg xmlns="http://www.w3.org/2000/svg" className="h-6 w-6 group-hover:rotate-90 transition-transform" fill="none" viewBox="0 0 24 24" stroke="currentColor">
-          <path strokeLinecap="round" strokeLinejoin="round" strokeWidth={2} d="M12 6v6m0 0v6m0-6h6m-6 0H6" />
-        </svg>
-        <span className="sr-only">Create New Post</span>
-      </button>
+      
     </div>
   );
 };
