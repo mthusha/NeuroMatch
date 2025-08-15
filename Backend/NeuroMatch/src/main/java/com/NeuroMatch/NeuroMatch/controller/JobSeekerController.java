@@ -3,6 +3,7 @@ package com.NeuroMatch.NeuroMatch.controller;
 import com.NeuroMatch.NeuroMatch.model.dto.InterviewResponse;
 import com.NeuroMatch.NeuroMatch.model.dto.InterviewRequest;
 import com.NeuroMatch.NeuroMatch.model.dto.JobSeekerDto;
+import com.NeuroMatch.NeuroMatch.model.dto.JobSeekerSummery;
 import com.NeuroMatch.NeuroMatch.model.entity.LikedJobs;
 import com.NeuroMatch.NeuroMatch.model.enums.RestApiResponseStatusCodes;
 import com.NeuroMatch.NeuroMatch.service.JobSeekerService;
@@ -126,6 +127,25 @@ public class JobSeekerController {
        }
     }
 
+    @GetMapping( EndpointBundle.JOB_SEEKER_SUMMERY + EndpointBundle.EMAIL)
+    public ResponseEntity<ResponseWrapper<JobSeekerSummery>> getJobSeekerSummery (@PathVariable String email){
+       try {
+           JobSeekerSummery jobSeekerSummery = jobSeekerService.getJobSeekerSummery(email);
+           return ResponseEntity.ok(new ResponseWrapper<>(
+                   RestApiResponseStatusCodes.SUCCESS.getCode(),
+                   ValidationMessages.RETRIEVED,
+                   jobSeekerSummery
+
+           ));
+       }catch (Exception e) {
+           return ResponseEntity.status(HttpStatus.INTERNAL_SERVER_ERROR).body(new ResponseWrapper<>(
+                   RestApiResponseStatusCodes.INTERNAL_SERVER_ERROR.getCode(),
+                   e.getMessage(),
+                   null
+           ));
+       }
+    }
+
     @GetMapping(EndpointBundle.CV + EndpointBundle.EMAIL)
     public ResponseEntity<ResponseWrapper<String>> getCVByJobSeeker(@PathVariable String email){
        try {
@@ -144,10 +164,29 @@ public class JobSeekerController {
        }
     }
 
+    @GetMapping( EndpointBundle.GET_SCORE_ONLY + EndpointBundle.ID)
+    public ResponseEntity<ResponseWrapper<Integer>> getScoreOnlyJobSeekers(@PathVariable Long id){
+       try {
+           Integer score = jobSeekerService.getAverageScoreAPI(id);
+           return ResponseEntity.ok(new ResponseWrapper<>(
+                   RestApiResponseStatusCodes.SUCCESS.getCode(),
+                   ValidationMessages.SCORE_FETCHED,
+                   score
+           ));
+       }catch (Exception e) {
+           return ResponseEntity.status(HttpStatus.INTERNAL_SERVER_ERROR).body(new ResponseWrapper<>(
+                   RestApiResponseStatusCodes.INTERNAL_SERVER_ERROR.getCode(),
+                   e.getMessage(),
+                   null
+           ));
+       }
+    }
+
     @GetMapping(EndpointBundle.INTERVIEW_QUESTIONS + EndpointBundle.EMAIL)
-    public ResponseEntity<ResponseWrapper<InterviewRequest>> startInterviewByEmail(@PathVariable String email) {
+    public ResponseEntity<ResponseWrapper<InterviewRequest>> startInterviewByEmail(@PathVariable String email,
+    @RequestParam(required = false) Long jobId) {
         try {
-            InterviewRequest questions = jobSeekerService.getInterviewQuestionsForJobSeeker(email);
+            InterviewRequest questions = jobSeekerService.getInterviewQuestionsForJobSeeker(email, jobId);
             ResponseWrapper<InterviewRequest> response = new ResponseWrapper<>(
                     RestApiResponseStatusCodes.SUCCESS.getCode(),
                     ValidationMessages.INTERVIEW_QA_GENERATED,
@@ -176,7 +215,10 @@ public class JobSeekerController {
         try {
             String sessionId = payload.get("session_id");
             String answer = payload.get("answer");
-            InterviewResponse response = jobSeekerService.answerInterviewQuestion(sessionId, answer);
+            Long jobId = payload.containsKey("job_id")
+                    ? Long.valueOf(payload.get("job_id"))
+                    : null;
+            InterviewResponse response = jobSeekerService.answerInterviewQuestion(sessionId, answer, jobId);
             ResponseWrapper<InterviewResponse> wrapper = new ResponseWrapper<>(
                     RestApiResponseStatusCodes.SUCCESS.getCode(),
                     ValidationMessages.ANSWER_PROCESSED,

@@ -31,4 +31,8 @@ public class InterviewSession {
     @ManyToOne
     @JoinColumn(name = "jobSeeker_id")
     private JobSeekerDetails jobSeeker;
+
+    @ManyToOne
+    @JoinColumn(name = "applied_id")
+    private AppliedJobs appliedJobs;
 }

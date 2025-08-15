@@ -83,4 +83,63 @@ export async function fetchCvData(email) {
   }
 }
 
+export const fetchJobSeekerSummary = async (email, token) => {
+  try {
+    const response = await axios.get(
+      `${API_BASE_URL}/job-seeker/job-seeker-summery/${email}`,
+      {
+        headers: {
+          // Authorization: `Bearer ${token}`,
+        },
+      }
+    );
+    return response.data.data; 
+  } catch (error) {
+    console.error("Failed to fetch job seeker summary:", error);
+    throw error;
+  }
+};
+
+
+export const fetchJobSeekerScore = async (id) => {
+  try {
+    const response = await axios.get(
+      `${API_BASE_URL}/job-seeker/get-score-only/${encodeURIComponent(id)}`
+    );
+
+    if (response.data && response.data.statusCode === 200) {
+      return response.data.data;
+    }
+    throw new Error(response.data?.statusMessage || "Failed to fetch score");
+  } catch (error) {
+    console.error("Error fetching score:", error);
+    throw error;
+  }
+};
+
+// api/JobSeeker.js
+
+export const fetchInterviewSessionsByApplicant = async (applicantId, jwt) => {
+  try {
+    const res = await fetch(
+      `${API_BASE_URL}/interview-session/by-applicant/${applicantId}`,
+      {
+        headers: {
+          Authorization: `Bearer ${jwt}`,
+          "Content-Type": "application/json",
+        },
+      }
+    );
+    const data = await res.json();
+    if (data.statusCode === 200) {
+      return data.data || [];
+    }
+    throw new Error(data.statusMessage || "Failed to fetch interview sessions");
+  } catch (err) {
+    console.error("Error fetching interview sessions:", err);
+    throw err;
+  }
+};
+
+
 

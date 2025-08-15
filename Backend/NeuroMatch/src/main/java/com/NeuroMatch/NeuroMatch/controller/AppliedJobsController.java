@@ -80,6 +80,46 @@ public class AppliedJobsController {
         }
     }
 
+    @GetMapping( EndpointBundle.APPLIED_UI + EndpointBundle.ID)
+    public ResponseEntity<ResponseWrapper<AppliedJobSeekerUIViewDto>> getAppliedUerUI(@PathVariable Long id) {
+        try {
+            AppliedJobSeekerUIViewDto appliedJobSeekerUIView = appliedJobsService.getAppliedJobUserUI(id);
+            return ResponseEntity.status(HttpStatus.CREATED).body(new ResponseWrapper<>(
+                    RestApiResponseStatusCodes.SUCCESS.getCode(),
+                    ValidationMessages.RETRIEVED,
+                    appliedJobSeekerUIView
+
+            ));
+        }catch (Exception e){
+            return ResponseEntity.status(HttpStatus.INTERNAL_SERVER_ERROR).body(new ResponseWrapper<>(
+                    RestApiResponseStatusCodes.INTERNAL_SERVER_ERROR.getCode(),
+                    e.getMessage(),
+                    null
+            ));
+        }
+    }
+
+    @GetMapping(EndpointBundle.APPLIED_TITLE + EndpointBundle.ID)
+    public ResponseEntity<ResponseWrapper<AppliedJobTitleDto>> getAppliedJobTitle(@PathVariable Long id) {
+        try {
+            AppliedJobTitleDto appliedJobTitle = appliedJobsService.getAppliedJobTitle(id);
+            return ResponseEntity.status(HttpStatus.CREATED).body(new ResponseWrapper<>(
+                    RestApiResponseStatusCodes.SUCCESS.getCode(),
+                    ValidationMessages.APPLIED_JOBS_RETRIEVED,
+                    appliedJobTitle
+            ));
+        }catch (Exception e){
+            return ResponseEntity.status(HttpStatus.INTERNAL_SERVER_ERROR).body(new ResponseWrapper<>(
+                    RestApiResponseStatusCodes.INTERNAL_SERVER_ERROR.getCode(),
+                    e.getMessage(),
+                    null
+            ));
+        }
+    }
+
+
+
+
     @PostMapping(EndpointBundle.UPDATE_STATUS)
     public ResponseEntity<ResponseWrapper<String>> updateAppliedJobsStatus(
            @RequestParam Long id,

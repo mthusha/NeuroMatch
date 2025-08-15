@@ -71,6 +71,28 @@ export const updateCandidateStatus = async (candidateId, newStatus, token) => {
     throw new Error(errText || "Failed to update status");
   }
 
-  return await response.json(); // if your backend returns a response body
+  return await response.json(); 
 };
 
+export const getAppliedJobUserUI = async (jobId) => {
+  try {
+    const response = await axios.get(
+      `${API_BASE_URL}/applied-jobs/applied-uer-ui/${jobId}`
+    );
+    return response.data?.data || null;
+  } catch (error) {
+    console.error(`Failed to fetch applied users for job ${jobId}`, error);
+    return null;
+  }
+};
+
+export const fetchJobInfo = async (jobId) => {
+  try {
+    const response = await axios.get(
+      `${API_BASE_URL}/applied-jobs/applied-title/${jobId}`
+    );
+    return response.data;
+  } catch (error) {
+    throw error;
+  }
+};

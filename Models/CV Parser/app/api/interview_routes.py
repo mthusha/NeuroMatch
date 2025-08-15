@@ -4,15 +4,17 @@ import uuid
 
 interview_api = Blueprint('interview_api', __name__)
 
-@interview_api.route("/start_interview", methods=["POST"])
-def start_interview():
+@interview_api.route("/general", methods=["POST"])
+def start_general_interview():
+    request_data = request.get_json()
+    result = InterviewService.start_general_interview(request_data)
+    return jsonify(result)
+
+@interview_api.route("/job-specific", methods=["POST"])
+def start_job_specific_interview():
     data = request.get_json()
-    cv_data = data.get("cv_data")
-    session_id = data.get("session_id") or str(uuid.uuid4())
-
-    question = InterviewService.start_interview(cv_data, session_id)
-    return jsonify({"session_id": session_id, "question": question})
-
+    result = InterviewService.start_job_specific_interview(data)
+    return jsonify(result)
 
 @interview_api.route("/answer", methods=["POST"])
 def continue_interview():

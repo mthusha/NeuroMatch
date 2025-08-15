@@ -1,10 +1,16 @@
-import React, { useEffect, useState } from "react";
+import React, { useEffect, useState, useRef } from "react";
 import { FiArrowLeft, FiMail, FiMapPin, FiBriefcase, FiAward,FiChevronDown  } from "react-icons/fi";
 import { useAuth } from "../../../../context/AuthContext";
 import CvConfirmationModal from "./../../../job_seeker/components/forms/CvConfirmationModal";
 import { fetchCvData } from "../../../../api/JobSeeker";
 import { updateCandidateStatus } from '../../../../api/AppliedJobs';
-const CandidateProfile = ({ candidate, goBack, jwt }) => {
+import NeuroScorePanel from "./NeuroScorePanel";
+import { fetchJobSeekerSummary } from "../../../../api/JobSeeker"; 
+import RenderWaitingScore from './../subs/ScoreView';
+import { fetchJobSeekerScore } from "../../../../api/JobSeeker"; 
+import { fetchInterviewSessionsByApplicant } from "../../../../api/JobSeeker";
+import InterviewSessions from './../pop/InterviewSessions';
+const CandidateProfile = ({ candidate, goBack, jwt, scrollContainerRef }) => {
   const { fetchUserProfile } = useAuth();
   const [profile, setProfile] = useState(null);
   const [isLoading, setIsLoading] = useState(true);
@@ -12,7 +18,13 @@ const CandidateProfile = ({ candidate, goBack, jwt }) => {
   const [cvData, setCvData] = useState(null);
   const [loadingCv, setLoadingCv] = useState(false);
   const [status, setStatus] = useState(candidate.status || 'shortlisted');
-
+  const [neuroData, setNeuroData] = useState(null);
+  const [loadingNeuro, setLoadingNeuro] = useState(false);
+  const [showNeuroScore, setShowNeuroScore] = useState(false);
+  const neuroScoreRef = useRef(null);
+  const [score, setScore] = useState(null);
+  const [sessions, setSessions] = useState([]);
+  const [showSessions, setShowSessions] = useState(false);
 
   useEffect(() => {
     const loadProfile = async () => {
@@ -27,11 +39,71 @@ const CandidateProfile = ({ candidate, goBack, jwt }) => {
       }
     };
     loadProfile();
+    // console.log(candidate)
   }, [candidate, jwt, fetchUserProfile]);
 
   useEffect(() => {
     setStatus(candidate.status || 'shortlisted');
+    // console.log(status)
   }, [candidate]);
+
+  const handleStatusUpdate = (newStatus) => {
+    setStatus(newStatus);
+  };
+
+
+   const handleShowNeuroScore = () => {
+    setShowNeuroScore((prev) => {
+      const newState = !prev;
+
+      if (!prev) {
+        setTimeout(() => {
+          if (neuroScoreRef.current) {
+            neuroScoreRef.current.scrollIntoView({
+              behavior: "smooth",
+              block: "start",
+              inline: "nearest",
+            });
+          }
+        }, 100);
+      }
+      return newState;
+    });
+  };
+
+  useEffect(() => {
+    if (!candidate?.email) return;
+
+    const loadNeuroData = async () => {
+      try {
+        setLoadingNeuro(true);
+        const data = await fetchJobSeekerSummary(candidate.email, jwt);
+        setNeuroData(data);
+      } catch (error) {
+        console.error("Error fetching neuro score data:", error);
+      } finally {
+        setLoadingNeuro(false);
+      }
+    };
+
+    loadNeuroData();
+  }, [candidate.email, jwt]);
+
+  useEffect(() => {
+    if (!candidate?.id) return;
+
+    const loadScore = async () => {
+      try {
+        const result = await fetchJobSeekerScore(candidate.id);
+        setScore(result);
+      } catch (error) {
+        console.error("Error fetching score:", error);
+      }
+    };
+
+    loadScore();
+  }, [candidate.id]);
+
 
     const handleViewCv = async () => {
     try {
@@ -55,6 +127,15 @@ const CandidateProfile = ({ candidate, goBack, jwt }) => {
       setStatus(oldStatus); 
     }
   };
+  const handleFetchSessions = async () => {
+  try {
+    const data = await fetchInterviewSessionsByApplicant(candidate.id, jwt);
+    setSessions(data);
+    setShowSessions(true);
+  } catch (err) {
+
+  }
+};
 
 
 
@@ -70,7 +151,6 @@ const CandidateProfile = ({ candidate, goBack, jwt }) => {
 
   return (
     <div className="bg-white rounded-xl overflow-hidden transition-all duration-300 border border-gray-200 rounded-xl p-1 shadow-sm hover:shadow-md transition-all group hover:border-indigo-200">
-      {/* Cover Image */}
       <div className="relative from-indigo-500 "
       style={{height:'8rem', backgroundColor:'transparent'}}>
         {profile.coverPictureBase64 ? (
@@ -94,7 +174,6 @@ const CandidateProfile = ({ candidate, goBack, jwt }) => {
           </span>
         </button>
 
-        {/* Profile Picture */}
         <div className="absolute -bottom-16 left-6 transform  transition-transform duration-300">
           <div className="relative">
             {profile.profilePictureBase64 ? (
@@ -146,6 +225,10 @@ const CandidateProfile = ({ candidate, goBack, jwt }) => {
           </div>
         </div>
 
+        <div 
+        style={{display:'flex', 
+               justifyContent:'space-between'}}
+        > 
         <div className="mt-5 flex gap-3 items-center">
           <button 
           onClick={handleViewCv}
@@ -155,22 +238,40 @@ const CandidateProfile = ({ candidate, goBack, jwt }) => {
           </button>
 
           <div className="relative">
-            <select
-              value={status}
-              onChange={(e) => handleStatusChange(e.target.value)}
-              className={`appearance-none px-6 py-2 pr-8 rounded-full text-xs font-medium border shadow-sm transition-all duration-300 cursor-pointer
-                ${status  === 'pending' ? 'bg-amber-50 border-amber-200 text-amber-700 hover:bg-amber-100' : 
-                  status === 'rejected' ? 'bg-red-50 border-red-200 text-red-700 hover:bg-red-100' :
-                  status === 'reviewed' ? 'bg-blue-50 border-blue-200 text-blue-700 hover:bg-blue-100' :
-                  'bg-green-50 border-green-200 text-green-700 hover:bg-green-100'}`}
-            >
-              <option value="shortlisted" className="">Shortlisted</option>
-              <option value="pending" className="">Pending</option>
-              <option value="reviewed" className="">In Review</option>
-              <option value="rejected" className="">Rejected</option>
-            </select>
+           <select
+             value={status}
+             onChange={(e) => handleStatusChange(e.target.value)}
+             className={`appearance-none px-6 py-2 pr-8 rounded-full text-xs font-medium border shadow-sm transition-all duration-300 cursor-pointer
+               ${status === 'pending' ? 'bg-amber-50 border-amber-200 text-amber-700 hover:bg-amber-100' :
+                status === 'rejected' ? 'bg-red-50 border-red-200 text-red-700 hover:bg-red-100' :
+                status === 'reviewed' ? 'bg-blue-50 border-blue-200 text-blue-700 hover:bg-blue-100' :
+                status === 'Request Interview' ? 'bg-gradient-to-r from-purple-100 to-indigo-100 text-indigo-800 border-indigo-200 animate-pulse hover:animate-none hover:from-purple-200 hover:to-indigo-200 transition-all duration-300' :
+                status === 'Waiting' ? 'bg-gradient-to-r from-purple-100 to-indigo-100 text-indigo-800 border-indigo-200 animate-pulse hover:animate-none hover:from-purple-200 hover:to-indigo-200 transition-all duration-300' :
+              
+                'bg-green-50 border-green-200 text-green-700 hover:bg-green-100'}`}
+           >
+             {status === 'Request Interview' && (
+               <option value="Request Interview" hidden>Request Interview</option>
+             )}
+             {status === 'Waiting' && (
+               <option value="Waiting" hidden>Waiting</option>
+             )}
+             <option value="shortlisted">Shortlisted</option>
+             <option value="pending">Pending</option>
+             <option value="reviewed">In Review</option>
+             <option value="rejected">Rejected</option>
+           </select>
+
             <FiChevronDown className="absolute right-3 top-1/2 transform -translate-y-1/2 text-xs text-current pointer-events-none" />
           </div>
+          
+        </div>
+         {status === "Waiting" && (
+           <div onClick={handleFetchSessions} className="cursor-pointer">
+             <RenderWaitingScore score={score} />
+           </div>
+         )}
+
         </div>
 
         {cvModalOpen && cvData && (
@@ -226,7 +327,9 @@ const CandidateProfile = ({ candidate, goBack, jwt }) => {
           )}
 
           {profile.neuroScore && (
-            <div className="mt-5 bg-gradient-to-br from-indigo-50/80 to-purple-50/80 p-4 rounded-lg border border-indigo-100/70">
+            <div  className="mt-5 bg-gradient-to-br from-indigo-50/80 to-purple-50/80 p-4 rounded-lg border border-indigo-100/70 cursor-pointer"
+            onClick={handleShowNeuroScore} style={{ cursor: "pointer" }}
+             >
               <div className="flex items-start gap-2.5">
                 <div className="bg-indigo-100/80 p-1.5 rounded-md mt-0.5">
                   <FiAward className="text-indigo-600 text-sm" />
@@ -254,6 +357,25 @@ const CandidateProfile = ({ candidate, goBack, jwt }) => {
               </div>
             </div>
           )}
+           {showNeuroScore && (
+            <div className="mt-6"
+            ref={neuroScoreRef}
+            // style={{ marginTop: 20, padding: 10, background: "#eef" }}
+            >
+             {loadingNeuro ? (
+               <div>Loading NeuroScore details...</div>
+             ) : neuroData ? (
+               <NeuroScorePanel 
+               neuroData={neuroData}
+               jobPost={candidate.id}
+               status={status}
+               onStatusChange={handleStatusUpdate} 
+               />
+             ) : (
+                <div>No NeuroScore data available</div>
+            )}
+          </div>
+          )}
         </div>
       </div>
       {loadingCv && (
@@ -262,6 +384,9 @@ const CandidateProfile = ({ candidate, goBack, jwt }) => {
           <p className="mt-4 text-sm font-medium">Loading CV...</p>
         </div>
       )}
+
+      {showSessions && <InterviewSessions sessions={sessions} score={score} onClose={() => setShowSessions(false)} jobId ={candidate.id} />}
+
     </div>
   );
 };

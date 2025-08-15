@@ -1,16 +1,48 @@
-import React, { useRef, useEffect, useState } from "react";
-import { FaMicrophone, FaPlay } from "react-icons/fa";
-
+// import { useNavigate } from "react-router-dom";
+import React, { useRef, useEffect, useState, useCallback } from "react";
+import { FaMicrophone, FaPlay, FaRedo } from "react-icons/fa";
+import { getAttemptCount  } from "../../../../../api/scheduledAssessmentService";
 const VoiceChatPanel = ({
   conversation,
   isRecording,
   toggleRecording,
   liveTranscript = "",
   interviewStarted,
-  startInterview
+  startInterview,
+  jobId,
+  onFinish
 }) => {
   const chatEndRef = useRef(null);
   const [displayedMessages, setDisplayedMessages] = useState([]);
+  const [attempts, setAttempts] = useState();
+  const [refreshCounter, setRefreshCounter] = useState(0);
+  // const navigate = useNavigate();
+
+
+  const fetchAttempts = useCallback(async () => {
+  try {
+    const count = await getAttemptCount(jobId);
+    setAttempts(count);
+  } catch (err) {
+    console.error(err.message);
+  }
+}, [jobId]);
+
+  const handleRestart = async () => {
+  if (isRecording) toggleRecording();
+
+  try {
+    // await deleteOldAssessment(jobId);
+    setRefreshCounter(prev => prev + 1);  
+    setTimeout(() => startInterview(), 100);
+  } catch (err) {
+    console.error(err.message);
+  }
+};
+
+
+
+
 
 useEffect(() => {
   if (!conversation.length) return;
@@ -62,7 +94,14 @@ useEffect(() => {
 
   useEffect(() => {
    chatEndRef.current?.scrollIntoView({ behavior: "smooth" });
- }, [displayedMessages]);
+ }, [displayedMessages ]);
+
+ // eslint-disable-next-line react-hooks/exhaustive-deps
+useEffect(() => {
+  fetchAttempts();
+}, [fetchAttempts, refreshCounter]); 
+
+
 
 
   return (
@@ -120,6 +159,7 @@ useEffect(() => {
 
       <div className="p-4 md:p-6 flex flex-col items-center justify-center border-t border-gray-200 bg-white min-h-[140px]">
         {!interviewStarted ? (
+        <div className="flex flex-col items-center justify-center h-[140px]">
           <button
               onClick={startInterview}
               className="
@@ -131,8 +171,48 @@ useEffect(() => {
             >
               <FaPlay className="text-2xl drop-shadow-md" />
             </button>
+          </div>
         ) : (
-          <>
+          <div className="flex flex-col items-center justify-center h-[140px]">
+           {jobId && (
+           <div className="absolute bottom-4 right-4 flex items-center gap-2 bg-white/80 backdrop-blur-sm px-2 py-1 rounded-full shadow-sm border border-gray-200">
+             <button
+               onClick={handleRestart}
+               className="
+                 p-1 rounded-full hover:bg-gray-100 transition-all duration-200
+                 flex items-center justify-center
+               "
+               title="Restart Interview"
+             >
+               <FaRedo size={12} className="text-gray-500" />
+             </button>
+             <span className="text-xs text-gray-600 font-medium">Attempt {attempts}</span>
+           </div>
+             )}
+
+             {/* finish */}
+             <div onClick={onFinish}
+               role="button"
+               tabIndex={0}
+               onKeyDown={(e) => {
+                 if (e.key === "Enter" || e.key === " ") {
+                  onFinish();
+                 }
+               }} className="absolute bottom-4 left-4 flex cursor-pointer items-center gap-2 bg-green-50/90 backdrop-blur-sm px-3 py-1 rounded-full shadow-sm border border-green-200">
+               <button
+                //  onClick={handleFinish}
+                 className="
+                   p-1 rounded-full hover:bg-green-100 transition-all duration-200
+                   flex items-center justify-center text-green-600
+                 "
+                 title="Finish Interview"
+               >
+                 <FaPlay size={12} className="rotate-90" />
+               </button>
+               <span className="text-xs font-medium text-green-700">Complete</span>
+             </div>
+             {/* end finish */}
+             
             <button
               onClick={toggleRecording}
               className={`p-5 md:p-6 rounded-full flex items-center justify-center ${
@@ -143,10 +223,11 @@ useEffect(() => {
             >
               <FaMicrophone className="text-xl md:text-2xl" />
             </button>
-
             <div className="mt-3 text-sm text-gray-600 h-[20px] flex items-center justify-center">
               {isRecording ? "Listening... Speak now" : "Press to speak"}
-       </div>
+           </div>
+
+             
 
             <div className="mt-3 flex space-x-1 h-[24px]">
               {isRecording &&
@@ -161,11 +242,9 @@ useEffect(() => {
                   />
                 ))}
             </div>
-          </>
+           </div>
         )}
       </div>
-
-
       <style jsx>{`
         @keyframes voice {
           0%,

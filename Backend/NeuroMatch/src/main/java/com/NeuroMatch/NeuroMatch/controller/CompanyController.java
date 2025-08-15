@@ -1,5 +1,6 @@
 package com.NeuroMatch.NeuroMatch.controller;
 
+import com.NeuroMatch.NeuroMatch.model.dto.CompanyDashboardDto;
 import com.NeuroMatch.NeuroMatch.model.dto.CompanyDto;
 import com.NeuroMatch.NeuroMatch.model.dto.CompanyViewDto;
 import com.NeuroMatch.NeuroMatch.model.dto.JobPostDto;
@@ -69,6 +70,42 @@ public class CompanyController {
                     RestApiResponseStatusCodes.SUCCESS.getCode(),
                     ValidationMessages.COMPANY_LIST_RETRIEVED_SUCCESSFULLY,
                     companyDtoList
+            ));
+        } catch (Exception e) {
+            return ResponseEntity.status(HttpStatus.INTERNAL_SERVER_ERROR).body(new ResponseWrapper<>(
+                    RestApiResponseStatusCodes.INTERNAL_SERVER_ERROR.getCode(),
+                    e.getMessage(),
+                    null
+            ));
+        }
+    }
+
+    @GetMapping(EndpointBundle.COMPANY_DASH + EndpointBundle.EMAIL)
+    public ResponseEntity<ResponseWrapper<CompanyDashboardDto>> getCompanyDash (@PathVariable String email) {
+        try {
+            CompanyDashboardDto companyDashboardDto = companyService.getCompanyDashboard(email);
+            return ResponseEntity.ok(new ResponseWrapper<>(
+                    RestApiResponseStatusCodes.SUCCESS.getCode(),
+                    ValidationMessages.COMPANY_DASH_RETRIEVED_SUCCESSFULLY,
+                    companyDashboardDto
+            ));
+        }catch (Exception e) {
+            return ResponseEntity.ok(new ResponseWrapper<>(
+                    RestApiResponseStatusCodes.INTERNAL_SERVER_ERROR.getCode(),
+                    e.getMessage(),
+                    null
+            ));
+        }
+    }
+
+    @GetMapping(EndpointBundle.GET_ID_BY_EMAIL + EndpointBundle.ID)
+    public ResponseEntity<ResponseWrapper<String>> getCompanyEmailById (@PathVariable Long id) {
+        try {
+            String email = companyService.getEmailByCompanyId(id);
+            return ResponseEntity.ok(new ResponseWrapper<>(
+                    RestApiResponseStatusCodes.SUCCESS.getCode(),
+                    ValidationMessages.RETRIEVED,
+                    email
             ));
         } catch (Exception e) {
             return ResponseEntity.status(HttpStatus.INTERNAL_SERVER_ERROR).body(new ResponseWrapper<>(

@@ -7,6 +7,8 @@ import java.util.regex.Pattern;
 
 public class HelperMethods {
 
+    public static int MAX_QUESTIONS = 10;
+
     public static String stripScoreSection(String text) {
         if (text == null) return null;
         int braceIndex = text.indexOf("{");
@@ -26,6 +28,7 @@ public class HelperMethods {
         }
         return result;
     }
+
 
 
 }

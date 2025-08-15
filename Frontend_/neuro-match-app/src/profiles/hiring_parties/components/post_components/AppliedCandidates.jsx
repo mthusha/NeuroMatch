@@ -1,4 +1,4 @@
-import React, { useState, useEffect } from 'react';
+import React, { useEffect, useState, useRef } from "react";
 import CandidateCard from './CandidateCard';
 import CandidateProfile from './CandidateProfile';
 import { getApplicantsByJobPostId } from '../../../../api/AppliedJobs';
@@ -7,6 +7,7 @@ const AppliedCandidates = ({ vacancies, selectedVacancy, onSelectVacancy }) => {
   const [applications, setApplications] = useState([]);
   const [selectedStatus, setSelectedStatus] = useState('all');
   const [selectedCandidate, setSelectedCandidate] = useState(null);
+  const scrollContainerRef = useRef(null);
 
   useEffect(() => {
     const fetchApplications = async () => {
@@ -70,12 +71,13 @@ const AppliedCandidates = ({ vacancies, selectedVacancy, onSelectVacancy }) => {
       </div>
 
       {selectedVacancy ? (
-        <div className="space-y-4">
+      <div ref={scrollContainerRef} className="space-y-4 no-scrollbar"
+        style={{maxHeight:'700px', overflowY: 'auto' }}>
           {selectedCandidate ? (
-              // ✅ Show CandidateProfile in same place
               <CandidateProfile
                 candidate={selectedCandidate}
                 goBack={() => setSelectedCandidate(null)}
+                scrollContainerRef={scrollContainerRef}
               />
           ) : (
           filteredApplications.length > 0 ? (
@@ -89,7 +91,9 @@ const AppliedCandidates = ({ vacancies, selectedVacancy, onSelectVacancy }) => {
                     score: application.score,
                     skill: application.skill,
                     profilePictureBase64: application.profilePictureBase64,
-                    bio : application.bio
+                    bio : application.bio,
+                    description : application.description,
+                    subject: application.subject
                   }}
                   applicationStatus={application.status} 
                   applicationDate={application.appliedDate}

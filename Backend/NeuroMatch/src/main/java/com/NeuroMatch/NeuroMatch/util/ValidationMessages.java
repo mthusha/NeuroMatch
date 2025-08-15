@@ -21,7 +21,7 @@ public class ValidationMessages {
     public static String RECOMMENDED_RETRIEVED_SUCCESSFULLY = "Recommended Job posts retrieved successfully";
     public static String USER_SKILLS = "user_skills";
     public static String JOB_SKILLS = "job_skills";
-    public static String JOB_POST_NOT_FOUND = "Job post not found";
+    public static String JOB_POST_NOT_FOUND = "Job post not found ";
     public static String RECOMMENDED_JOB_SEEKERS = "Recommended For JobSeekers retrieved successfully";
     public static String JOB_SEEKER_NOT_FOUND = "Job seeker not found.";
     public static String APPLICANTS_RETRIEVED_SUCCESSFULLY = "Applicants retrieved successfully";
@@ -38,4 +38,16 @@ public class ValidationMessages {
     public static final String INTERVIEW_SESSION_LIST_RETRIEVED_SUCCESSFULLY = "Interview session list retrieved successfully";
     public static final String CV_GENERATED = "CV generated successfully";
     public static final String STATUS_UPDATED = "Status updated successfully";
+    public static final String COMPANY_DASH_RETRIEVED_SUCCESSFULLY = "Company dash retrieved successfully";
+    public static final String ASSESSMENT_CREATED = "Assessment created successfully";
+    public static final String APPLIED_JOB_NOT_ID =  "Applied job not found with ID: ";
+    public static final String SCHEDULED_ASSESSMENT_NOT_FOUND = "Scheduled assessment not found";
+    public static final String SCHEDULED_ASSESSMENT_NOT_FOUND_FOR_JOB_SEEKER = "Scheduled assessment not found for job seeker and job post";
+    public static final String ASSESSMENT_COUNT_NOT_FOUND_FOR_JOB_SEEKER = "AssessmentCount not found for ScheduledAssessment";
+    public static final String DELETE_OLD_COUNTED = "Deleted old, counted";
+    public static final String COUNT_FETCHED = "Count fetched successfully";
+    public static final String COMPLETED_ASSESSMENT = "Completed assessment";
+    public static final String SCORE_FETCHED = "Score fetched successfully";
+    public static final String VIDEO_SAVED =  "Video saved successfully at: ";
+    public static final String INTERVIEW_VIDEO_NOT_FOUND =  "Interview video not found for jobId: ";
 }

@@ -9,6 +9,7 @@ import com.NeuroMatch.NeuroMatch.model.entity.JobPost;
 import com.NeuroMatch.NeuroMatch.model.entity.Users;
 import com.NeuroMatch.NeuroMatch.repository.*;
 import com.NeuroMatch.NeuroMatch.util.ValidationMessages;
+import jakarta.transaction.Transactional;
 import org.springframework.beans.BeanUtils;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Service;
@@ -126,6 +127,7 @@ public class CompanyServiceImpl implements CompanyService{
                 .collect(Collectors.toList());
     }
 
+    @Transactional
     public CompanyDashboardDto getCompanyDashboard(String email) {
         CompanyDetails company = usersRepository.findByEmail(email)
                 .orElseThrow(()-> new RuntimeException(ValidationMessages.USER_NOT_COMPANY))
@@ -139,10 +141,10 @@ public class CompanyServiceImpl implements CompanyService{
 
         //
         int totalApplied = appliedJobsRepository.countByJobPostCompanyDetailsId(companyId);
-        int shortlisted = appliedJobsRepository.countByJobPostCompanyDetailsIdAndStatus(companyId, "SHORTLISTED");
-        int inReview = appliedJobsRepository.countByJobPostCompanyDetailsIdAndStatus(companyId, "IN_REVIEW");
-        int pending = appliedJobsRepository.countByJobPostCompanyDetailsIdAndStatus(companyId, "PENDING");
-        int rejected = appliedJobsRepository.countByJobPostCompanyDetailsIdAndStatus(companyId, "REJECTED");
+        int shortlisted = appliedJobsRepository.countByJobPostCompanyDetailsIdAndStatus(companyId, "shortlisted");
+        int inReview = appliedJobsRepository.countByJobPostCompanyDetailsIdAndStatus(companyId, "reviewed");
+        int pending = appliedJobsRepository.countByJobPostCompanyDetailsIdAndStatus(companyId, "Pending");
+        int rejected = appliedJobsRepository.countByJobPostCompanyDetailsIdAndStatus(companyId, "rejected");
 
         CompanyDashboardDto dto = new CompanyDashboardDto();
         dto.setOpenPosition(openPositions);
@@ -174,6 +176,16 @@ public class CompanyServiceImpl implements CompanyService{
 
     }
 
+    @Override
+    public String getEmailByCompanyId(Long companyId) {
+        CompanyDetails companyDetails = companyRepository
+                .findById(companyId).orElseThrow(()-> new RuntimeException(ValidationMessages.USER_NOT_COMPANY));
+
+        return companyDetails
+                .getUser()
+                .getEmail();
+    }
+
 
     // support method
     public int calculateAvgTimeToHire(Long companyId) {
@@ -183,7 +195,7 @@ public class CompanyServiceImpl implements CompanyService{
             LocalDate postedOn = job.getPostedOn();
             if (postedOn == null || job.getAppliedJobs().isEmpty()) continue;
             Optional<AppliedJobs> firstShortlist = job.getAppliedJobs().stream()
-                    .filter(app -> "SHORTLISTED".equalsIgnoreCase(app.getStatus()))
+                    .filter(app -> "shortlisted".equalsIgnoreCase(app.getStatus()))
                     .min(Comparator.comparing(AppliedJobs::getAppliedDate));
             if (firstShortlist.isPresent()) {
                 long daysBetween = ChronoUnit.DAYS.between(postedOn, firstShortlist.get().getAppliedDate());
@@ -197,9 +209,9 @@ public class CompanyServiceImpl implements CompanyService{
 
     public int calculateHiringGoalPercent(Long companyId) {
         int totalApplied = appliedJobsRepository.countByJobPostCompanyDetailsId(companyId);
-        int shortlisted = appliedJobsRepository.countByJobPostCompanyDetailsIdAndStatus(companyId, "SHORTLISTED");
-        int pending = appliedJobsRepository.countByJobPostCompanyDetailsIdAndStatus(companyId, "PENDING");
-        int inReview = appliedJobsRepository.countByJobPostCompanyDetailsIdAndStatus(companyId, "IN_REVIEW");
+        int shortlisted = appliedJobsRepository.countByJobPostCompanyDetailsIdAndStatus(companyId, "shortlisted");
+        int pending = appliedJobsRepository.countByJobPostCompanyDetailsIdAndStatus(companyId, "Pending");
+        int inReview = appliedJobsRepository.countByJobPostCompanyDetailsIdAndStatus(companyId, "reviewed");
 
         int remainingPool = totalApplied - shortlisted;
         if (remainingPool == 0) return 0;

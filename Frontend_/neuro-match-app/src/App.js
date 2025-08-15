@@ -1,5 +1,5 @@
 import { BrowserRouter as Router, Routes, Route } from "react-router-dom";
-import Home from "./home/Home";
+// import Home from "./home/Home";
 import Login from "./auth/login";
 import Register from "./auth/Register";
 import Dashboard from "./profiles/job_seeker/Jobseeker";
@@ -14,6 +14,7 @@ import HiringDashboard from "./profiles/hiring_parties/HiringDashboard";
 import InterviewPanel from "./profiles/job_seeker/components/InterviewPanel";
 import AppliedJobCo from "./profiles/hiring_parties/AppliedJobCo";
 import InterviewHistory from "./profiles/job_seeker/components/interview_componets/historice/InterviewHistory"
+import NotFoundPage from "./profiles/comman/404";
 
 function App() {
   return (
@@ -21,7 +22,7 @@ function App() {
       {" "}
       <AuthProvider>
         <Routes>
-          <Route path="/" element={<Home />} />
+          <Route path="/" element={<Login />} />
           <Route path="/login" element={<Login />} />
           <Route path="/register" element={<Register />} />
 
@@ -54,12 +55,15 @@ function App() {
             }
           />
           {/* Fallback */}
-          <Route path="*" element={<Home />} />
+          <Route path="*" element={<NotFoundPage />} />
 
           {/* view search */}
           <Route path="/company/:id" element={<CompanyView />} />
           <Route path="/view-applied-jobs" element={<AppliedJobs />} />
-          <Route path="/seeker-interview" element={<InterviewPanel />} />
+          <Route
+            path="/seeker-interview/:jobId?"
+            element={<InterviewPanel />}
+          />
           <Route path="/view-applied-jobs-co" element={<AppliedJobCo />} />
           <Route path="/interview-past" element={<InterviewHistory />} />
           {/* <Route path="/user/:id" element={<UserView />} /> */}

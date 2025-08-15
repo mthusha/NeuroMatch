@@ -2,8 +2,10 @@ package com.NeuroMatch.NeuroMatch.service;
 
 import com.NeuroMatch.NeuroMatch.model.dto.InterviewResponse;
 import com.NeuroMatch.NeuroMatch.model.dto.InterviewRequest;
+import com.NeuroMatch.NeuroMatch.model.entity.AppliedJobs;
 import com.NeuroMatch.NeuroMatch.model.entity.InterviewSession;
 import com.NeuroMatch.NeuroMatch.model.entity.JobSeekerDetails;
+import com.NeuroMatch.NeuroMatch.repository.AppliedJobsRepository;
 import com.NeuroMatch.NeuroMatch.repository.InterviewSessionRepository;
 import com.NeuroMatch.NeuroMatch.repository.UsersRepository;
 import com.NeuroMatch.NeuroMatch.service.voice.AzureTtsService;
@@ -34,6 +36,8 @@ public class AIClientApiServiceImpl implements AIClientApiService {
     private UsersRepository usersRepository;
     @Autowired
     private ElevenLabsService elevenLabsService;
+    @Autowired
+    private AppliedJobsRepository appliedJobsRepository;
 
     public AIClientApiServiceImpl(RestTemplate restTemplate) {
         this.restTemplate = restTemplate;
@@ -61,11 +65,14 @@ public class AIClientApiServiceImpl implements AIClientApiService {
         }
     }
     @Override
-    public InterviewRequest startInterview(String cvData, String email) {
+    public InterviewRequest startInterview(Map<String, Object> request, String email, Long jobId) {
         try {
-            Map<String, Object> request = Map.of("cv_data", cvData);
+            String endpoint = jobId != null ?
+                    EndpointBundle.AI_CLIENT_JOB_INTERVIEW :
+                    EndpointBundle.AI_CLIENT_GENERAL_INTERVIEW;
+
             ResponseEntity<Map<String, String>> response = restTemplate.exchange(
-                    EndpointBundle.AI_CLIENT_START_INTERVIEW,
+                    endpoint,
                     HttpMethod.POST,
                     new HttpEntity<>(request),
                     new ParameterizedTypeReference<Map<String, String>>() {}
@@ -83,6 +90,11 @@ public class AIClientApiServiceImpl implements AIClientApiService {
                 sessionEntity.setSessionId(body.get("session_id"));
                 sessionEntity.setAIResponse(HelperMethods.stripScoreSection(body.get("question")));
                 sessionEntity.setJobSeeker(currentJobSeeker);
+                if (jobId != null) {
+                    AppliedJobs appliedJob = appliedJobsRepository.findById(jobId)
+                            .orElseThrow(() -> new RuntimeException(ValidationMessages.APPLIED_JOB_NOT_ID + jobId));
+                    sessionEntity.setAppliedJobs(appliedJob);
+                }
                 interviewSessionRepository.save(sessionEntity);
 
                 try {
@@ -104,7 +116,7 @@ public class AIClientApiServiceImpl implements AIClientApiService {
     }
 
     @Override
-    public InterviewResponse sendAnswer(String sessionId, String answer) {
+    public InterviewResponse sendAnswer(String sessionId, String answer, Long jobId) {
         try {
             Map<String, Object> request = Map.of(
                     "session_id", sessionId,
@@ -122,7 +134,8 @@ public class AIClientApiServiceImpl implements AIClientApiService {
             if (body != null && body.containsKey("response")) {
                 String aiResponse = HelperMethods.stripScoreSection(body.get("response"));
                 updatePreviousQuestionWithAnswer(sessionId, answer);
-                saveNewAIQuestion(sessionId, body.get("response"));
+                saveNewAIQuestion(sessionId, body.get("response"), jobId);
+
                 InterviewResponse interviewResponse = new InterviewResponse();
                 interviewResponse.setResponse(aiResponse);
 
@@ -158,11 +171,17 @@ public class AIClientApiServiceImpl implements AIClientApiService {
     }
 
 
-    private void saveNewAIQuestion(String sessionId, String aiResponseRaw) {
+    private void saveNewAIQuestion(String sessionId, String aiResponseRaw, Long jobId) {
         JobSeekerDetails currentJobSeeker = interviewSessionRepository
                 .findFirstBySessionId(sessionId)
                 .map(InterviewSession::getJobSeeker)
                 .orElseThrow(() -> new RuntimeException("Session not found"));
+
+        AppliedJobs appliedJob = null;
+        if (jobId != null) {
+            appliedJob = appliedJobsRepository.findById(jobId)
+                    .orElseThrow(() -> new RuntimeException(ValidationMessages.APPLIED_JOB_NOT_ID + jobId));
+        }
 
         Map<String, Integer> parsed = HelperMethods.extractScoreAndTime(aiResponseRaw);
 
@@ -172,6 +191,9 @@ public class AIClientApiServiceImpl implements AIClientApiService {
         newSessionEntity.setScore(parsed.get("score"));
         newSessionEntity.setExpectTimeSeconds(parsed.get("expected_time"));
         newSessionEntity.setJobSeeker(currentJobSeeker);
+        if (jobId != null) {
+            newSessionEntity.setAppliedJobs(appliedJob);
+        }
         interviewSessionRepository.save(newSessionEntity);
     }
 

@@ -17,7 +17,7 @@ function CompanyView(){
         <Header searchType="company" />
         <div style={{ maxHeight: "900px", overflow: "auto", scrollbarWidth: "none" }} className="main-content">
           <CompanyProfile companyId={id} onFollowChange={refreshConnections} />
-          <JobFeed companyId={id} type="company" />
+          <JobFeed companyId={id} type="company"/>
         </div>
 
         <div className="sidebar">

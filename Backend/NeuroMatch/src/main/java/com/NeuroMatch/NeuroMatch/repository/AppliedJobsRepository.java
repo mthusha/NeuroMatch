@@ -7,6 +7,7 @@ import org.springframework.data.jpa.repository.JpaRepository;
 import org.springframework.stereotype.Repository;
 
 import java.util.List;
+import java.util.Optional;
 
 @Repository
 public interface AppliedJobsRepository extends JpaRepository<AppliedJobs, Long> {
@@ -15,5 +16,5 @@ public interface AppliedJobsRepository extends JpaRepository<AppliedJobs, Long> 
     List<AppliedJobs> findByJobSeeker(JobSeekerDetails jobSeeker);
     int countByJobPostCompanyDetailsId(Long companyId);
     int countByJobPostCompanyDetailsIdAndStatus(Long companyId, String status);
-
+    Optional<AppliedJobs> findByJobSeekerIdAndJobPostId(Long jobSeekerId, Long jobPostId);
 }

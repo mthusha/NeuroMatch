@@ -1,5 +1,5 @@
 import React, { useEffect, useRef, useState } from 'react';
-import { FaMapMarkerAlt} from 'react-icons/fa';
+import { FaMapMarkerAlt, FaHeart, FaUserFriends } from 'react-icons/fa';
 import { useAuth } from '../../../context/AuthContext';
 import { uploadImage } from '../../../api/Users';
 import PostViewBar from './PostViewBar'
@@ -96,7 +96,7 @@ const ProfileCard = () => {
           />
         </div>
 
-        <div className="bg-in-box from-gray-900 via-gray-800 to-gray-900 px-6 pb-6 text-white relative " style={{border:"none"}} >
+        <div className="bg-gradient-to-b from-gray-50 to-white px-6 pb-6 pt-14 relative " style={{border:"none"}} >
           <div className="absolute -top-12 left-6">
             <img
               src={profile.coverPictureBase64
@@ -115,15 +115,28 @@ const ProfileCard = () => {
             />
           </div>
 
-          <div className="pt-12">
-            <h2 className="text-lg font-semibold">{profile.name || 'Not Set'}</h2>
-            <p className="text-sm text-gray-500 mt-1">
+        <div className="pt-2">
+            <h2 className="text-2xl font-bold text-gray-800">
+              {profile.name || 'Not Set'}
+            </h2>
+            <div className="flex items-center text-gray-500 text-sm mt-1">
+              <FaMapMarkerAlt className="mr-1" />
+              <span>{profile.address || 'Location not specified'}</span>
+            </div>
+            <p className="text-sm text-gray-600 mt-2">
               {profile.description || 'Not Set'}
             </p>
-            <p className="text-xs text-gray-400 mt-2 flex items-center gap-1">
-              <FaMapMarkerAlt className="h-3 w-3" />
-              {profile.address || 'Not Set'}
-            </p>
+
+            <div className="flex gap-6 mt-4">
+              <div className="flex items-center gap-2 text-sm text-gray-700 bg-gray-100 px-4 py-2 rounded-xl shadow-sm">
+                <FaUserFriends className="text-blue-500" />
+                <span className="font-medium">1.2k Followers</span>
+              </div>
+              <div className="flex items-center gap-2 text-sm text-gray-700 bg-gray-100 px-4 py-2 rounded-xl shadow-sm">
+                <FaHeart className="text-red-500" />
+                <span className="font-medium">865 Likes</span>
+              </div>
+            </div>
           </div>
         </div>
       </div>

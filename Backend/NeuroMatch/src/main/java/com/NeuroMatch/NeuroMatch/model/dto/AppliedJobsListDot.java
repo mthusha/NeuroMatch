@@ -17,4 +17,5 @@ public class AppliedJobsListDot {
     private String status;
     private String posterImageBase64;
     private String CompanyProfileImageBase64;
+    private String subject;
 }

@@ -1,9 +1,11 @@
 import React, { useState, useEffect,  useCallback, useRef  } from 'react';
+import { useParams } from 'react-router-dom';
 import AvatarPanel from './../components/interview_componets/avatar/AvatarPanel';
 import VoiceChatPanel from './../components/interview_componets/chat/VoiceChatPanel';
 import { useAuth } from "../../../context/AuthContext";
 import { fetchFirstQuestionApi, sendAnswerApi } from '../../../api/Interview';
 import { useEyeTracking } from './../../../service/useEyeTracking';
+import { completeAssessment  } from "../../../api/scheduledAssessmentService";
 
 const InterviewPanel = () => {
   const [conversation, setConversation] = useState([]);
@@ -19,12 +21,13 @@ const InterviewPanel = () => {
   const sendTimerRef = useRef(null);
   const { user } = useAuth();
   const email = user?.email || '';
+  const { jobId } = useParams();
+  const finishCallbacksRef = useRef([]);
 
   const { eyeDetected, trackingActive, lastDetectionTimeRef } = useEyeTracking(interviewStarted);
 
-
   
-  const playAudio = useCallback((audioBase64) => {
+  const playAudio = useCallback((audioBase64) => { 
     if (!audioBase64) return;
     try {
       const audio = new Audio(`data:audio/mp3;base64,${audioBase64}`);
@@ -38,7 +41,9 @@ const InterviewPanel = () => {
 
  const fetchFirstQuestion = useCallback(async () => {
     try {
-      const response = await fetchFirstQuestionApi(email);
+      const response = jobId 
+        ? await fetchFirstQuestionApi(email, jobId)
+        : await fetchFirstQuestionApi(email);
       
       if (response.statusCode === 200) {
         setSessionId(response.data.sessionId);
@@ -62,14 +67,18 @@ const InterviewPanel = () => {
       };
       setConversation(prev => [...prev, errorMessage]);
     }
-  }, [email, playAudio]);
+  }, [email, playAudio, jobId]);
 
 
   const sendAnswer = useCallback(async (answer) => {
     if (!sessionId || !answer) return;
 
     try {
-      const response = await sendAnswerApi(sessionId, answer);
+
+      const response = jobId 
+        ? await sendAnswerApi(sessionId, answer, jobId)
+        : await sendAnswerApi(sessionId, answer);
+      // const response = await sendAnswerApi(sessionId, answer);
       
       if (response.statusCode === 200) {
         const aiResponse = {
@@ -97,7 +106,7 @@ const InterviewPanel = () => {
       };
       setConversation(prev => [...prev, fallbackMessage]);
     }
-  }, [sessionId, playAudio]);
+  }, [sessionId, playAudio, jobId]);
 
 
   useEffect(() => {
@@ -270,7 +279,18 @@ const InterviewPanel = () => {
 
   setIsRecording(prev => !prev);
 };
-
+const handleFinish = async () => {
+  for (const cb of finishCallbacksRef.current) {
+    await cb();
+  }
+  try {
+    await completeAssessment(jobId);
+    window.location.href = "/view-applied-jobs";
+  } catch (error) {
+    console.error("Failed to complete assessment:", error);
+    // user feedback
+  }
+};
 
 
   return (
@@ -285,8 +305,11 @@ const InterviewPanel = () => {
         <div className="w-3/4">
           <AvatarPanel 
               showCamera={eyeTrackCameraReady}
+              // showCamera={false}
               eyeDetected={eyeDetected}
               trackingActive={trackingActive}
+              jobId = {jobId}
+              onFinish={finishCallbacksRef}
             />
         </div>
         <VoiceChatPanel
@@ -296,6 +319,8 @@ const InterviewPanel = () => {
           // liveTranscript={liveTranscript}
           interviewStarted={interviewStarted}
           startInterview={startInterview}
+          jobId = {jobId}
+           onFinish={handleFinish}
         />
       </div>
     </div>

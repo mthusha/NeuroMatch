@@ -1,9 +1,11 @@
 import { API_BASE_URL } from "../config";
-export const fetchFirstQuestionApi = async (email) => {
+export const fetchFirstQuestionApi = async (email, jobId = null) => {
   try {
-    const res = await fetch(
-      `${API_BASE_URL}/job-seeker/interview/generate_questions/${email}`
-    );
+    let url = `${API_BASE_URL}/job-seeker/interview/generate_questions/${email}`;
+    if (jobId) {
+      url += `?jobId=${jobId}`; 
+    }
+    const res = await fetch(url);
     const data = await res.json();
     return data;
   } catch (err) {
@@ -12,16 +14,17 @@ export const fetchFirstQuestionApi = async (email) => {
   }
 };
 
-export const sendAnswerApi = async (sessionId, answer) => {
+export const sendAnswerApi = async (sessionId, answer, jobId = null) => {
   try {
-    const res = await fetch(
-      `${API_BASE_URL}/job-seeker/interview/generate_questions/answer`,
-      {
-        method: "POST",
-        headers: { "Content-Type": "application/json" },
-        body: JSON.stringify({ session_id: sessionId, answer }),
-      }
-    );
+    const body = { session_id: sessionId, answer };
+    if (jobId !== null && jobId !== undefined) {
+      body.job_id = jobId; 
+    }
+    const res = await fetch(`${API_BASE_URL}/job-seeker/interview/answer`, {
+      method: "POST",
+      headers: { "Content-Type": "application/json" },
+      body: JSON.stringify(body),
+    });
     const data = await res.json();
     return data;
   } catch (err) {
@@ -29,6 +32,7 @@ export const sendAnswerApi = async (sessionId, answer) => {
     throw err;
   }
 };
+
 
 
 export const getInterviewSessions = async (email) => {
@@ -46,4 +50,41 @@ export const getInterviewSessions = async (email) => {
     throw error; 
   }
 };
+
+export const uploadInterviewVideo = async (blob, jobId) => {
+  try {
+    const formData = new FormData();
+    formData.append('file', blob, `${jobId}.webm`);
+    formData.append('jobId', jobId);
+
+    const res = await fetch(`${API_BASE_URL}/interview-session/upload-video`, {
+      method: "POST",
+      body: formData,
+    });
+
+    const result = await res.text();
+    return result;
+  } catch (err) {
+    throw err;
+  }
+};
+
+export const fetchInterviewVideo = async (jobId) => {
+  try {
+    const response = await fetch(
+      `${API_BASE_URL}/interview-session/interview-video/${jobId}`
+    );
+
+    if (!response.ok) {
+      throw new Error(`Failed to fetch video: ${response.statusText}`);
+    }
+
+    const blob = await response.blob();
+    return URL.createObjectURL(blob);
+  } catch (error) {
+    console.error("Error fetching interview video:", error);
+    throw error;
+  }
+};
+
 

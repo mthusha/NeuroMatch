@@ -9,7 +9,7 @@ import java.util.Map;
 public interface AIClientApiService {
     boolean isRecommendationMatch(Map<String, List<String>> userSkillsMap,
                         Map<String, List<String>> jobSkillsMap);
-    InterviewRequest startInterview(String cvData, String email);
-    InterviewResponse sendAnswer(String sessionId, String answer);
+    InterviewRequest startInterview(Map<String, Object> request, String email, Long jobId);
+    InterviewResponse sendAnswer(String sessionId, String answer, Long jobId);
 
 }

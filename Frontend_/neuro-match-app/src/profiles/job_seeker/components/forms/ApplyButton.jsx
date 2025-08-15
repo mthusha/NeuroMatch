@@ -1,4 +1,5 @@
 import { FaShareSquare } from 'react-icons/fa';
+
 const ApplyButton = ({ job, openApplyForm }) => {
   if (job.isApplied) {
     return (

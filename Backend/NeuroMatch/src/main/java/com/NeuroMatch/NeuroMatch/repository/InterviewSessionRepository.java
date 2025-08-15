@@ -1,5 +1,6 @@
 package com.NeuroMatch.NeuroMatch.repository;
 
+import com.NeuroMatch.NeuroMatch.model.entity.AppliedJobs;
 import com.NeuroMatch.NeuroMatch.model.entity.InterviewSession;
 import com.NeuroMatch.NeuroMatch.model.entity.JobSeekerDetails;
 import jakarta.transaction.Transactional;
@@ -13,5 +14,10 @@ import java.util.Optional;
 public interface InterviewSessionRepository extends JpaRepository<InterviewSession, Long>{
     Optional<InterviewSession> findFirstBySessionId(String sessionId);
     Optional<InterviewSession> findTopBySessionIdAndUserResponseIsNullOrderByIdDesc(String sessionId);
-    List<InterviewSession> findByJobSeekerOrderByCreatedAtDesc(JobSeekerDetails jobSeeker);
+//    List<InterviewSession> findByJobSeekerOrderByCreatedAtDesc(JobSeekerDetails jobSeeker);
+    List<InterviewSession> findByJobSeeker(JobSeekerDetails jobSeeker);
+    List<InterviewSession> findByJobSeekerAndAppliedJobsIsNull(JobSeekerDetails jobSeeker);
+    void deleteByAppliedJobs_Id(Long appliedId);
+    List<InterviewSession> findByAppliedJobs(AppliedJobs appliedJobs);
+
 }

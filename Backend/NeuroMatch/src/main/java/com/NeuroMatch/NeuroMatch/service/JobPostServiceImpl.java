@@ -103,7 +103,7 @@ public class JobPostServiceImpl implements JobPostService {
             boolean isLikedOrApplied = jobSeekerDetails.map(js ->
                     likedJobsRepository.existsByJobSeekerAndJobPost(js, jobPost)
             ).orElse(false);
-//            jobPostDto.setHasApplied(isLikedOrApplied);
+            jobPostDto.setIsApplied(isLikedOrApplied);
             jobPostDto.setIsLiked(isLikedOrApplied);
             jobPostDtos.add(jobPostDto);
         }

@@ -1,18 +1,25 @@
 import React from 'react';
 
-const Insights = () => {
-  const applicationStatusData = [
-    { name: 'Hired', value: 18, color: '#10b981', target: 25 },
-    { name: 'Interview', value: 32, color: '#3b82f6', target: 40 },
-    { name: 'Screening', value: 45, color: '#f59e0b', target: 60 },
-    { name: 'Applied', value: 120, color: '#8b5cf6', target: 150 }
+const Insights = ({
+  shortlisted,
+  shortlistedPercent,
+  inReview,
+  inReviewPercent,
+  pending,
+  pendingPercent,
+  rejected,
+  rejectedPercent,
+  totalApplied,
+  totalAppliedPercent
+}) => {
+
+    const applicationStatusData = [
+    { name: 'Hired', value: shortlisted, color: '#10b981', target: shortlisted / (shortlistedPercent / 100 || 1) }, 
+    { name: 'Interview', value: inReview, color: '#3b82f6', target: inReview / (inReviewPercent / 100 || 1) },
+    { name: 'Pending', value: pending, color: '#f59e0b', target: pending / (pendingPercent / 100 || 1) },
+    { name: 'Applied', value: totalApplied, color: '#8b5cf6', target: totalApplied / (totalAppliedPercent / 100 || 1) }
   ];
 
-//   const timeToHireData = [
-//     { metric: 'Avg. Time to Hire', value: '14 days', change: '-2 days', positive: true },
-//     { metric: 'Avg. Time to Screen', value: '3.2 days', change: '-0.5 days', positive: true },
-//     { metric: 'Interview to Offer', value: '7 days', change: '+1 day', positive: false }
-//   ];
 
   return (
     <div className="bg-in-box rounded-xl shadow-sm p-6 mb-8 transition-colors duration-300 h-fit border border-gray-200">

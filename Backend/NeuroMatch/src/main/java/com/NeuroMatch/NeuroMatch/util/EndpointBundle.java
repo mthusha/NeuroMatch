@@ -2,6 +2,7 @@ package com.NeuroMatch.NeuroMatch.util;
 
 public class EndpointBundle {
     public static final String BASE_URL = "api/v1";
+    public static final String DELETE = "/delete";
 
     // Auth
     public static final String AUTH = BASE_URL + "/auth";
@@ -28,6 +29,8 @@ public class EndpointBundle {
     public static final String INTERVIEW_ANSWERS = "/answer";
     public static final String FOLLOW = "/follow";
     public static final String LIKE = "/like";
+    public static final String JOB_SEEKER_SUMMERY = "/job-seeker-summery";
+    public static final String GET_SCORE_ONLY = "/get-score-only";
 
 
     //utils
@@ -41,19 +44,32 @@ public class EndpointBundle {
     public static final String NOT_COMPANY_LIST = "/followed-list";
     public static final String RECOMMENDED_COMPANY_LIST = "/recommended";
     public static final String SEARCH_COMPANY = "/search";
+    public static final String COMPANY_DASH = "/company/dashboard";
+    public static final String GET_ID_BY_EMAIL = "id-by-email";
 
     //Applied Jobs
     public static final String APPLIED_JOBS = BASE_URL + "/applied-jobs";
     public static final String RECOMMENDED_APPLIED_JOBS = "/{jobPostId}/applicants";
     public static final String UPDATE_STATUS = "/status-update";
+    public static final String APPLIED_UI = "/applied-uer-ui";
+    public static final String APPLIED_TITLE = "/applied-title";
 //    public static final String APPLIED_JOBS_GET = "/applied-jobs";
 
     // python server
     public static final String AI_CLIENT_URL_RECOMMEND = "http://localhost:5000/api/recommend/predict";
-    public static final String AI_CLIENT_START_INTERVIEW = "http://localhost:5000/api/interview/start_interview";
+    public static final String AI_CLIENT_GENERAL_INTERVIEW = "http://localhost:5000/api/interview/general";
+    public static final String AI_CLIENT_JOB_INTERVIEW = "http://localhost:5000/api/interview/job-specific";
     public static final String AI_CLIENT_ANSWER = "http://localhost:5000/api/interview/answer";
 
     // Interview Session
     public static final String INTERVIEW_SESSION = BASE_URL + "/interview-session";
+    public static final String GET_INTERVIEW_BY_APPLICANT = "/by-applicant";
+    public static final String VIDEO_UPLOAD = "/upload-video";
+    public static final String GET_VIDEO = "/interview-video/{jobId}";
+
+    //SCHEDULE_ASSESSMENT
+    public static final String SCHEDULE_ASSESSMENT = BASE_URL + "/schedule-assessment";
+    public static final String GET_SCHEDULE_COUNT = "/count";
+    public static final String COMPLETE_ASSESSMENT = "/complete-assessment";
 
 }

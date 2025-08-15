@@ -13,4 +13,5 @@ public interface CompanyService {
     List<CompanyDto> getSearchCompanyByJobSeeker(String name);
     CompanyViewDto getCompanyByCompanyId(Long companyId, String email);
     CompanyDashboardDto getCompanyDashboard(String email);
+    String getEmailByCompanyId(Long companyId);
 }

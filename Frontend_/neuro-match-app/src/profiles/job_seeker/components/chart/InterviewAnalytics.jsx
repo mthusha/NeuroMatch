@@ -75,7 +75,7 @@ const InterviewAnalytics = ({ chartData, barChartData, radarChartData, timeCompa
                       },
                       y: {
                         beginAtZero: true,
-                        max: 10,
+                        max: 11,
                         grid: {
                           color: 'rgba(229, 231, 235, 0.5)',
                           drawBorder: false
@@ -173,7 +173,7 @@ const InterviewAnalytics = ({ chartData, barChartData, radarChartData, timeCompa
                         },
                         y: {
                           beginAtZero: true,
-                          max: 10,
+                          max: 15,
                           grid: {
                             color: 'rgba(229, 231, 235, 0.5)',
                             drawBorder: false
