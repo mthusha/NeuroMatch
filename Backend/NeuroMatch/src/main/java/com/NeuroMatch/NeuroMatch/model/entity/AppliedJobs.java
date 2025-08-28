@@ -15,6 +15,7 @@ public class AppliedJobs {
     @Id
     @GeneratedValue(strategy = GenerationType.IDENTITY)
     private Long id;
+    @Column(columnDefinition = "LONGTEXT")
     private String description;
     private LocalDate appliedDate;
     private String subject;

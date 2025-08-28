@@ -15,64 +15,86 @@ class InterviewService:
 
     @staticmethod
     def start_general_interview(request_data: Dict) -> Dict:
+        """Handles general interviews (when no job ID is provided)"""
+        cv_data = request_data.get("cv_data")
         session_id = str(uuid.uuid4())
-
-        # Instead of calling Gemini API, return hardcoded response
-        dummy_question = (
-            "Hello, I am NeuroMatch. Let's start the interview. "
-            "Please introduce yourself briefly. "
-            "<feedback and next question in one paragraph>\n"
-            "{ score: null, expected_time: 60 }"
-        )
-
-        # Store dummy chat session info (if needed for continue)
+        
+        chat = model.start_chat()
         chat_sessions[session_id] = {
-            "chat": None,  # No real chat object in test mode
+            "chat": chat,
             "question_count": 1,
             "max_questions": request_data.get("numberOfQuestions", 10),
             "interview_type": "general"
         }
 
+        prompt = f"""
+You are a technical interviewer. 
+Your name is "Neuro". 
+Begin with your introduction and ask the candidate to introduce themselves.
+
+CV: {cv_data} 
+
+At the end of your response, on a separate line, include a JSON object like this exactly:
+
+{{ score: null, expected_time: <time in seconds> }}
+"""
+        response = chat.send_message(prompt)
         return {
             "session_id": session_id,
-            "question": dummy_question
+            "question": response.text.strip()
         }
-
+    
     @staticmethod
     def start_job_specific_interview(request_data: Dict) -> Dict:
+        """Handles job-specific interviews"""
         session_id = str(uuid.uuid4())
+        chat = model.start_chat()
 
-        candidate_name = request_data.get("candidateName", "Candidate")
-        job_title = request_data.get("jobTitle", "a position")
-        company_name = request_data.get("companyName", "our company")
-
-        dummy_question = (
-            f"You are conducting a technical interview for {job_title} at {company_name}. "
-            f"Hello {candidate_name}, I am NeuroMatch. Please introduce yourself briefly. "
-            "<feedback and next question in one paragraph>\n"
-            "{ score: null, expected_time: 60 }"
-        )
-
-        # Store dummy chat session info (if needed for continue)
         chat_sessions[session_id] = {
-            "chat": None,  # No real chat object in test mode
+            "chat": chat,
             "question_count": 1,
             "max_questions": request_data.get("numberOfQuestions", 10),
             "interview_type": "job-specific",
             "type": request_data.get("type"),
             "custom_parameters": request_data.get("customParameters"),
-            "candidate_name": candidate_name,
+            "candidate_name": request_data.get("candidateName"),
             "candidate_bio": request_data.get("candidateBio"),
-            "company_name": company_name,
+            "company_name": request_data.get("companyName"),
             "company_description": request_data.get("companyDescription"),
-            "job_title": job_title,
+            "job_title": request_data.get("jobTitle"),
             "job_description": request_data.get("jobDescription"),
             "job_requirements": request_data.get("jobRequirement"),
         }
 
+        candidate_name = request_data.get("candidateName", "")
+        candidate_bio = request_data.get("candidateBio", "")
+        company_name = request_data.get("companyName", "")
+        company_desc = request_data.get("companyDescription", "")
+        job_title = request_data.get("jobTitle", "a position")
+        job_desc = request_data.get("jobDescription", "")
+        job_reqs = request_data.get("jobRequirement", "")
+
+        prompt = f"""
+You are conducting a technical interview for {job_title}{f" at {company_name}" if company_name else ""}.
+
+{f"Candidate name: {candidate_name}" if candidate_name else ""}
+{f"Candidate bio: {candidate_bio}" if candidate_bio else ""}
+{f"Company description: {company_desc}" if company_desc else ""}
+{f"Job description: {job_desc}" if job_desc else ""}
+{f"Job requirements: {job_reqs}" if job_reqs else ""}
+
+Begin with your introduction (your name is "Neuro") and greet the candidate by name if available. and ask the candidate to introduce themselves.
+
+
+At the end of your response, on a separate line, include a JSON object like this exactly:
+
+{{ score: null, expected_time: <time in seconds> }}
+""".strip()
+
+        response = chat.send_message(prompt)
         return {
             "session_id": session_id,
-            "question": dummy_question
+            "question": response.text.strip()
         }
 
 

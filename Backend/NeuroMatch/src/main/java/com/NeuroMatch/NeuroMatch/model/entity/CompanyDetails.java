@@ -18,6 +18,7 @@ public class CompanyDetails {
     private String name;
     private String address;
     private String phone;
+    @Column(columnDefinition = "LONGTEXT")
     private String description;
     @Lob
     @Column(columnDefinition = "LONGBLOB")

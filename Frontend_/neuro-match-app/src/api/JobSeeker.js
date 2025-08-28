@@ -117,7 +117,6 @@ export const fetchJobSeekerScore = async (id) => {
   }
 };
 
-// api/JobSeeker.js
 
 export const fetchInterviewSessionsByApplicant = async (applicantId, jwt) => {
   try {
@@ -140,6 +139,5 @@ export const fetchInterviewSessionsByApplicant = async (applicantId, jwt) => {
     throw err;
   }
 };
-
 
 

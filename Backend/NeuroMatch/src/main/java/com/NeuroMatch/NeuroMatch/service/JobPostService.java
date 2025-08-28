@@ -11,4 +11,5 @@ public interface JobPostService {
     List<JobPostDto> getAllJobPostsByCompany (String email);
     List<JobPostDto> getAllRecommendJobPostsByJoSeeker(String email);
     List<JobPostDto> getAllJobPostsByCompanyId(Long id, String email);
+    void deletePostById(Long id);
 }

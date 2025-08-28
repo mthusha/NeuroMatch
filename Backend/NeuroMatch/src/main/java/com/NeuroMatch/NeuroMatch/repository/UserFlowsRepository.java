@@ -21,7 +21,7 @@ public interface UserFlowsRepository extends JpaRepository<UserFlows, Long> {
     Optional<UserFlows> findByUserAndCompany(JobSeekerDetails user, CompanyDetails company);
 
     int countByCompanyId(Long companyId);
-
+    Long countByCompany_Id(Long companyId);
 
 
 }

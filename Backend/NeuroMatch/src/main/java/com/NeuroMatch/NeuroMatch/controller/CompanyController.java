@@ -1,9 +1,6 @@
 package com.NeuroMatch.NeuroMatch.controller;
 
-import com.NeuroMatch.NeuroMatch.model.dto.CompanyDashboardDto;
-import com.NeuroMatch.NeuroMatch.model.dto.CompanyDto;
-import com.NeuroMatch.NeuroMatch.model.dto.CompanyViewDto;
-import com.NeuroMatch.NeuroMatch.model.dto.JobPostDto;
+import com.NeuroMatch.NeuroMatch.model.dto.*;
 import com.NeuroMatch.NeuroMatch.model.enums.RestApiResponseStatusCodes;
 import com.NeuroMatch.NeuroMatch.service.CompanyService;
 import com.NeuroMatch.NeuroMatch.util.EndpointBundle;
@@ -91,6 +88,24 @@ public class CompanyController {
             ));
         }catch (Exception e) {
             return ResponseEntity.ok(new ResponseWrapper<>(
+                    RestApiResponseStatusCodes.INTERNAL_SERVER_ERROR.getCode(),
+                    e.getMessage(),
+                    null
+            ));
+        }
+    }
+
+    @GetMapping( EndpointBundle.GET_FOLLOWS_APPLIED + EndpointBundle.ID)
+    public ResponseEntity<ResponseWrapper<GetFollowsApplied>> getFollowedCompanyById(@PathVariable Long id) {
+        try {
+            GetFollowsApplied FollowsApplied =  companyService.getFollowsLikes(id);
+            return ResponseEntity.ok(new ResponseWrapper<>(
+                    RestApiResponseStatusCodes.SUCCESS.getCode(),
+                    ValidationMessages.RETRIEVED_ORG,
+                    FollowsApplied
+            ));
+        }catch (Exception e) {
+            return ResponseEntity.status(HttpStatus.INTERNAL_SERVER_ERROR).body(new ResponseWrapper<>(
                     RestApiResponseStatusCodes.INTERNAL_SERVER_ERROR.getCode(),
                     e.getMessage(),
                     null

@@ -3,6 +3,7 @@ package com.NeuroMatch.NeuroMatch.service;
 import com.NeuroMatch.NeuroMatch.model.dto.CompanyDashboardDto;
 import com.NeuroMatch.NeuroMatch.model.dto.CompanyDto;
 import com.NeuroMatch.NeuroMatch.model.dto.CompanyViewDto;
+import com.NeuroMatch.NeuroMatch.model.dto.GetFollowsApplied;
 import com.NeuroMatch.NeuroMatch.model.entity.AppliedJobs;
 import com.NeuroMatch.NeuroMatch.model.entity.CompanyDetails;
 import com.NeuroMatch.NeuroMatch.model.entity.JobPost;
@@ -125,6 +126,13 @@ public class CompanyServiceImpl implements CompanyService{
                     return dto;
                 })
                 .collect(Collectors.toList());
+    }
+
+    public GetFollowsApplied getFollowsLikes(Long companyId) {
+        Long follows = userFlowsRepository.countByCompany_Id(companyId);
+        Long applied = appliedJobsRepository.countByCompanyId(companyId);
+
+        return new GetFollowsApplied(follows, applied);
     }
 
     @Transactional

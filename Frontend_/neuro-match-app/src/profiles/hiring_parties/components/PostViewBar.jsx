@@ -10,22 +10,34 @@ const PostViewBar = () => {
   const { user } = useAuth();
   const [activeTab, setActiveTab] = useState('post');
   const [vacancies, setVacancies] = useState([]);
+  // const [isDeleting, setIsDeleting] = useState(false);
+  
   // const [selectedVacancy, setSelectedVacancy] = useState(null);
   // const [showForm, setShowForm] = useState(false);
 
   const fetchVacancies = useCallback(async () => {
-    if (!user?.email) return;
-    try {
-      const response = await getJobPostsByEmail(user.email);
-      setVacancies(response.data.data || []);
-    } catch (error) {
-      console.error('Failed to fetch vacancies:', error);
+  if (!user?.email) return;
+  try {
+    const response = await getJobPostsByEmail(user.email);
+    if (response.data && response.data.data) {
+      setVacancies(response.data.data); 
+    } else {
+      setVacancies([]);
     }
-  }, [user?.email]);
+  } catch (error) {
+    console.error('Failed to fetch vacancies:', error);
+    setVacancies([]);
+  }
+}, [user?.email]);
 
   useEffect(() => {
     fetchVacancies();
   }, [fetchVacancies]);
+
+  const handleDeleteSuccess = () => {
+  
+    fetchVacancies();
+  };
 
   return (
     <div className="flex flex-col mt-5" 
@@ -79,6 +91,7 @@ const PostViewBar = () => {
         {activeTab === 'post' && (
           <JobPosts 
             posts={vacancies} 
+             onDeleteSuccess={handleDeleteSuccess} 
             // onCreateNew={() => setShowForm(true)} 
           />
         )}

@@ -47,3 +47,50 @@ export const fetchEmailByCompanyId = async (id) => {
     throw error;
   }
 };
+
+export const fetchCompanyStats = async (companyId, jwt) => {
+  try {
+    const res = await fetch(
+      `${API_BASE_URL}/company/follow-applied/${companyId}`,
+      {
+        headers: {
+          Authorization: `Bearer ${jwt}`,
+          "Content-Type": "application/json",
+        },
+      }
+    );
+
+    if (!res.ok) {
+      throw new Error(`Failed to fetch company stats: ${res.status}`);
+    }
+
+    const result = await res.json();
+    return result?.data || { totalFollows: 0, totalApplied: 0 };
+  } catch (err) {
+    console.error("fetchCompanyStats error:", err);
+    return { totalFollows: 0, totalApplied: 0 };
+  }
+};
+
+export const deleteJobPost = async (jobPostId, jwt) => {
+  try {
+    const res = await fetch(`${API_BASE_URL}/job-post/${jobPostId}`, {
+      method: "DELETE",
+      headers: {
+        Authorization: `Bearer ${jwt}`,
+        "Content-Type": "application/json",
+      },
+    });
+
+    const data = await res.json();
+
+    if (res.ok && data.statusCode === 200) {
+      return true;
+    }
+
+    throw new Error(data.statusMessage || "Failed to delete job post");
+  } catch (err) {
+    console.error("Error deleting job post:", err);
+    throw err;
+  }
+};

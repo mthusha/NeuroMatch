@@ -20,11 +20,14 @@ export const sendAnswerApi = async (sessionId, answer, jobId = null) => {
     if (jobId !== null && jobId !== undefined) {
       body.job_id = jobId; 
     }
-    const res = await fetch(`${API_BASE_URL}/job-seeker/interview/answer`, {
-      method: "POST",
-      headers: { "Content-Type": "application/json" },
-      body: JSON.stringify(body),
-    });
+    const res = await fetch(
+      `${API_BASE_URL}/job-seeker/interview/generate_questions/answer`,
+      {
+        method: "POST",
+        headers: { "Content-Type": "application/json" },
+        body: JSON.stringify(body),
+      }
+    );
     const data = await res.json();
     return data;
   } catch (err) {

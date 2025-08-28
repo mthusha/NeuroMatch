@@ -101,7 +101,22 @@ public class JobPostController {
             ));
         }
     }
-//    public Map<String, List<String>> extractSkillsFromCV(@PathVariable String email){
-//        return userService.extractSkillsFromCV(email);
-//    }
+
+    @DeleteMapping(EndpointBundle.ID)
+    public ResponseEntity<ResponseWrapper<?>> jobPostDelete(@PathVariable Long id) {
+        try {
+            jobPostService.deletePostById(id);
+            return ResponseEntity.ok(new ResponseWrapper<>(
+                    RestApiResponseStatusCodes.SUCCESS.getCode(),
+                    ValidationMessages.DELETED_SUCCESS,
+                    null
+            ));
+        }catch (Exception e) {
+            return ResponseEntity.status(HttpStatus.INTERNAL_SERVER_ERROR).body(new ResponseWrapper<>(
+                    RestApiResponseStatusCodes.INTERNAL_SERVER_ERROR.getCode(),
+                    e.getMessage(),
+                    null
+            ));
+        }
+    }
 }

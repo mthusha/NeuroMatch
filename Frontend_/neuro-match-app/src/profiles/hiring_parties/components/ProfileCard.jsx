@@ -3,17 +3,23 @@ import { FaMapMarkerAlt, FaHeart, FaUserFriends } from 'react-icons/fa';
 import { useAuth } from '../../../context/AuthContext';
 import { uploadImage } from '../../../api/Users';
 import PostViewBar from './PostViewBar'
+import { fetchCompanyStats } from '../../../api/Company'; 
 const ProfileCard = () => {
   const { user, fetchUserProfile } = useAuth();
   const [profile, setProfile] = useState(null);
   const profileInputRef = useRef(null);
   const coverInputRef = useRef(null);
+  const [stats, setStats] = useState({ totalFollows: 0, totalApplied: 0 });
 
   useEffect(() => {
   const loadProfile = async () => {
     if (user?.email) {
       const data = await fetchUserProfile(user.email, user.jwt);
       setProfile(data);
+      if (data?.id) {
+          const statData = await fetchCompanyStats(data.id, user.jwt);
+          setStats(statData);
+        }
     }
   };
   loadProfile();
@@ -130,11 +136,11 @@ const ProfileCard = () => {
             <div className="flex gap-6 mt-4">
               <div className="flex items-center gap-2 text-sm text-gray-700 bg-gray-100 px-4 py-2 rounded-xl shadow-sm">
                 <FaUserFriends className="text-blue-500" />
-                <span className="font-medium">1.2k Followers</span>
+                <span className="font-medium">{stats.totalFollows} Followers</span>
               </div>
               <div className="flex items-center gap-2 text-sm text-gray-700 bg-gray-100 px-4 py-2 rounded-xl shadow-sm">
                 <FaHeart className="text-red-500" />
-                <span className="font-medium">865 Likes</span>
+                 <span className="font-medium">{stats.totalApplied} Applied</span>
               </div>
             </div>
           </div>

@@ -46,6 +46,7 @@ public class EndpointBundle {
     public static final String SEARCH_COMPANY = "/search";
     public static final String COMPANY_DASH = "/company/dashboard";
     public static final String GET_ID_BY_EMAIL = "id-by-email";
+    public static final String GET_FOLLOWS_APPLIED = "/follow-applied";
 
     //Applied Jobs
     public static final String APPLIED_JOBS = BASE_URL + "/applied-jobs";

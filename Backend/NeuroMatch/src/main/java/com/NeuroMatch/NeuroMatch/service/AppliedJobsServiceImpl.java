@@ -89,6 +89,7 @@ public class AppliedJobsServiceImpl implements AppliedJobsService {
                     app.getId(),
                     fullName,
                     user.getEmail(),
+                    user.getJobSeekerDetails().getId(),
                     app.getSubject(),
                     app.getDescription(),
                     app.getAppliedDate(),

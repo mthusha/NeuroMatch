@@ -23,6 +23,7 @@ import org.springframework.web.client.RestTemplate;
 import java.time.Duration;
 import java.time.LocalDateTime;
 import java.util.*;
+import java.util.concurrent.atomic.AtomicLong;
 
 @Service
 public class AIClientApiServiceImpl implements AIClientApiService {
@@ -98,8 +99,8 @@ public class AIClientApiServiceImpl implements AIClientApiService {
                 interviewSessionRepository.save(sessionEntity);
 
                 try {
-//                    String audioBase64 = azureTtsService.synthesizeToBase64(HelperMethods.stripScoreSection(body.get("question")));
-//                    session.setAudioBase64(audioBase64);
+                    String audioBase64 = azureTtsService.synthesizeToBase64(HelperMethods.stripScoreSection(body.get("question")));
+                    session.setAudioBase64(audioBase64);
 
                 } catch (Exception e) {
                     System.err.println("TTS failed but continuing interview: " + e.getMessage());
@@ -133,15 +134,20 @@ public class AIClientApiServiceImpl implements AIClientApiService {
             Map<String, String> body = response.getBody();
             if (body != null && body.containsKey("response")) {
                 String aiResponse = HelperMethods.stripScoreSection(body.get("response"));
-                updatePreviousQuestionWithAnswer(sessionId, answer);
+                long second = updatePreviousQuestionWithAnswer(sessionId, answer);
                 saveNewAIQuestion(sessionId, body.get("response"), jobId);
+                Map<String, Integer> parsed = HelperMethods.extractScoreAndTime(body.get("response"));
 
                 InterviewResponse interviewResponse = new InterviewResponse();
                 interviewResponse.setResponse(aiResponse);
+                interviewResponse.setScore(parsed.get("score"));
+                interviewResponse.setExpectTimeSeconds(parsed.get("expected_time"));
+                interviewResponse.setActualTimeSeconds(second);
+
 
                 try {
-//                    String audioBase64 = azureTtsService.synthesizeToBase64(aiResponse);
-//                    interviewResponse.setAudioBase64(audioBase64);
+                    String audioBase64 = azureTtsService.synthesizeToBase64(aiResponse);
+                    interviewResponse.setAudioBase64(audioBase64);
                 } catch (Exception e) {
                     System.err.println("TTS failed but continuing interview: " + e.getMessage());
                     interviewResponse.setAudioBase64(null);
@@ -158,16 +164,19 @@ public class AIClientApiServiceImpl implements AIClientApiService {
 
 
     // helper for save interview session
-    private void updatePreviousQuestionWithAnswer(String sessionId, String answer) {
+    private long updatePreviousQuestionWithAnswer(String sessionId, String answer) {
+        AtomicLong second = new AtomicLong();
         interviewSessionRepository
                 .findTopBySessionIdAndUserResponseIsNullOrderByIdDesc(sessionId)
                 .ifPresent(lastUnanswered -> {
                     lastUnanswered.setUserResponse(answer);
                     long seconds = Duration.between(lastUnanswered.getCreatedAt(), LocalDateTime.now()).toSeconds();
+                    second.set(seconds);
                     lastUnanswered.setActualTimeSeconds((int) seconds);
 
                     interviewSessionRepository.save(lastUnanswered);
                 });
+        return second.get();
     }
 
 

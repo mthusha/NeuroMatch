@@ -1,0 +1,48 @@
+<!DOCTYPE html>
+<html>
+  <head>
+    <meta charset="UTF-8" />
+    <title>Eye Tracker</title>
+    <!-- load webgazer -->
+    <script src="https://webgazer.cs.brown.edu/webgazer.js"></script>
+  </head>
+  <body>
+    <script>
+      window.onload = () => {
+        if (!window.webgazer) return;
+
+        const webgazer = window.webgazer;
+
+        webgazer
+          .setRegression("ridge")
+          .setGazeListener((data) => {
+            if (data && data.x !== null && data.y !== null) {
+              window.parent.postMessage(
+                {
+                  type: "eyeTracking",
+                  eyeDetected: true,
+                  gaze: { x: data.x, y: data.y },
+                  timestamp: Date.now(),
+                },
+                "*"
+              );
+            } else {
+              window.parent.postMessage(
+                {
+                  type: "eyeTracking",
+                  eyeDetected: false,
+                  timestamp: Date.now(),
+                },
+                "*"
+              );
+            }
+          })
+          .begin()
+          .then(() => {
+            webgazer.showVideoPreview(false);
+            webgazer.showPredictionPoints(false);
+          });
+      };
+    </script>
+  </body>
+</html>

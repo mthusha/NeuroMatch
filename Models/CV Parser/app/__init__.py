@@ -5,6 +5,7 @@ from .api.cv_routes import cv_blueprint
 from .config import CONFIG
 from app.api.recommendation_routes import recommend_api
 from .api.interview_routes import interview_api
+# from .api.lipsync_api import lipsync_api
 
 load_dotenv()
 def create_app():
@@ -19,4 +20,5 @@ def create_app():
     app.register_blueprint(cv_blueprint, url_prefix='/api')
     app.register_blueprint(recommend_api, url_prefix="/api/recommend")
     app.register_blueprint(interview_api, url_prefix='/api/interview') 
+    # app.register_blueprint(lipsync_api, url_prefix='/api/lipsync') 
     return app

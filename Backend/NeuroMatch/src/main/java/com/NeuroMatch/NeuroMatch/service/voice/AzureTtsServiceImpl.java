@@ -30,27 +30,27 @@ public class AzureTtsServiceImpl implements AzureTtsService {
 
     public String synthesizeToBase64(String text) {
         try {
+            String escapedText = text.replace("&", "&amp;").replace("<", "&lt;").replace(">", "&gt;");
+
             String ssml = String.format("""
-                           <speak version='1.0' xmlns='http://www.w3.org/2001/10/synthesis'
-                  xmlns:mstts='https://www.w3.org/2001/mstts'
-                  xml:lang='en-US'>
-               <voice name='en-US-AriaNeural'>
-                   <mstts:express-as style='friendly' styledegree='1.2'>
-                       <prosody rate="-10%%" pitch="+0.3st" volume="medium">
-                           %s
-                       </prosody>
-                       <break time="300ms"/>
-                   </mstts:express-as>
-               </voice>
-                           </speak>
-    """, text);
-
-
+    <speak version='1.0' xmlns='http://www.w3.org/2001/10/synthesis' 
+           xmlns:mstts='https://www.w3.org/2001/mstts' xml:lang='en-US'>
+        <voice name='en-US-AriaNeural'>
+            <mstts:express-as style='friendly'>
+                <prosody rate='-10%%' pitch='+3%%' volume='medium'>
+                    %s
+                </prosody>
+                <break time='300ms'/>
+            </mstts:express-as>
+        </voice>
+    </speak>
+""", escapedText);
 
             HttpHeaders headers = new HttpHeaders();
             headers.set("Ocp-Apim-Subscription-Key", azureKey);
-            headers.setContentType(MediaType.TEXT_PLAIN); // Changed from APPLICATION_XML
+            headers.setContentType(MediaType.valueOf("application/ssml+xml"));
             headers.set("X-Microsoft-OutputFormat", "audio-24khz-48kbitrate-mono-mp3");
+
 
             HttpEntity<String> entity = new HttpEntity<>(ssml, headers);
 

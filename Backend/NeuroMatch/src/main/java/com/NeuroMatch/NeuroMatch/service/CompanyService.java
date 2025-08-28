@@ -3,6 +3,7 @@ package com.NeuroMatch.NeuroMatch.service;
 import com.NeuroMatch.NeuroMatch.model.dto.CompanyDashboardDto;
 import com.NeuroMatch.NeuroMatch.model.dto.CompanyDto;
 import com.NeuroMatch.NeuroMatch.model.dto.CompanyViewDto;
+import com.NeuroMatch.NeuroMatch.model.dto.GetFollowsApplied;
 import com.NeuroMatch.NeuroMatch.model.entity.Users;
 
 import java.util.List;
@@ -14,4 +15,5 @@ public interface CompanyService {
     CompanyViewDto getCompanyByCompanyId(Long companyId, String email);
     CompanyDashboardDto getCompanyDashboard(String email);
     String getEmailByCompanyId(Long companyId);
+    GetFollowsApplied getFollowsLikes(Long companyId);
 }

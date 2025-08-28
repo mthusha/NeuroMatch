@@ -23,15 +23,19 @@ const InterviewPanel = () => {
   const email = user?.email || '';
   const { jobId } = useParams();
   const finishCallbacksRef = useRef([]);
+  const [currentAudioBase64, setCurrentAudioBase64] = useState(null);
 
   const { eyeDetected, trackingActive, lastDetectionTimeRef } = useEyeTracking(interviewStarted);
+  const [avatarAnimation, setAvatarAnimation] = useState("Idle");
+  const [facialExpression, setFacialExpression] = useState("default");
+  // const lastAiMessageRef = useRef(null);
 
   
   const playAudio = useCallback((audioBase64) => { 
     if (!audioBase64) return;
     try {
-      const audio = new Audio(`data:audio/mp3;base64,${audioBase64}`);
-      audio.play().catch(err => console.error('Audio play failed:', err));
+      // const audio = new Audio(`data:audio/mp3;base64,${audioBase64}`);
+      // audio.play().catch(err => console.error('Audio play failed:', err));
     } catch (err) {
       console.error('Error playing audio:', err);
     }
@@ -56,6 +60,7 @@ const InterviewPanel = () => {
         
         setConversation(prev => [...prev, newMessage]);
         playAudio(response.data.audioBase64);
+        
       } else {
         throw new Error(response.statusMessage || 'Failed to fetch question');
       }
@@ -84,7 +89,10 @@ const InterviewPanel = () => {
         const aiResponse = {
           speaker: 'ai',
           text: response.data.response,
-          audioBase64: response.data.audioBase64
+          audioBase64: response.data.audioBase64,
+          score: response.data.score,
+          expectTimeSeconds: response.data.expectTimeSeconds,
+          actualTimeSeconds: response.data.actualTimeSeconds
         };
         
         setConversation(prev => [...prev, aiResponse]);
@@ -254,6 +262,15 @@ const InterviewPanel = () => {
     }
   }, [trackingActive, eyeTrackCameraReady]);
 
+//   useEffect(() => {
+//   const lastMessage = conversation[conversation.length - 1];
+//   if (lastMessage?.speaker === 'ai' && lastMessage.audioBase64) {
+//     setCurrentAudioBase64(lastMessage.audioBase64);
+    
+//   }
+// }, [conversation]);
+
+
 
 
 
@@ -292,6 +309,25 @@ const handleFinish = async () => {
   }
 };
 
+useEffect(() => {
+  // console.log("effect conversation:", conversation);
+  const lastAiMessage = [...conversation].reverse().find(
+    (msg) => msg.speaker === "ai" || "user"
+  );
+// console.log("picked message:", lastAiMessage);
+  if (lastAiMessage) {
+    if (lastAiMessage.audioBase64) {
+      setCurrentAudioBase64(lastAiMessage.audioBase64);
+      setAvatarAnimation(["Talking_0", "Talking_1", "Talking_2"][Math.floor(Math.random() * 3)]);
+      setFacialExpression("smile");
+    } else {
+      setAvatarAnimation("Idle");
+      setFacialExpression("default");
+    }
+  }
+}, [conversation]);
+
+
 
   return (
     <div className="flex flex-col h-screen bg-gray-100">
@@ -304,12 +340,26 @@ const handleFinish = async () => {
       <div className="flex flex-1">
         <div className="w-3/4">
           <AvatarPanel 
-              showCamera={eyeTrackCameraReady}
-              // showCamera={false}
-              eyeDetected={eyeDetected}
-              trackingActive={trackingActive}
-              jobId = {jobId}
-              onFinish={finishCallbacksRef}
+            showCamera={eyeTrackCameraReady}
+            // showCamera={false}
+            eyeDetected={eyeDetected}
+            trackingActive={trackingActive}
+            jobId = {jobId}
+            onFinish={finishCallbacksRef}
+            audioBase64={currentAudioBase64} 
+            text={(() => {
+              const lastAiMessage = [...conversation].reverse().find(msg => msg.speaker === 'ai');
+              return lastAiMessage?.text || '';
+            })()}
+            score={conversation[conversation.length - 1]?.score}
+            expectTime={conversation[conversation.length - 1]?.expectTimeSeconds}
+            actualTime={conversation[conversation.length - 1]?.actualTimeSeconds}
+            facialExpression={facialExpression}
+            avatarAnimation={avatarAnimation}
+            // onAudioEnd={() => {
+            //     setAvatarAnimation("Idle");
+            //     setFacialExpression("default");
+            //   }}
             />
         </div>
         <VoiceChatPanel

@@ -2,14 +2,18 @@ import React, { useState, useEffect } from 'react';
 import { FaEye, FaEyeSlash, FaBriefcase, FaBuilding, FaMapMarkerAlt } from 'react-icons/fa';
 import LoadCamera from './LoadCamera';
 import { fetchJobInfo } from './../../../../../api/AppliedJobs'; 
-// import { Canvas } from '@react-three/fiber';
+import { Canvas } from '@react-three/fiber';
 import { Experience } from './../../../../avatar/Experience';
-import { Canvas } from "@react-three/fiber";
-const AvatarPanel = ({ showCamera, eyeDetected, trackingActive, jobId, onFinish }) => {
+// import { Canvas } from "@react-three/fiber";
+// import VideoAvatar  from './../../../../avatar/VideoAvatar'
+// import AIAnimation from '../../../../avatar/AIAnimation'
+const AvatarPanel = ({ showCamera, eyeDetected, trackingActive, jobId, onFinish, audioBase64, text, score, expectTime, actualTime, facialExpression, avatarAnimation  }) => {
 
   const [jobInfo, setJobInfo] = useState(null);
   const [loading, setLoading] = useState(false);
   const [error, setError] = useState(null);
+  const [currentPhase ,setCurrentPhase] = useState('Hello')
+  // console.log("from avatarpanel", audioBase64 )
 
   useEffect(() => {
     // console.log(onFinish)
@@ -34,6 +38,13 @@ const AvatarPanel = ({ showCamera, eyeDetected, trackingActive, jobId, onFinish 
       getJobInfo();
     }
   }, [jobId]);
+
+
+  useEffect(() => {
+    if (text.includes("Hello")) setCurrentPhase("starting");
+    else if (text.includes("Question")) setCurrentPhase("asking");
+    else setCurrentPhase("finishing");
+  }, [text]);
 
   const currentDateTime = new Date().toLocaleString('en-US', {
     weekday: 'long',
@@ -98,12 +109,14 @@ const AvatarPanel = ({ showCamera, eyeDetected, trackingActive, jobId, onFinish 
         </div>
         {/* end */}
        <div className="w-full h-full">
-        <Canvas className="w-full h-full" shadows camera={{ position: [0, 0, 8], fov: 42 }}>
+         <Canvas className="w-full h-full" shadows camera={{ position: [0, 0, 8], fov: 42 }}>
           <color attach="background" args={["#ececec"]} />
-          <Experience />
+          <Experience audioBase64={audioBase64 } text = {text} phase={currentPhase} facialExpression={facialExpression} avatarAnimation={avatarAnimation}/>
         </Canvas>
-      </div>
+        {/* <AIAnimation phase={currentPhase} duration={500} audioBase64={audioBase64 } /> */}
 
+      
+      </div>
         {trackingActive && (
           <div className={`absolute top-4 left-4 flex items-center space-x-2 p-2 px-3 rounded-full backdrop-blur-sm transition-all duration-300${
             eyeDetected 
@@ -120,6 +133,49 @@ const AvatarPanel = ({ showCamera, eyeDetected, trackingActive, jobId, onFinish 
             </span>
           </div>
         )}
+          {score !== undefined && (
+            <div
+              className="absolute bottom-6 left-6 bg-white/90 border border-gray-200 rounded-xl p-3 w-40 backdrop-blur-sm
+                         transform transition-all duration-500 ease-out scale-90 opacity-0 animate-slide-in"
+              key={score} 
+              style={{ animation: 'slideIn 0.5s forwards' }}
+            >
+              <h4 className="text-[0.65rem] font-semibold text-gray-700 mb-1">Last Answer</h4>
+              <div className="space-y-0.5 text-[0.7rem]">
+                <p className="flex justify-between">
+                  <span className="text-gray-500">Score</span>
+                  <span className="font-medium text-indigo-600">{score}/10</span>
+                </p>
+                <p className="flex justify-between">
+                  <span className="text-gray-500">Expected</span>
+                  <span className="font-medium text-green-600">{expectTime}s</span>
+                </p>
+                <p className="flex justify-between">
+                  <span className="text-gray-500">Your Time</span>
+                  <span className="font-medium text-yellow-600">{actualTime}s</span>
+                </p>
+              </div>
+              <div className="mt-2 w-full bg-gray-200 rounded-full h-1">
+                <div
+                  className={`h-1 rounded-full transition-all duration-500 ${
+                    actualTime <= expectTime ? 'bg-green-500' : 'bg-red-500'
+                  }`}
+                  style={{ width: `${Math.min((actualTime / expectTime) * 100, 100)}%` }}
+                ></div>
+              </div>
+
+              {/* Inline keyframes animation */}
+              <style>
+                {`
+                  @keyframes slideIn {
+                    0% { opacity: 0; transform: translateX(-20px) scale(0.8); }
+                    100% { opacity: 1; transform: translateX(0) scale(1); }
+                  }
+                `}
+              </style>
+            </div>
+          )}
+
         <LoadCamera show={showCamera} jobId={jobId} onFinish={onFinish} />
       {/* </div> */}
     </div>

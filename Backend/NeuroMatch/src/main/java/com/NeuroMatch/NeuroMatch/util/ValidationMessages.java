@@ -50,4 +50,6 @@ public class ValidationMessages {
     public static final String SCORE_FETCHED = "Score fetched successfully";
     public static final String VIDEO_SAVED =  "Video saved successfully at: ";
     public static final String INTERVIEW_VIDEO_NOT_FOUND =  "Interview video not found for jobId: ";
+    public static final String RETRIEVED_ORG = "Retrieved";
+    public static final String DELETED_SUCCESS = "Deleted";
 }

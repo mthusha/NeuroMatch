@@ -2,10 +2,11 @@ import React, { useState, useEffect } from "react";
 import { fetchCompanyProfile, toggleFollowCompany } from "../../../../api/JobSeeker";
 import { useAuth } from "../../../../context/AuthContext";
 import { FaMapMarkerAlt, FaHeart, FaUserPlus } from "react-icons/fa";
-
+import { fetchCompanyStats } from "../../../../api/Company"; 
 function CompanyProfile({ companyId, onFollowChange }) {
   const [company, setCompany] = useState(null);
   const [isFollowing, setIsFollowing] = useState(false);
+  const [stats, setStats] = useState({ totalFollows: 0, totalApplied: 0 }); 
   const [isLoading, setIsLoading] = useState(true);
   const { user } = useAuth();
   const email = user.email;
@@ -16,6 +17,8 @@ function CompanyProfile({ companyId, onFollowChange }) {
         const companyData = await fetchCompanyProfile(companyId, email);
         setCompany(companyData);
         setIsFollowing(companyData.isFollowing);
+        const statData = await fetchCompanyStats(companyId);
+        setStats(statData);
       } catch (error) {
         console.error("Could not load company data", error);
       } finally {
@@ -29,7 +32,15 @@ function CompanyProfile({ companyId, onFollowChange }) {
     try {
       const result = await toggleFollowCompany(email, companyId);
       console.log(result.message);
-      setIsFollowing((prev) => !prev);
+      setIsFollowing((prev) => {
+        const newState = !prev;
+        setStats((s) => ({
+          ...s,
+          totalFollows: newState ? s.totalFollows + 1 : s.totalFollows - 1,
+        }));
+
+        return newState;
+      });
       if (onFollowChange) onFollowChange();
     } catch (error) {
       console.error("Error toggling follow status:", error);
@@ -92,13 +103,13 @@ function CompanyProfile({ companyId, onFollowChange }) {
               <FaUserPlus className="text-white" />
               {isFollowing ? "Following" : "Follow"}
               <span className="ml-1 bg-transparent text-white px-2 py-0.5 rounded-full text-xs font-semibold">
-                3.4k
+                 {stats.totalFollows}
               </span>
             </button>
 
             <div className="flex items-center gap-2 text-sm text-gray-700 bg-gray-100 px-4 py-2 rounded-full shadow-sm">
               <FaHeart className="text-red-500" />
-              <span className="font-medium">1.2k Likes</span>
+               <span className="font-medium">{stats.totalApplied} Applied</span>
             </div>
           </div>
         </div>

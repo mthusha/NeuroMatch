@@ -117,7 +117,14 @@ const AppliedJobsList = () => {
 
       {jobs.length === 0 ? (
         <div className="bg-white rounded-2xl border border-gray-200 p-10 text-center shadow-sm">
-          <div className="text-gray-400 mb-3">📄</div>
+          <div className="flex flex-col justify-center items-center ">
+             <img
+               src="/static/img/file-not-found.png"
+               alt="Select a vacancy"
+               className="w-24 h-24 mb-4"
+             />
+
+          </div>
           <h3 className="text-sm font-medium text-gray-700 mb-1">No applications yet</h3>
           <p className="text-sm text-gray-500">You haven't applied to any jobs yet.</p>
         </div>

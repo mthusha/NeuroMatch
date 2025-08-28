@@ -15,6 +15,7 @@ public class ApplicantResponseDto {
     private Long id;
     private String name;
     private String email;
+    private Long jobSeekerId;
     private String subject;
     private String description;
     private LocalDate appliedDate;

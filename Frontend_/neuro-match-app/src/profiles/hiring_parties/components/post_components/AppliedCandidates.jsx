@@ -104,12 +104,29 @@ const AppliedCandidates = ({ vacancies, selectedVacancy, onSelectVacancy }) => {
               </div>
             ))
           ) : (
-            <p className="text-sm text-gray-500">No applications found for this vacancy.</p>
+            <div className="flex flex-col justify-center items-center h-64">
+             <img
+               src="/static/img/file-not-found.png"
+               alt="Select a vacancy"
+               className="w-24 h-24 mb-4"
+             />
+               <p className="text-sm text-gray-500">No applications found for this vacancy.</p>
+
+           </div>
           )
           )}
         </div>
       ) : (
-        <p className="text-sm text-gray-500">Please select a vacancy to view applications.</p>
+         <div className="flex flex-col justify-center items-center h-64">
+             <img
+               src="/static/img/placeholder-image.png"
+               alt="Select a vacancy"
+               className="w-24 h-24 mb-4"
+             />
+             <p className="text-sm text-gray-500 text-center">
+               Please select a vacancy to view applications
+             </p>
+           </div>
       )}
     </div>
     </div>

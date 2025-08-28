@@ -64,6 +64,7 @@ public class JobPostServiceImpl implements JobPostService {
         List<JobPost> jobPostList = company.getJobPosts();
         List<JobPostDto> jobPostDtoList = new ArrayList<>();
 
+
         for (JobPost jobPost : jobPostList) {
             JobPostDto dto = new JobPostDto();
             BeanUtils.copyProperties(jobPost, dto);
@@ -72,6 +73,14 @@ public class JobPostServiceImpl implements JobPostService {
                 String base64Image = "data:image/jpeg;base64," +
                         Base64.getEncoder().encodeToString(jobPost.getPosterImage());
                 dto.setPosterImageBase64(base64Image);
+            }
+            if (jobPost.getCompanyDetails().getProfilePicture() != null) {
+                String base64Image = "data:image/jpeg;base64," +
+                        Base64.getEncoder().encodeToString(jobPost.getCompanyDetails().getProfilePicture());
+                dto.setProfileImageBase64(base64Image);
+            }
+            if (jobPost.getCompanyDetails() != null) {
+                dto.setPostedBy(jobPost.getCompanyDetails().getName());
             }
 
             jobPostDtoList.add(dto);
@@ -100,11 +109,15 @@ public class JobPostServiceImpl implements JobPostService {
                         .encodeToString(jobPost.getCompanyDetails().getProfilePicture()));
             }
 
-            boolean isLikedOrApplied = jobSeekerDetails.map(js ->
+            boolean isApplied = jobSeekerDetails.map(js ->
+                    appliedJobsRepository.existsByJobSeekerAndJobPost(js, jobPost)
+            ).orElse(false);
+            boolean isLiked = jobSeekerDetails.map(js ->
                     likedJobsRepository.existsByJobSeekerAndJobPost(js, jobPost)
             ).orElse(false);
-            jobPostDto.setIsApplied(isLikedOrApplied);
-            jobPostDto.setIsLiked(isLikedOrApplied);
+
+            jobPostDto.setIsApplied(isApplied);
+            jobPostDto.setIsLiked(isLiked);
             jobPostDtos.add(jobPostDto);
         }
         return jobPostDtos;
@@ -176,6 +189,11 @@ public class JobPostServiceImpl implements JobPostService {
 
 
         return finalRecommended;
+    }
+
+    @Override
+    public void deletePostById(Long id) {
+        jobPostRepository.deleteById(id);
     }
 
 

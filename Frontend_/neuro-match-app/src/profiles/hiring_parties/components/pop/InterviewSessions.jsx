@@ -4,7 +4,7 @@ import TimeComparisonChart from "./../chart/TimeComparisonChart"
 import ScoreTrendChart from "./../chart/ScoreTrendChart"
 import SummaryCard from "./../chart/SummaryCard"
 import { fetchInterviewVideo } from "../../../../api/Interview";
-const InterviewSessions = ({ sessions, onClose ,score,jobId}) => {
+const InterviewSessions = ({ sessions, onClose, score, jobId}) => {
   const [showChat, setShowChat] = useState(false);
   const averageScore = score;
   const [videoUrl, setVideoUrl] = useState(null);

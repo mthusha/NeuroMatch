@@ -188,7 +188,6 @@ function JobFeed({ companyId, type }) {
               </div>
             </div>
             <div className="job-details">
-              <h3>{job.title}</h3>
               {/* <p
               style={{
                 marginTop:"0",
@@ -197,6 +196,8 @@ function JobFeed({ companyId, type }) {
               >{job.postedTime}</p> */}
               <div className='post-detail-box'>
                 <div className="post-text-box">
+              <h3>{job.title}</h3>
+                  
                   <p className="job-description">{job.description}</p>
                   <div className="job-meta">
                     <p><strong>📍 Location:</strong> {job.location}</p>
