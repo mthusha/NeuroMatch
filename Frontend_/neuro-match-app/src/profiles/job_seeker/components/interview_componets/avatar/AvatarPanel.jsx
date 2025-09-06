@@ -113,6 +113,8 @@ const AvatarPanel = ({ showCamera, eyeDetected, trackingActive, jobId, onFinish,
           <color attach="background" args={["#ececec"]} />
           <Experience audioBase64={audioBase64 } text = {text} phase={currentPhase} facialExpression={facialExpression} avatarAnimation={avatarAnimation}/>
         </Canvas>
+
+        
         {/* <AIAnimation phase={currentPhase} duration={500} audioBase64={audioBase64 } /> */}
 
       

@@ -76,6 +76,9 @@ public class AppliedJobsServiceImpl implements AppliedJobsService {
         for (AppliedJobs app : appliedJobsList) {
             JobSeekerDetails seeker = app.getJobSeeker();
             Users user = seeker.getUser();
+//            if (user.isTemp()) {
+//                continue;
+//            }
 
             Map<String, List<String>> userSkillsMap = userService.extractSkillsFromCV(user.getEmail());
 
@@ -99,7 +102,8 @@ public class AppliedJobsServiceImpl implements AppliedJobsService {
                     userSkillsMap,
                     profilePictureBase64,
                     seeker.getBio(),
-                    app.getStatus()
+                    app.getStatus(),
+                    user.isTemp()
             );
 
             result.add(dto);

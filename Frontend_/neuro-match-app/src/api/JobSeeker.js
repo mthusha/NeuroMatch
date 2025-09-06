@@ -141,3 +141,23 @@ export const fetchInterviewSessionsByApplicant = async (applicantId, jwt) => {
 };
 
 
+export const checkMultipleCVs = async (files, jobId) => {
+  if (!files.length || !jobId) throw new Error("Files or jobId missing");
+
+  const formData = new FormData();
+  files.forEach((file) => formData.append("files", file));
+  formData.append("jobId", jobId);
+
+  const response = await fetch(`${API_BASE_URL}/job-seeker/check-multiple`, {
+    method: "POST",
+    body: formData,
+  });
+
+  if (!response.ok) {
+    throw new Error(`Server error: ${response.statusText}`);
+  }
+
+  return response.json();
+};
+
+

@@ -1,4 +1,5 @@
 import { API_BASE_URL } from "../config";
+
 export const fetchFirstQuestionApi = async (email, jobId = null) => {
   try {
     let url = `${API_BASE_URL}/job-seeker/interview/generate_questions/${email}`;
@@ -90,4 +91,29 @@ export const fetchInterviewVideo = async (jobId) => {
   }
 };
 
+
+
+export const createTempInterview = async (email, name, jobPostId, interviewData = {}) => {
+  try {
+    const response = await fetch(
+      `${API_BASE_URL}/no-registered-interview/temp`,
+      {
+        method: "POST",
+        headers: {
+          "Content-Type": "application/json",
+        },
+        body: JSON.stringify({
+          email,
+          name,
+          jobPostId,
+          ...interviewData,
+        }),
+      }
+    );
+    
+    return await response.json();
+  } catch (error) {
+    throw new Error('Failed to create temporary interview');
+  }
+};
 

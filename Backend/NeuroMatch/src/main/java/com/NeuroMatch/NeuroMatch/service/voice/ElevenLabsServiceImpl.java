@@ -27,10 +27,6 @@ public class ElevenLabsServiceImpl implements ElevenLabsService {
     private String baseApiUrl;
 
     private final RestTemplate restTemplate = new RestTemplate();
-
-    //    private static final String VOICE_ID = "21m00Tcm4TlvDq8ikWAM";
-//    private static final String API_URL = "https://api.elevenlabs.io/v1/text-to-speech/" + VOICE_ID;
-
     public String synthesizeToBase64(String text) {
         try {
             String requestBody = """

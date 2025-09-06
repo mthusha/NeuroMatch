@@ -25,7 +25,6 @@ const LoadCamera = ({ show, jobId, onFinish }) => {
       }
       return false;
     };
-
     let attempts = 0;
     const interval = setInterval(() => {
       if (tryAttachWebgazerStream() || attempts > 20) {
@@ -35,7 +34,6 @@ const LoadCamera = ({ show, jobId, onFinish }) => {
       }
       attempts++;
     }, 300);
-
     return () => clearInterval(interval);
   }, [show, jobId]);
 
@@ -65,9 +63,7 @@ const LoadCamera = ({ show, jobId, onFinish }) => {
           mediaRecorderRef.current.onstop = resolve;
         });
         setIsRecording(false);
-
         clearInterval(timerRef.current);
-
         const blob = new Blob(recordedChunksRef.current, { type: 'video/webm' });
         try {
           await uploadInterviewVideo(blob, jobId);

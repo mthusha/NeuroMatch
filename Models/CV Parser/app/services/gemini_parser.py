@@ -39,7 +39,6 @@ class GeminiParser:
            - Mark ongoing degrees as "Currently pursuing"
         3. Include ALL projects with full descriptions
         4. Never return null for required fields
-        
         Required JSON format:
         {
             "personal_info": {

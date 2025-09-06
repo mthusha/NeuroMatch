@@ -29,6 +29,12 @@ const CandidateCard = ({ candidate, applicationStatus, applicationDate, showActi
     }
   };
 
+  if (candidate.isTemp) {
+    return (
+     ''
+    );
+  }
+
   return (
     <div
       className="bg-white border border-gray-200 rounded-2xl p-5 shadow-sm hover:shadow-md hover:-translate-y-1 transition-all duration-300 group cursor-pointer"
@@ -49,7 +55,6 @@ const CandidateCard = ({ candidate, applicationStatus, applicationDate, showActi
               {candidate.name?.charAt(0).toUpperCase() || 'U'}
             </div>
           )}
-
           {candidate.score && (
             <div className="absolute -bottom-1 -right-1 bg-white rounded-full p-0.5 shadow-sm">
               <div className="bg-indigo-600 text-white text-xs font-bold h-5 w-5 rounded-full flex items-center justify-center">

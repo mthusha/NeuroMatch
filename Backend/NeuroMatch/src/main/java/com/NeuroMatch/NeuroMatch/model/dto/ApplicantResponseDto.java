@@ -25,4 +25,6 @@ public class ApplicantResponseDto {
     private String profilePictureBase64;
     private String bio;
     private String status;
+    private boolean isTemp;
+
 }

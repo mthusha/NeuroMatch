@@ -53,6 +53,11 @@ const CandidateProfile = ({ candidate, goBack, jwt, scrollContainerRef }) => {
 
 
    const handleShowNeuroScore = () => {
+
+    if (!profile?.neuroScore) {
+        console.warn("No NeuroScore available for this candidate.");
+        return;
+      }
     setShowNeuroScore((prev) => {
       const newState = !prev;
 
@@ -127,7 +132,8 @@ const CandidateProfile = ({ candidate, goBack, jwt, scrollContainerRef }) => {
       setStatus(oldStatus); 
     }
   };
-  const handleFetchSessions = async () => {
+  
+const handleFetchSessions = async () => {
   try {
     const data = await fetchInterviewSessionsByApplicant(candidate.id, jwt);
     setSessions(data);

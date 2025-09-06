@@ -31,6 +31,7 @@ public class EndpointBundle {
     public static final String LIKE = "/like";
     public static final String JOB_SEEKER_SUMMERY = "/job-seeker-summery";
     public static final String GET_SCORE_ONLY = "/get-score-only";
+    public static final String CHECK_CV = "/check-multiple";
 
 
     //utils
@@ -61,6 +62,7 @@ public class EndpointBundle {
     public static final String AI_CLIENT_GENERAL_INTERVIEW = "http://localhost:5000/api/interview/general";
     public static final String AI_CLIENT_JOB_INTERVIEW = "http://localhost:5000/api/interview/job-specific";
     public static final String AI_CLIENT_ANSWER = "http://localhost:5000/api/interview/answer";
+    public static final String CV_CHECK = "http://localhost:5000/api/check-cv";
 
     // Interview Session
     public static final String INTERVIEW_SESSION = BASE_URL + "/interview-session";
@@ -72,5 +74,9 @@ public class EndpointBundle {
     public static final String SCHEDULE_ASSESSMENT = BASE_URL + "/schedule-assessment";
     public static final String GET_SCHEDULE_COUNT = "/count";
     public static final String COMPLETE_ASSESSMENT = "/complete-assessment";
+
+    //NoRegisteredInterviewController
+    public static final String NO_REGISTERED_INTERVIEW = BASE_URL + "/no-registered-interview";
+    public static final String TEMP = "/temp";
 
 }

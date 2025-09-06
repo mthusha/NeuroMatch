@@ -88,7 +88,6 @@ public class InterviewSessionServiceImpl implements InterviewSessionService {
         if (!Files.exists(filePath)) {
             throw new IOException(ValidationMessages.INTERVIEW_VIDEO_NOT_FOUND + jobId);
         }
-
         try {
             Resource resource = new UrlResource(filePath.toUri());
             if (resource.exists() && resource.isReadable()) {

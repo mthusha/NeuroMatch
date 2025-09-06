@@ -98,25 +98,8 @@ const InterviewHistoryView = ({ groupedBySession, selectedSession, setSelectedSe
           <div className="space-y-2 flex-grow overflow-y-auto pr-1 no-scrollbar">
             {selectedSession.map((item, index) => (
               <div key={item.id} className="space-y-1.5">
-                <div className="flex justify-end">
-                  <div className="bg-indigo-50 text-gray-800 rounded-lg p-2 max-w-[85%] relative">
-                    <div className="absolute -right-1 -top-1 w-2 h-2 bg-indigo-50 transform rotate-45"></div>
-                    <div className="flex items-center">
-                      {/* <div className="w-5 h-5 rounded-full bg-indigo-100 text-indigo-600 flex items-center justify-center mr-2 text-xs font-medium">
-                        {index + 1}
-                      </div> */}
-                      <div className="font-medium text-indigo-600 text-xs">You</div>
-                    </div>
-                    <p className="mt-1 text-sm">{item.userResponse}</p>
-                    {item.actualTimeSeconds && (
-                      <div className="text-[0.65rem] text-gray-400 mt-1 text-right">
-                        {item.actualTimeSeconds}s
-                      </div>
-                    )}
-                  </div>
-                </div>
 
-                <div className="flex justify-start">
+                 <div className="flex justify-start">
                   <div className="bg-gray-50 text-gray-800 rounded-lg p-2 max-w-[85%] relative">
                     <div className="absolute -left-1 -top-1 w-2 h-2 bg-gray-50 transform rotate-45"></div>
                     <div className="flex items-center justify-between">
@@ -136,6 +119,26 @@ const InterviewHistoryView = ({ groupedBySession, selectedSession, setSelectedSe
                     <p className="mt-1 text-sm">{item.airesponse}</p>
                   </div>
                 </div>
+                
+                <div className="flex justify-end">
+                  <div className="bg-indigo-50 text-gray-800 rounded-lg p-2 max-w-[85%] relative">
+                    <div className="absolute -right-1 -top-1 w-2 h-2 bg-indigo-50 transform rotate-45"></div>
+                    <div className="flex items-center">
+                      {/* <div className="w-5 h-5 rounded-full bg-indigo-100 text-indigo-600 flex items-center justify-center mr-2 text-xs font-medium">
+                        {index + 1}
+                      </div> */}
+                      <div className="font-medium text-indigo-600 text-xs">You</div>
+                    </div>
+                    <p className="mt-1 text-sm">{item.userResponse}</p>
+                    {item.actualTimeSeconds && (
+                      <div className="text-[0.65rem] text-gray-400 mt-1 text-right">
+                        {item.actualTimeSeconds}s
+                      </div>
+                    )}
+                  </div>
+                </div>
+
+               
               </div>
             ))}
           </div>

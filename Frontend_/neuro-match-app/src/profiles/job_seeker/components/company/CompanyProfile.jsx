@@ -38,7 +38,6 @@ function CompanyProfile({ companyId, onFollowChange }) {
           ...s,
           totalFollows: newState ? s.totalFollows + 1 : s.totalFollows - 1,
         }));
-
         return newState;
       });
       if (onFollowChange) onFollowChange();

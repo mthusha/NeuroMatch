@@ -8,6 +8,7 @@ import com.NeuroMatch.NeuroMatch.model.entity.JobSeekerDetails;
 import com.NeuroMatch.NeuroMatch.model.entity.LikedJobs;
 import com.NeuroMatch.NeuroMatch.model.entity.Users;
 import com.fasterxml.jackson.core.JsonProcessingException;
+import org.springframework.web.multipart.MultipartFile;
 
 import java.util.List;
 import java.util.Map;
@@ -24,4 +25,5 @@ public interface JobSeekerService {
     JobSeekerSummery getJobSeekerSummery(String email);
     Integer getAverageScore(JobSeekerDetails jobSeeker);
     Integer getAverageScoreAPI(Long id);
+    List<Map<String, Object>> checkMultipleCVs(MultipartFile[] files, Long jobId);
 }

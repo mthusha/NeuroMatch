@@ -1,12 +1,14 @@
 import React, { useState, useEffect,  useCallback, useRef  } from 'react';
-import { useParams } from 'react-router-dom';
+import { useParams, useLocation } from 'react-router-dom';
 import AvatarPanel from './../components/interview_componets/avatar/AvatarPanel';
 import VoiceChatPanel from './../components/interview_componets/chat/VoiceChatPanel';
 import { useAuth } from "../../../context/AuthContext";
 import { fetchFirstQuestionApi, sendAnswerApi } from '../../../api/Interview';
 import { useEyeTracking } from './../../../service/useEyeTracking';
 import { completeAssessment  } from "../../../api/scheduledAssessmentService";
-
+function useQuery() {
+  return new URLSearchParams(useLocation().search);
+}
 const InterviewPanel = () => {
   const [conversation, setConversation] = useState([]);
   // const [liveTranscript, setLiveTranscript] = useState('');
@@ -20,12 +22,15 @@ const InterviewPanel = () => {
   const pendingAnswerRef = useRef(''); 
   const sendTimerRef = useRef(null);
   const { user } = useAuth();
-  const email = user?.email || '';
+  const query = useQuery();
+  const email = user?.email || query.get('email');
   const { jobId } = useParams();
   const finishCallbacksRef = useRef([]);
   const [currentAudioBase64, setCurrentAudioBase64] = useState(null);
 
   const { eyeDetected, trackingActive, lastDetectionTimeRef } = useEyeTracking(interviewStarted);
+
+
   const [avatarAnimation, setAvatarAnimation] = useState("Idle");
   const [facialExpression, setFacialExpression] = useState("default");
   // const lastAiMessageRef = useRef(null);
@@ -283,10 +288,8 @@ const InterviewPanel = () => {
 
   const toggleRecording = () => {
   if (!interviewStarted) return;
-
   if (isRecording) {
     if (sendTimerRef.current) clearTimeout(sendTimerRef.current);
-
     if (pendingAnswerRef.current || pendingAnswer) {
       sendAnswer(pendingAnswerRef.current || pendingAnswer);
       setPendingAnswer('');
@@ -302,7 +305,13 @@ const handleFinish = async () => {
   }
   try {
     await completeAssessment(jobId);
-    window.location.href = "/view-applied-jobs";
+    if (user?.email) {
+      window.location.href = "/view-applied-jobs";
+    } else if (query.get('email')) {
+      window.location.href = "/interview-no-user-completed";
+    } else {
+      window.location.href = "/";
+    }
   } catch (error) {
     console.error("Failed to complete assessment:", error);
     // user feedback

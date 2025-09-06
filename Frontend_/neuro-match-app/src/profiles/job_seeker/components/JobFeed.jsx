@@ -81,7 +81,6 @@ function JobFeed({ companyId, type }) {
 
   const toggleInteraction = async (jobId, type) => {
   const hasInteracted = userInteractions[jobId]?.[type] || false;
-
   setJobs(prev =>
     prev.map(job =>
       job.id === jobId
@@ -93,7 +92,6 @@ function JobFeed({ companyId, type }) {
         : job
     )
   );
-
   setUserInteractions(prev => ({
     ...prev,
     [jobId]: {

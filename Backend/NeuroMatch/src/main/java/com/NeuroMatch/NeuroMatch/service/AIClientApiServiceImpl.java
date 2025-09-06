@@ -2,11 +2,13 @@ package com.NeuroMatch.NeuroMatch.service;
 
 import com.NeuroMatch.NeuroMatch.model.dto.InterviewResponse;
 import com.NeuroMatch.NeuroMatch.model.dto.InterviewRequest;
+import com.NeuroMatch.NeuroMatch.model.dto.MultipartInputStreamFileResource;
 import com.NeuroMatch.NeuroMatch.model.entity.AppliedJobs;
 import com.NeuroMatch.NeuroMatch.model.entity.InterviewSession;
 import com.NeuroMatch.NeuroMatch.model.entity.JobSeekerDetails;
 import com.NeuroMatch.NeuroMatch.repository.AppliedJobsRepository;
 import com.NeuroMatch.NeuroMatch.repository.InterviewSessionRepository;
+import com.NeuroMatch.NeuroMatch.repository.JobPostRepository;
 import com.NeuroMatch.NeuroMatch.repository.UsersRepository;
 import com.NeuroMatch.NeuroMatch.service.voice.AzureTtsService;
 import com.NeuroMatch.NeuroMatch.service.voice.ElevenLabsService;
@@ -17,8 +19,17 @@ import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.core.ParameterizedTypeReference;
 import org.springframework.stereotype.Service;
 
+
 import org.springframework.http.*;
+import org.springframework.util.LinkedMultiValueMap;
+import org.springframework.util.MultiValueMap;
 import org.springframework.web.client.RestTemplate;
+import org.springframework.web.multipart.MultipartFile;
+
+import java.io.IOException;
+import java.util.*;
+
+import org.springframework.http.*;
 
 import java.time.Duration;
 import java.time.LocalDateTime;
@@ -39,6 +50,8 @@ public class AIClientApiServiceImpl implements AIClientApiService {
     private ElevenLabsService elevenLabsService;
     @Autowired
     private AppliedJobsRepository appliedJobsRepository;
+    @Autowired
+    private JobPostRepository jobPostRepository;
 
     public AIClientApiServiceImpl(RestTemplate restTemplate) {
         this.restTemplate = restTemplate;
@@ -71,7 +84,6 @@ public class AIClientApiServiceImpl implements AIClientApiService {
             String endpoint = jobId != null ?
                     EndpointBundle.AI_CLIENT_JOB_INTERVIEW :
                     EndpointBundle.AI_CLIENT_GENERAL_INTERVIEW;
-
             ResponseEntity<Map<String, String>> response = restTemplate.exchange(
                     endpoint,
                     HttpMethod.POST,
@@ -99,7 +111,8 @@ public class AIClientApiServiceImpl implements AIClientApiService {
                 interviewSessionRepository.save(sessionEntity);
 
                 try {
-                    String audioBase64 = azureTtsService.synthesizeToBase64(HelperMethods.stripScoreSection(body.get("question")));
+                    String audioBase64 = azureTtsService.synthesizeToBase64(HelperMethods
+                            .stripScoreSection(body.get("question")));
                     session.setAudioBase64(audioBase64);
 
                 } catch (Exception e) {
@@ -123,14 +136,12 @@ public class AIClientApiServiceImpl implements AIClientApiService {
                     "session_id", sessionId,
                     "answer", answer
             );
-
             ResponseEntity<Map<String, String>> response = restTemplate.exchange(
                     EndpointBundle.AI_CLIENT_ANSWER,
                     HttpMethod.POST,
                     new HttpEntity<>(request),
                     new ParameterizedTypeReference<Map<String, String>>() {}
             );
-
             Map<String, String> body = response.getBody();
             if (body != null && body.containsKey("response")) {
                 String aiResponse = HelperMethods.stripScoreSection(body.get("response"));
@@ -160,7 +171,40 @@ public class AIClientApiServiceImpl implements AIClientApiService {
         }
     }
 
+    @Override
+    public List<Map<String, Object>> checkMultipleCVs(MultipartFile[] files, Long jobId) {
+        List<Map<String, Object>> responses = new ArrayList<>();
+        String skills = jobPostRepository.findById(jobId)
+                .orElseThrow(()-> new RuntimeException(ValidationMessages.JOB_POST_NOT_FOUND))
+                .getRequirements();
+        for (MultipartFile file : files) {
+            try {
+                MultiValueMap<String, Object> body = new LinkedMultiValueMap<>();
+                body.add("skills", skills);
+                body.add("file", new MultipartInputStreamFileResource(file.getInputStream(), file.getOriginalFilename()));
+                HttpHeaders headers = new HttpHeaders();
+                headers.setContentType(MediaType.MULTIPART_FORM_DATA);
+                HttpEntity<MultiValueMap<String, Object>> requestEntity = new HttpEntity<>(body, headers);
+                ResponseEntity<Map> response = restTemplate.postForEntity(EndpointBundle.CV_CHECK, requestEntity, Map.class);
 
+                if (response.getStatusCode() == HttpStatus.OK && response.getBody() != null) {
+                    responses.add(response.getBody());
+                } else {
+                    Map<String, Object> errorMap = new HashMap<>();
+                    errorMap.put("pdf_name", file.getOriginalFilename());
+                    errorMap.put("error", "Failed to process CV");
+                    responses.add(errorMap);
+                }
+            } catch (IOException e) {
+                Map<String, Object> errorMap = new HashMap<>();
+                errorMap.put("pdf_name", file.getOriginalFilename());
+                errorMap.put("error", "IOException: " + e.getMessage());
+                responses.add(errorMap);
+            }
+        }
+
+        return responses;
+    }
 
 
     // helper for save interview session

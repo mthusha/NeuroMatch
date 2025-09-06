@@ -18,8 +18,8 @@ class InterviewService:
         """Handles general interviews (when no job ID is provided)"""
         cv_data = request_data.get("cv_data")
         session_id = str(uuid.uuid4())
-        
         chat = model.start_chat()
+
         chat_sessions[session_id] = {
             "chat": chat,
             "question_count": 1,
@@ -83,7 +83,8 @@ You are conducting a technical interview for {job_title}{f" at {company_name}" i
 {f"Job description: {job_desc}" if job_desc else ""}
 {f"Job requirements: {job_reqs}" if job_reqs else ""}
 
-Begin with your introduction (your name is "Neuro") and greet the candidate by name if available. and ask the candidate to introduce themselves.
+Begin with your introduction (your name is "Neuro") and greet the candidate by name if available. 
+ONLY ask them to introduce themselves. DO NOT ask any other interview question yet.
 
 
 At the end of your response, on a separate line, include a JSON object like this exactly:
@@ -103,7 +104,6 @@ At the end of your response, on a separate line, include a JSON object like this
         session = chat_sessions.get(session_id)
         if not session:
             return "Session not found. Please start a new interview."
-
         chat = session["chat"]
         question_count = session["question_count"]
         max_questions = session.get("numberOfQuestions", InterviewService.MAX_QUESTIONS)

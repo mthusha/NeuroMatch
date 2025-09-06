@@ -52,4 +52,5 @@ public class ValidationMessages {
     public static final String INTERVIEW_VIDEO_NOT_FOUND =  "Interview video not found for jobId: ";
     public static final String RETRIEVED_ORG = "Retrieved";
     public static final String DELETED_SUCCESS = "Deleted";
+    public static final String TEMPORARY_INTERVIEW_SUCCESS = "Temporary interview created successfully for ";
 }

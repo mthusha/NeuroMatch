@@ -21,8 +21,7 @@ import java.util.stream.Collectors;
 @Service
 public class JobPostServiceImpl implements JobPostService {
 
-    @Autowired
-    private JobPostRepository jobPostRepository;
+
     @Autowired
     private UsersRepository usersRepository;
     @Autowired
@@ -33,7 +32,8 @@ public class JobPostServiceImpl implements JobPostService {
     private LikedJobsRepository likedJobsRepository;
     @Autowired
     private AppliedJobsRepository appliedJobsRepository;
-
+    @Autowired
+    private JobPostRepository jobPostRepository;
     @Override
     public JobPost createJobPost (JobPostDto jobPostDto, String email) {
         Users user = usersRepository.findByEmail(email)

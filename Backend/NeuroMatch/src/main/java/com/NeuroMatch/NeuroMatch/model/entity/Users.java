@@ -16,6 +16,8 @@ public class Users {
     private String password;
     private String provider;
     private String role;
+    @Column(nullable = false, columnDefinition = "BOOLEAN DEFAULT FALSE")
+    private boolean temp = false;
 
     @OneToOne(cascade = CascadeType.ALL, mappedBy = "user")
     private JobSeekerDetails jobSeekerDetails;

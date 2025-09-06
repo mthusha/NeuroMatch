@@ -24,9 +24,6 @@ public class JobPostController {
     @Autowired
     private JobPostService jobPostService;
 
-//    @Autowired
-//    private UserService userService;
-
     @PostMapping(EndpointBundle.EMAIL)
     public ResponseEntity<ResponseWrapper<?>> jobPostCreate(@PathVariable String email,
                                                             @RequestBody JobPostDto jobPostDto) {

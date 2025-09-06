@@ -8,15 +8,19 @@ const SummaryCard = ({ title, sessions, averageScoreOrg }) => {
   const averageExpectedTimeSeconds = sessions.reduce((sum, s) => sum + s.expectTimeSeconds, 0) / totalSessions || 0;
   const averageActualTimeSeconds = sessions.reduce((sum, s) => sum + s.actualTimeSeconds, 0) / totalSessions || 0;
   const sessionsAboveThreshold = sessions.filter(s => s.score >= 8).length;
-  const highestScore = Math.max(...sessions.map(s => s.score)) || 0;
-  const lowestScore = Math.min(...sessions.map(s => s.score)) || 0;
+  const scores = sessions.map(s => s.score || 0);
+  const highestScore = scores.length > 0 ? Math.max(...scores) : 0;
+  const lowestScore = scores.length > 0 ? Math.min(...scores) : 0;
   const successRatePercentage = (sessionsAboveThreshold / totalSessions) * 100 || 0;
   const lastTwoScores = sessions
     .slice()
     .sort((a, b) => b.id - a.id)
     .slice(0, 2)
     .map(s => s.score);
-  const trend = lastTwoScores.length === 2 ? ((lastTwoScores[0] - lastTwoScores[1]) / lastTwoScores[1]) * 100 : 0;
+ const trend = (lastTwoScores.length === 2 && lastTwoScores[1])
+    ? ((lastTwoScores[0] - lastTwoScores[1]) / lastTwoScores[1]) * 100
+    : 0;
+
   const lastInterview = sessions.slice().sort((a, b) => b.id - a.id)[0] || {};
 //   const lastInterviewScore = lastInterview.score || 0;
   const lastInterviewId = lastInterview.id || 'N/A';

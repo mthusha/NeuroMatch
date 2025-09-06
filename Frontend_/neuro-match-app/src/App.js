@@ -15,6 +15,7 @@ import InterviewPanel from "./profiles/job_seeker/components/InterviewPanel";
 import AppliedJobCo from "./profiles/hiring_parties/AppliedJobCo";
 import InterviewHistory from "./profiles/job_seeker/components/interview_componets/historice/InterviewHistory"
 import NotFoundPage from "./profiles/comman/404";
+import InterviewNoUserCompleted from "./profiles/job_seeker/components/interview_componets/InterviewNoUserCompleted";
 
 function App() {
   return (
@@ -66,6 +67,10 @@ function App() {
           />
           <Route path="/view-applied-jobs-co" element={<AppliedJobCo />} />
           <Route path="/interview-past" element={<InterviewHistory />} />
+          <Route
+            path="/interview-no-user-completed"
+            element={<InterviewNoUserCompleted />}
+          />
           {/* <Route path="/user/:id" element={<UserView />} /> */}
         </Routes>
       </AuthProvider>

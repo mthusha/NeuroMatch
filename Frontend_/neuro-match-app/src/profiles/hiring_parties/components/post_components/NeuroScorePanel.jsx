@@ -4,7 +4,13 @@ import RequestInterview from './RequestInterview';
 const NeuroScorePanel = ({ neuroData, jobPost, status, onStatusChange  }) => {
   const [isFormOpen, setIsFormOpen] = useState(false);
 //   const [status, setStatus] = useState(initialStatus);
-  if (!neuroData) return null;
+  if (!neuroData || typeof neuroData !== "object") {
+    return (
+      <div className="text-sm text-gray-500 italic">
+        No NeuroScore data available
+      </div>
+    );
+  }
 
   const openForm = () => setIsFormOpen(true);
   const closeForm = () => setIsFormOpen(false);
@@ -15,11 +21,13 @@ const NeuroScorePanel = ({ neuroData, jobPost, status, onStatusChange  }) => {
   };
   
 
-  const chartData = Object.entries(neuroData.sessionScores || {}).map(([_, score], index) => {
+  // Safely handle sessionScores
+  const sessionScores = neuroData.sessionScores || {};
+  const chartData = Object.entries(sessionScores).map(([_, score], index) => {
     let fillColor;
-    if (score >= 80) fillColor = '#10b981'; 
-    else if (score >= 60) fillColor = '#6366f1'; 
-    else fillColor = '#ef4444'; 
+    if (score >= 80) fillColor = '#10b981';
+    else if (score >= 60) fillColor = '#6366f1';
+    else fillColor = '#ef4444';
 
     return {
       sessionNumber: index + 1,
@@ -32,13 +40,14 @@ const NeuroScorePanel = ({ neuroData, jobPost, status, onStatusChange  }) => {
     ...entry,
     order: idx + 1,
   }));
-// console.log(processedData);
 
+  const recentScores = Object.values(sessionScores);
+  const lastFive = recentScores.slice(-5);
 
-  const recentScores = Object.values(neuroData.sessionScores).slice(-5);
-  const trend = recentScores.length > 1
-    ? ((recentScores[recentScores.length - 1] - recentScores[0]) / recentScores[0] * 100).toFixed(2)
+  const trend = lastFive.length > 1
+    ? ((lastFive[lastFive.length - 1] - lastFive[0]) / lastFive[0] * 100).toFixed(2)
     : 0;
+
 
   return (
     <div className="bg-white rounded-xl">
@@ -293,7 +302,7 @@ const NeuroScorePanel = ({ neuroData, jobPost, status, onStatusChange  }) => {
                 </svg>
               </span>
               <span className="bg-gradient-to-r from-indigo-600 to-purple-600 bg-clip-text text-transparent">
-                 {status === "Request Interview" ? "NeuroChecked" : "NeuroCheck"}
+                 {status === "Request Interview" ? "Applied" : "Neuro Interview"}
               </span>
             </button>
           </div>

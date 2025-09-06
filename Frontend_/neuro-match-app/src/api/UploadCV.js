@@ -5,14 +5,11 @@ export const uploadFileToApi = async (file) => {
   if (!file) {
     return { success: false, error: "No file selected" };
   }
-
   if (!file.name.toLowerCase().endsWith(".pdf")) {
     return { success: false, error: "Only PDF files are allowed" };
   }
-
   const formData = new FormData();
   formData.append("file", file);
-
   try {
     const response = await axios.post(`${CV_BASE_URL}/upload-cv`, formData, {
       headers: {
